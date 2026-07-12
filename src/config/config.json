@@ -5,7 +5,9 @@
     "bing_verification": "",
     "yandex_verification": "",
     "language": "en",
-    "google_analytics_id": ""
+    "google_analytics_id": "",
+    "rating_value": "",
+    "rating_count": ""
   },
   "social": [
     {

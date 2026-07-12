@@ -1,5 +1,6 @@
 ---
 import { getTranslations } from '@theme/i18n/utils';
+import config from '~/config/config.json';
 
 interface FAQ {
   question: string;
@@ -49,6 +50,17 @@ const siteURL = Astro.url.origin;
         price: '0',
         priceCurrency: 'USD',
       },
+      ...(config.site.rating_value && config.site.rating_count
+        ? {
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: config.site.rating_value,
+              ratingCount: config.site.rating_count,
+              bestRating: '5',
+              worstRating: '1',
+            },
+          }
+        : {}),
       publisher: {
         '@type': 'Organization',
         '@id': `${siteURL}#organization`,

@@ -49,7 +49,7 @@ const getSocialLogoMarkup = (name: string) => socialLogos[name.toLowerCase()] ??
           navigation.footer.map((item) => (
             <li>
               <a href={item.url === "/" ? getLocalizedUrl(item.url, locale) : item.url} class="px-4 py-2 rounded-xl text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 text-sm font-medium transition-all duration-300">
-                {t[item.name]}
+                {t[item.name] ?? item.name}
               </a>
             </li>
           ))

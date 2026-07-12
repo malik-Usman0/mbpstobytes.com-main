@@ -4,6 +4,7 @@ import FAQs from "@theme/components/FAQs.astro";
 import Chart from "@theme/components/Chart.astro";
 import { getTranslations, type Locale } from "@theme/i18n/utils";
 import HowItWorks from "@theme/components/HowItWorks.astro";
+import RelatedTools from "@theme/components/RelatedTools.astro";
 
 const locale = (Astro.params.lang || "en") as Locale;
 const t = getTranslations(locale);
@@ -114,6 +115,16 @@ export const getStaticPaths = getStaticPathsIndex;
             </div>
           </div>
 
+          <!-- Unit standard toggle -->
+          <div class="flex flex-wrap items-center gap-3 mb-6">
+            <span class="text-gray-500 text-sm font-medium">Standard:</span>
+            <div class="inline-flex rounded-xl border border-gray-200 bg-gray-50 p-1" role="group" aria-label="Unit standard">
+              <button id="std-si" type="button" aria-pressed="true" class="px-4 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-600 shadow-sm transition-all duration-200">Decimal (SI)</button>
+              <button id="std-iec" type="button" aria-pressed="false" class="px-4 py-1.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200">Binary (IEC)</button>
+            </div>
+            <span id="std-hint" class="text-gray-400 text-xs">1 KB = 1,000 B · 1 MB = 1,000,000 B</span>
+          </div>
+
           <!-- Form -->
           <div class="gap-8 grid md:grid-cols-2">
             <!-- Mbps -->
@@ -136,8 +147,13 @@ export const getStaticPaths = getStaticPathsIndex;
                 {t["Bytes per second (B/s)"]}
               </label>
               <div class="relative">
-                <input id="bytes" inputmode="decimal" placeholder={t["Enter speed in Bytes/s"]} class="glow-input pr-12" />
-                <div class="absolute right-5 top-1/2 -translate-y-1/2 text-amber-500 font-bold text-sm">B/s</div>
+                <input id="bytes" inputmode="decimal" placeholder={t["Enter speed in Bytes/s"]} class="glow-input pr-24" />
+                <select id="byte-unit" aria-label="Byte-side unit" class="absolute right-3 top-1/2 -translate-y-1/2 bg-amber-50 border border-amber-100 text-amber-600 font-bold text-sm rounded-lg px-2 py-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-200">
+                  <option value="B" selected>B/s</option>
+                  <option value="KB">KB/s</option>
+                  <option value="MB">MB/s</option>
+                  <option value="GB">GB/s</option>
+                </select>
               </div>
               <p class="text-gray-400 text-xs leading-relaxed">
                 {t["1 byte = 8 bits. So Bytes/s = bits/s ÷ 8."]}
@@ -612,6 +628,10 @@ export const getStaticPaths = getStaticPathsIndex;
     const el = (id) => document.getElementById(id);
     const $mbps = el("mbps");
     const $bytes = el("bytes");
+    const $byteUnit = el("byte-unit");
+    const $stdSi = el("std-si");
+    const $stdIec = el("std-iec");
+    const $stdHint = el("std-hint");
     const $decMinus = el("dec-minus");
     const $decPlus = el("dec-plus");
     const $decValue = el("dec-value");
@@ -626,7 +646,17 @@ export const getStaticPaths = getStaticPathsIndex;
     const $resKBps = el("result-kbps");
     const $resMBps = el("result-mBps");
 
-    let state = { mbps: "", bytes: "", decimals: 2, lastEdited: "mbps", dirty: false };
+    let state = { mbps: "", bytes: "", byteUnit: "B", standard: "si", decimals: 2, lastEdited: "mbps", dirty: false };
+
+    const UNIT_POWERS = { B: 0, KB: 1, MB: 2, GB: 3 };
+    const SI_LABELS = { B: "B/s", KB: "KB/s", MB: "MB/s", GB: "GB/s" };
+    const IEC_LABELS = { B: "B/s", KB: "KiB/s", MB: "MiB/s", GB: "GiB/s" };
+
+    const unitBase = () => (state.standard === "iec" ? 1024 : 1000);
+    const unitFactor = () => Math.pow(unitBase(), UNIT_POWERS[state.byteUnit]);
+    const unitLabel = () => (state.standard === "iec" ? IEC_LABELS : SI_LABELS)[state.byteUnit];
+    const kLabel = () => (state.standard === "iec" ? "KiB/s:" : t["KB/s:"]);
+    const mbLabel = () => (state.standard === "iec" ? "MiB/s:" : t["MB/s:"]);
 
     const num = (x) => Number(String(x).replace(/[^0-9+\-.e]/g, ""));
     const format = (n) => {
@@ -643,91 +673,129 @@ export const getStaticPaths = getStaticPathsIndex;
     const toBytesPerSecondFromMbps = (mbps) => (mbps * BITS_PER_MEGABIT) / BITS_PER_BYTE;
     const toMbpsFromBytesPerSecond = (bytesPerSecond) => (bytesPerSecond * BITS_PER_BYTE) / BITS_PER_MEGABIT;
 
-    const updateSidebar = (mbpsValue, bytesValue) => {
-      if (!mbpsValue && !bytesValue) {
+    // Raw B/s derived from whichever side was edited last (byte side is in the selected unit)
+    const currentRawBps = () => {
+      if (state.lastEdited === "mbps") {
+        const m = num(state.mbps);
+        return Number.isFinite(m) && state.mbps !== "" ? toBytesPerSecondFromMbps(m) : NaN;
+      }
+      const b = num(state.bytes);
+      return Number.isFinite(b) && state.bytes !== "" ? b * unitFactor() : NaN;
+    };
+
+    const updateSidebar = () => {
+      const rawBps = currentRawBps();
+
+      if (!Number.isFinite(rawBps)) {
         $resMain.textContent = "—";
         $resSecondary.textContent = "";
         [$resMbps, $resBps, $resKBps, $resMBps].forEach((el, i) => {
-          const labels = [t["Mbps:"], t["Bytes/s:"], t["KB/s:"], t["MB/s:"]];
+          const labels = [t["Mbps:"], t["Bytes/s:"], kLabel(), mbLabel()];
           el.innerHTML = `<span class="text-gray-400 text-sm font-medium">${labels[i]}</span><span class="text-gray-600 font-semibold">—</span>`;
         });
         return;
       }
 
-      const mNum = num(mbpsValue);
-      const bNum = num(bytesValue);
-      const mbps = Number.isFinite(mNum) ? mNum : Number.isFinite(bNum) ? toMbpsFromBytesPerSecond(bNum) : NaN;
-      const bytesPerSecond = Number.isFinite(bNum) ? bNum : Number.isFinite(mNum) ? toBytesPerSecondFromMbps(mNum) : NaN;
+      const mbps = toMbpsFromBytesPerSecond(rawBps);
+      const base = unitBase();
+      const kBps = rawBps / base;
+      const MBps = rawBps / (base * base);
+      const unitVal = rawBps / unitFactor();
 
-      const kBps = bytesPerSecond / 1_000;
-      const MBps = bytesPerSecond / 1_000_000;
+      const mTxt = format(mbps);
+      const bTxt = format(rawBps);
+      const kTxt = format(kBps);
+      const MBTxt = format(MBps);
+      const uTxt = format(unitVal);
+      const uLbl = unitLabel();
+      const mbLbl = mbLabel().replace(":", "");
 
-      const mTxt = Number.isFinite(mbps) ? format(mbps) : "—";
-      const bTxt = Number.isFinite(bytesPerSecond) ? format(bytesPerSecond) : "—";
-      const kTxt = Number.isFinite(kBps) ? format(kBps) : "—";
-      const MBTxt = Number.isFinite(MBps) ? format(MBps) : "—";
-
-      $resMain.textContent = state.lastEdited === "mbps" ? (mTxt !== "" ? mTxt + " Mbps" : "—") : bTxt !== "" ? bTxt + " B/s" : "—";
-      $resSecondary.textContent = state.lastEdited === "mbps" ? (bTxt !== "" ? bTxt + " B/s (≈ " + MBTxt + " MB/s)" : "") : mTxt !== "" ? mTxt + " Mbps (≈ " + MBTxt + " MB/s)" : "";
+      $resMain.textContent = state.lastEdited === "mbps" ? mTxt + " Mbps" : uTxt + " " + uLbl;
+      $resSecondary.textContent = state.lastEdited === "mbps" ? uTxt + " " + uLbl + " (≈ " + MBTxt + " " + mbLbl + ")" : mTxt + " Mbps (≈ " + MBTxt + " " + mbLbl + ")";
 
       $resMbps.innerHTML = `<span class="text-gray-400 text-sm font-medium">${t["Mbps:"]}</span><span class="text-teal-600 font-semibold">${mTxt || "—"}</span>`;
       $resBps.innerHTML = `<span class="text-gray-400 text-sm font-medium">${t["Bytes/s:"]}</span><span class="text-amber-600 font-semibold">${bTxt || "—"}</span>`;
-      $resKBps.innerHTML = `<span class="text-gray-400 text-sm font-medium">${t["KB/s:"]}</span><span class="text-gray-600 font-semibold">${kTxt || "—"}</span>`;
-      $resMBps.innerHTML = `<span class="text-gray-400 text-sm font-medium">${t["MB/s:"]}</span><span class="text-gray-600 font-semibold">${MBTxt || "—"}</span>`;
+      $resKBps.innerHTML = `<span class="text-gray-400 text-sm font-medium">${kLabel()}</span><span class="text-gray-600 font-semibold">${kTxt || "—"}</span>`;
+      $resMBps.innerHTML = `<span class="text-gray-400 text-sm font-medium">${mbLabel()}</span><span class="text-gray-600 font-semibold">${MBTxt || "—"}</span>`;
     };
 
     const updateNumbers = () => {
       if (state.lastEdited === "mbps") {
         const m = num(state.mbps);
-        if (!Number.isFinite(m)) {
+        if (!Number.isFinite(m) || state.mbps === "") {
           state.bytes = "";
           $bytes.value = "";
-          updateSidebar("", "");
         } else {
-          const bytesPerSecond = toBytesPerSecondFromMbps(m);
-          const bFmt = Number(bytesPerSecond.toFixed(state.decimals)).toString();
+          const unitVal = toBytesPerSecondFromMbps(m) / unitFactor();
+          const bFmt = Number(unitVal.toFixed(Math.max(state.decimals, 6))).toString();
           state.bytes = bFmt;
           $bytes.value = bFmt;
-          updateSidebar(state.mbps, state.bytes);
         }
       } else {
         const b = num(state.bytes);
-        if (!Number.isFinite(b)) {
+        if (!Number.isFinite(b) || state.bytes === "") {
           state.mbps = "";
           $mbps.value = "";
-          updateSidebar("", "");
         } else {
-          const mbps = toMbpsFromBytesPerSecond(b);
-          const mFmt = Number(mbps.toFixed(state.decimals)).toString();
+          const mbps = toMbpsFromBytesPerSecond(b * unitFactor());
+          const mFmt = Number(mbps.toFixed(Math.max(state.decimals, 6))).toString();
           state.mbps = mFmt;
           $mbps.value = mFmt;
-          updateSidebar(state.mbps, state.bytes);
         }
       }
+      updateSidebar();
       $decValue.textContent = state.decimals;
     };
 
+    const refreshStandardUI = () => {
+      const si = state.standard === "si";
+      $stdSi.className = si ? "px-4 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-600 shadow-sm transition-all duration-200" : "px-4 py-1.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200";
+      $stdIec.className = !si ? "px-4 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-600 shadow-sm transition-all duration-200" : "px-4 py-1.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200";
+      $stdSi.setAttribute("aria-pressed", String(si));
+      $stdIec.setAttribute("aria-pressed", String(!si));
+      $stdHint.textContent = si ? "1 KB = 1,000 B · 1 MB = 1,000,000 B" : "1 KiB = 1,024 B · 1 MiB = 1,048,576 B";
+      const labels = si ? SI_LABELS : IEC_LABELS;
+      [...$byteUnit.options].forEach((opt) => (opt.textContent = labels[opt.value]));
+    };
+
+    const setStandard = (std) => {
+      state.standard = std;
+      refreshStandardUI();
+      updateNumbers();
+    };
+
     const clearAll = () => {
-      state = { mbps: "", bytes: "", decimals: 2, lastEdited: "mbps", dirty: false };
+      const std = state.standard;
+      const unit = state.byteUnit;
+      state = { mbps: "", bytes: "", byteUnit: unit, standard: std, decimals: 2, lastEdited: "mbps", dirty: false };
       $mbps.value = "";
       $bytes.value = "";
       $decValue.textContent = state.decimals;
-      updateSidebar("", "");
+      updateSidebar();
       setDirty(false);
       updateVisualization(0, 0);
     };
 
     const shareText = async () => {
-      const m = state.mbps || "—";
-      const b = state.bytes || "—";
-      const mNum = num(state.mbps);
-      const mbps = Number.isFinite(mNum) ? mNum : state.bytes ? toMbpsFromBytesPerSecond(num(state.bytes)) : NaN;
-      const bytesPerSecond = Number.isFinite(mbps) ? toBytesPerSecondFromMbps(mbps) : NaN;
-      const MBTxt = Number.isFinite(bytesPerSecond) ? format(bytesPerSecond / 1_000_000) : "—";
-      const txt = `Mbps↔Bytes/s: ${m} Mbps = ${b} B/s (≈ ${MBTxt} MB/s). via mbpstobytes.com`;
+      const rawBps = currentRawBps();
+      if (!Number.isFinite(rawBps)) return;
+      const mbps = toMbpsFromBytesPerSecond(rawBps);
+      const base = unitBase();
+      const MBTxt = format(rawBps / (base * base));
+      const mbLbl = mbLabel().replace(":", "");
+      const txt = `Mbps↔Bytes/s: ${format(mbps)} Mbps = ${format(rawBps)} B/s (≈ ${MBTxt} ${mbLbl}). via mbpstobytes.com`;
       try {
         await navigator.clipboard.writeText(txt);
       } catch (e) {}
+    };
+
+    const refreshVisualization = () => {
+      const rawBps = currentRawBps();
+      if (!Number.isFinite(rawBps)) {
+        updateVisualization(0, 0);
+        return;
+      }
+      updateVisualization(toMbpsFromBytesPerSecond(rawBps), rawBps);
     };
 
     $mbps.addEventListener("input", () => {
@@ -735,8 +803,7 @@ export const getStaticPaths = getStaticPathsIndex;
       state.lastEdited = "mbps";
       setDirty(true);
       updateNumbers();
-      const mbps = parseFloat($mbps.value) || 0;
-      updateVisualization(mbps, (mbps * 1000000) / 8);
+      refreshVisualization();
     });
 
     $bytes.addEventListener("input", () => {
@@ -744,9 +811,17 @@ export const getStaticPaths = getStaticPathsIndex;
       state.lastEdited = "bytes";
       setDirty(true);
       updateNumbers();
-      const bytes = parseFloat($bytes.value) || 0;
-      updateVisualization((bytes * 8) / 1000000, bytes);
+      refreshVisualization();
     });
+
+    $byteUnit.addEventListener("change", () => {
+      state.byteUnit = $byteUnit.value;
+      updateNumbers();
+      refreshVisualization();
+    });
+
+    $stdSi.addEventListener("click", () => setStandard("si"));
+    $stdIec.addEventListener("click", () => setStandard("iec"));
 
     $decMinus.addEventListener("click", () => {
       state.decimals = Math.max(0, state.decimals - 1);
@@ -761,7 +836,8 @@ export const getStaticPaths = getStaticPathsIndex;
     $btnClear.addEventListener("click", clearAll);
 
     (function init() {
-      updateSidebar("", "");
+      refreshStandardUI();
+      updateSidebar();
       setDirty(false);
     })();
   </script>
@@ -871,4 +947,15 @@ export const getStaticPaths = getStaticPathsIndex;
   </script>
 
   <FAQs faqs={t.faqs} />
+
+  <RelatedTools
+    tools={[
+      {
+        name: "Bytes to Mbps Converter",
+        url: "/converters/bytes-to-mbps/",
+        description: "The reverse conversion — turn Bytes/s, KB/s or MB/s into megabits per second, with SI/IEC support.",
+        icon: "⇄",
+      },
+    ]}
+  />
 </IndexLayout>

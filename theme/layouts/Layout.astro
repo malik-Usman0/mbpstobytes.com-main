@@ -129,8 +129,8 @@ const isIndexPage = pathWithoutLocale === '/';
         '@context': 'https://schema.org',
         '@graph': navigation.header.map((item) => ({
           '@type': 'SiteNavigationElement',
-          '@id': `${siteURL}/#${slugify(t[item.name])}`,
-          name: t[item.name],
+          '@id': `${siteURL}/#${slugify(t[item.name] ?? item.name)}`,
+          name: t[item.name] ?? item.name,
           url: `${siteURL}${item.url === '/' ? getLocalizedUrl(item.url, locale) : item.url}`,
         })),
       })}
