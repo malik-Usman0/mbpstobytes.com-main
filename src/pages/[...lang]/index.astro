@@ -1,0 +1,874 @@
+---
+import IndexLayout, { getStaticPaths as getStaticPathsIndex } from "@theme/layouts/IndexLayout.astro";
+import FAQs from "@theme/components/FAQs.astro";
+import Chart from "@theme/components/Chart.astro";
+import { getTranslations, type Locale } from "@theme/i18n/utils";
+import HowItWorks from "@theme/components/HowItWorks.astro";
+
+const locale = (Astro.params.lang || "en") as Locale;
+const t = getTranslations(locale);
+
+export const getStaticPaths = getStaticPathsIndex;
+---
+
+<IndexLayout>
+  <div class="gap-8 grid grid-cols-1 lg:grid-cols-3">
+    <!-- Calculator card -->
+    <section class="lg:col-span-2">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <!-- Header -->
+          <div class="flex flex-wrap justify-between items-start gap-6 mb-8">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 rounded-full mb-3">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                <span class="text-indigo-600 text-xs font-semibold uppercase tracking-wide">Live Calculator</span>
+              </div>
+              <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">
+                {t["Mbps to Bytes Converter"]}
+              </h1>
+              <p class="text-gray-500 text-base mt-3 max-w-lg leading-relaxed">
+                {t["Convert between Mbps and Bytes/s in real time. No buttons — results update as you type."]}
+              </p>
+            </div>
+            <div class="flex items-center gap-2 bg-gray-50 px-4 py-3 rounded-2xl border border-gray-100">
+              <span class="text-gray-500 text-sm font-medium">{t["Decimals:"]}</span>
+              <button id="dec-minus" class="w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold">−</button>
+              <div id="dec-value" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-sm shadow-lg shadow-indigo-200">2</div>
+              <button id="dec-plus" class="w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold">+</button>
+            </div>
+          </div>
+
+          <!-- INTERACTIVE CONVERSION VISUALIZATION - FIXED LAYOUT -->
+          <div class="mb-10 p-6 md:p-8 rounded-3xl bg-gradient-to-br from-teal-50 via-white to-amber-50 border-2 border-gray-100 shadow-inner relative overflow-hidden">
+            <!-- Decorative elements -->
+            <div class="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-teal-200 to-teal-100 rounded-full blur-2xl opacity-60"></div>
+            <div class="absolute bottom-4 left-4 w-24 h-24 bg-gradient-to-br from-amber-200 to-amber-100 rounded-full blur-2xl opacity-60"></div>
+
+            <div class="text-center mb-6 relative">
+              <h3 class="text-gray-700 text-sm font-bold uppercase tracking-wide mb-1">Live Conversion Visualization</h3>
+              <p class="text-gray-400 text-xs">Watch 8 bits combine into 1 byte</p>
+            </div>
+
+            <!-- Main Visualization Area - FLEXBOX LAYOUT -->
+            <div class="relative rounded-2xl viz-container p-6 md:p-8" id="conversion-viz">
+              <!-- Canvas for particle effects -->
+              <canvas id="particle-canvas" class="absolute inset-0 w-full h-full rounded-2xl pointer-events-none"></canvas>
+
+              <!-- Flexbox Layout for proper spacing -->
+              <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4">
+                <!-- Bits Section (Left) -->
+                <div class="flex flex-col items-center text-center">
+                  <div class="text-teal-600 font-extrabold text-2xl md:text-3xl mb-1" id="mbps-display">0</div>
+                  <div class="text-teal-500 text-xs font-bold uppercase tracking-wide mb-3">Mbps</div>
+                  <div class="flex gap-1" id="bits-container">
+                    <div class="bit-box" data-bit="0">0</div>
+                    <div class="bit-box" data-bit="1">1</div>
+                    <div class="bit-box" data-bit="2">0</div>
+                    <div class="bit-box" data-bit="3">1</div>
+                    <div class="bit-box" data-bit="4">0</div>
+                    <div class="bit-box" data-bit="5">1</div>
+                    <div class="bit-box" data-bit="6">0</div>
+                    <div class="bit-box" data-bit="7">1</div>
+                  </div>
+                  <div class="text-gray-400 text-[10px] mt-2 font-medium">8 bits = 1 byte</div>
+                </div>
+
+                <!-- Conversion Symbol (Center) -->
+                <div class="flex flex-col items-center flex-shrink-0">
+                  <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white shadow-xl border-2 border-gray-100 flex items-center justify-center">
+                    <span class="text-xl md:text-2xl font-black bg-gradient-to-br from-indigo-600 to-purple-600 bg-clip-text text-transparent">÷8</span>
+                  </div>
+                  <div class="hidden md:flex items-center gap-2 mt-2">
+                    <div class="w-8 h-0.5 bg-gradient-to-r from-teal-400 to-transparent rounded-full"></div>
+                    <svg class="w-5 h-5 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M13.025 1l-2.847 2.828 6.176 6.176H0v3.992h16.354l-6.176 6.176L13.025 23 24 12z"></path>
+                    </svg>
+                    <div class="w-8 h-0.5 bg-gradient-to-l from-amber-400 to-transparent rounded-full"></div>
+                  </div>
+                </div>
+
+                <!-- Bytes Section (Right) -->
+                <div class="flex flex-col items-center text-center">
+                  <div class="text-amber-600 font-extrabold text-2xl md:text-3xl mb-1" id="bytes-display">0</div>
+                  <div class="text-amber-500 text-xs font-bold uppercase tracking-wide mb-3">B/s</div>
+                  <div id="byte-container">
+                    <div class="byte-box" id="byte-result">
+                      <span class="text-sm font-black">BYTE</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Speed Indicator Bar -->
+            <div class="mt-6 relative">
+              <div class="flex justify-between text-xs text-gray-400 mb-2 font-medium">
+                <span>0 Mbps</span>
+                <span class="text-gray-500 font-semibold">Transfer Speed</span>
+                <span>1000 Mbps</span>
+              </div>
+              <div class="speed-track">
+                <div id="speed-bar" class="h-full rounded-full bg-gradient-to-r from-teal-400 via-indigo-500 to-pink-500 transition-all duration-500 shadow-lg" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form -->
+          <div class="gap-8 grid md:grid-cols-2">
+            <!-- Mbps -->
+            <div class="space-y-3">
+              <label for="mbps" class="block text-gray-700 text-sm font-semibold">
+                {t["Megabits per second (Mbps)"]}
+              </label>
+              <div class="relative">
+                <input id="mbps" inputmode="decimal" placeholder={t["Enter speed in Mbps"]} class="glow-input pr-16" />
+                <div class="absolute right-5 top-1/2 -translate-y-1/2 text-teal-500 font-bold text-sm">Mbps</div>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                {t["Network speeds are usually in Mbps (decimal): 1 Mbps = 1,000,000 bits per second."]}
+              </p>
+            </div>
+
+            <!-- Bytes/s -->
+            <div class="space-y-3">
+              <label for="bytes" class="block text-gray-700 text-sm font-semibold">
+                {t["Bytes per second (B/s)"]}
+              </label>
+              <div class="relative">
+                <input id="bytes" inputmode="decimal" placeholder={t["Enter speed in Bytes/s"]} class="glow-input pr-12" />
+                <div class="absolute right-5 top-1/2 -translate-y-1/2 text-amber-500 font-bold text-sm">B/s</div>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">
+                {t["1 byte = 8 bits. So Bytes/s = bits/s ÷ 8."]}
+              </p>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="gap-4 grid grid-cols-1 sm:grid-cols-3 mt-8">
+            <button id="btn-share" class="btn-premium btn-secondary flex justify-center items-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              {t["Share result"]}
+            </button>
+            <button id="btn-reload" class="btn-premium btn-primary">
+              {t["Reload calculator"]}
+            </button>
+            <button id="btn-clear" class="btn-premium btn-ghost" disabled>
+              {t["Clear all"]}
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="space-y-6">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-200">
+              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <span class="text-gray-900 font-bold text-lg">{t["Result"]}</span>
+          </div>
+          <div id="result-main" class="result-display mb-3">—</div>
+          <div id="result-secondary" class="text-gray-500 text-sm mb-6"></div>
+
+          <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-6"></div>
+
+          <div class="space-y-4">
+            <div id="result-mbps" class="flex justify-between items-center">
+              <span class="text-gray-400 text-sm font-medium">{t["Mbps:"]}</span>
+              <span class="text-gray-600 font-semibold">—</span>
+            </div>
+            <div id="result-bps" class="flex justify-between items-center">
+              <span class="text-gray-400 text-sm font-medium">{t["Bytes/s:"]}</span>
+              <span class="text-gray-600 font-semibold">—</span>
+            </div>
+            <div id="result-kbps" class="flex justify-between items-center">
+              <span class="text-gray-400 text-sm font-medium">{t["KB/s:"]}</span>
+              <span class="text-gray-600 font-semibold">—</span>
+            </div>
+            <div id="result-mBps" class="flex justify-between items-center">
+              <span class="text-gray-400 text-sm font-medium">{t["MB/s:"]}</span>
+              <span class="text-gray-600 font-semibold">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- What is Megabit Section -->
+  <article class="premium-card mt-12">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">What is a Megabit?</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        A Megabit (Mb) is <strong class="text-indigo-600">a unit of digital information equal to 1,000,000 bits (10<sup>6</sup> bits)</strong> or 1,000 kilobits. Megabit has the symbol <strong>Mb</strong> and is one of the basic units in telecommunication and computer science for measuring digital information transmission.
+      </p>
+
+      <div class="grid sm:grid-cols-2 gap-6 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h4 class="font-semibold text-gray-900 mb-2">Megabit Key Facts</h4>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex items-start gap-2">
+              <span class="text-teal-500 mt-1">•</span>
+              <span>1 Megabit = 1,000,000 bits</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-teal-500 mt-1">•</span>
+              <span>1 Megabit = 1,000 kilobits (Kb)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-teal-500 mt-1">•</span>
+              <span>1 Megabit = 125,000 Bytes</span>
+            </li>
+          </ul>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100">
+          <h4 class="font-semibold text-gray-900 mb-2">Common Uses</h4>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex items-start gap-2">
+              <span class="text-indigo-500 mt-1">•</span>
+              <span>Internet speed measurement (Mbps)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-indigo-500 mt-1">•</span>
+              <span>Network transfer rates</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-indigo-500 mt-1">•</span>
+              <span>Bandwidth capacity</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="text-gray-600 leading-relaxed">Internet Service Providers (ISPs) use Megabits per second (Mbps) to represent communication speed, including download speed, upload speed, and overall network speed. This unit measures the data transfer rate of your internet connection.</p>
+    </div>
+  </article>
+
+  <!-- What is Byte Section -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">What is a Byte?</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        A Byte (B) is <strong class="text-amber-600">the basic unit of digital information storage consisting of 8 bits</strong>. The Byte is used extensively in information technology, digital technology, and computer science as one of the most fundamental data measurement units.
+      </p>
+
+      <div class="p-5 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50 to-yellow-50 border-l-4 border-amber-500 mb-6">
+        <p class="text-gray-700">
+          <strong>1 Byte = 8 bits</strong>, which means 1 bit = (1/8) bytes or 0.125 bytes.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-6 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">
+          <h4 class="font-semibold text-gray-900 mb-2">Byte Size Reference</h4>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 mt-1">•</span>
+              <span>1 Kilobyte (KB) = 1,000 Bytes</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 mt-1">•</span>
+              <span>1 Megabyte (MB) = 1,000,000 Bytes</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-amber-500 mt-1">•</span>
+              <span>1 Gigabyte (GB) = 1,000,000,000 Bytes</span>
+            </li>
+          </ul>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-orange-50 to-white border border-orange-100">
+          <h4 class="font-semibold text-gray-900 mb-2">Used For</h4>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex items-start gap-2">
+              <span class="text-orange-500 mt-1">•</span>
+              <span>Digital information storage</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-orange-500 mt-1">•</span>
+              <span>File size measurement</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-orange-500 mt-1">•</span>
+              <span>Data processing & transmission</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="text-gray-600 leading-relaxed">
+        The earliest computers used processors supporting 1 byte commands because 1 byte can represent 256 different values (2<sup>8</sup> = 256), making it ideal for encoding characters and basic data units during storage, processing, and transmission of digital information.
+      </p>
+    </div>
+  </article>
+
+  <!-- How Many Bytes in a Megabit Section -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">How Many Bytes in a Megabit?</h2>
+
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500 mb-8">
+        <p class="text-lg text-gray-700">
+          There are <strong class="text-indigo-600 text-xl">125,000 Bytes</strong> in 1 Megabit.
+        </p>
+        <p class="text-gray-500 text-sm mt-2">
+          1 Megabit = (1/8) × 10<sup>6</sup> Bytes = 125,000 Bytes (B)
+        </p>
+      </div>
+
+      <h3 class="font-semibold text-gray-900 mb-4">Megabit to Bytes Conversion Formula</h3>
+      <p class="text-gray-600 leading-relaxed mb-4">To convert Megabits (Mbit) to Bytes (B), divide the number of bits by 8 because each byte contains 8 bits:</p>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-8">
+        <div class="p-4 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <code class="text-teal-700 text-sm font-semibold">1 Megabit = 1,000,000 bits</code>
+        </div>
+        <div class="p-4 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">
+          <code class="text-amber-700 text-sm font-semibold">1,000,000 ÷ 8 = 125,000 Bytes</code>
+        </div>
+      </div>
+
+      <h3 class="font-semibold text-gray-900 mb-4">Step-by-Step Calculation</h3>
+      <div class="space-y-3 mb-6">
+        <div class="flex gap-3 items-start">
+          <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">1</span>
+          <span class="text-gray-600">1 Megabit = 10<sup>6</sup> bits = 1,000,000 bits</span>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">2</span>
+          <span class="text-gray-600">1 Byte = 8 bits, therefore divide by 8</span>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">3</span>
+          <span class="text-gray-600">1,000,000 bits ÷ 8 = <strong class="text-indigo-600">125,000 Bytes</strong></span>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
+        <table class="luxury-table">
+          <caption class="sr-only">Megabit to Bytes conversion reference</caption>
+          <thead>
+            <tr>
+              <th>Megabits (Mbit)</th>
+              <th>Bits</th>
+              <th>Bytes (B)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-teal-600 font-semibold">1 Mbit</td>
+              <td class="text-gray-600">1,000,000</td>
+              <td class="text-amber-600 font-bold">125,000 B</td>
+            </tr>
+            <tr>
+              <td class="text-teal-600 font-semibold">10 Mbit</td>
+              <td class="text-gray-600">10,000,000</td>
+              <td class="text-amber-600">1,250,000 B</td>
+            </tr>
+            <tr>
+              <td class="text-teal-600 font-semibold">100 Mbit</td>
+              <td class="text-gray-600">100,000,000</td>
+              <td class="text-amber-600">12,500,000 B</td>
+            </tr>
+            <tr>
+              <td class="text-teal-600 font-semibold">1000 Mbit</td>
+              <td class="text-gray-600">1,000,000,000</td>
+              <td class="text-amber-600">125,000,000 B</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </article>
+
+  <!-- Mbit to Bytes Conversion Table -->
+  <section class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <div class="flex md:flex-row flex-col md:justify-between md:items-center gap-4 mb-8">
+        <h2 class="font-bold text-2xl text-gray-900">Mbit to Bytes Conversion Table</h2>
+        <p class="text-gray-400 text-sm font-medium">
+          Formula: <span class="text-gray-600">Bytes = Megabits × 125,000</span>
+        </p>
+      </div>
+
+      <div class="gap-8 grid md:grid-cols-2">
+        <div>
+          <h3 class="mb-4 font-semibold text-gray-700">Mbps to Bytes per Second</h3>
+          <div class="rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+            <table class="luxury-table">
+              <thead>
+                <tr>
+                  <th>Mbps</th>
+                  <th>Bytes/s (B/s)</th>
+                  <th>KB/s</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="text-teal-600 font-semibold">0.5 Mbps</td><td class="text-amber-600">62,500 B/s</td><td class="text-gray-500">62.5 KB/s</td></tr>
+                <tr><td class="text-teal-600 font-semibold">1 Mbps</td><td class="text-amber-600 font-bold">125,000 B/s</td><td class="text-gray-500">125 KB/s</td></tr>
+                <tr><td class="text-teal-600 font-semibold">5 Mbps</td><td class="text-amber-600">625,000 B/s</td><td class="text-gray-500">625 KB/s</td></tr>
+                <tr><td class="text-teal-600 font-semibold">10 Mbps</td><td class="text-amber-600">1,250,000 B/s</td><td class="text-gray-500">1,250 KB/s</td></tr>
+                <tr><td class="text-teal-600 font-semibold">25 Mbps</td><td class="text-amber-600">3,125,000 B/s</td><td class="text-gray-500">3,125 KB/s</td></tr>
+                <tr><td class="text-teal-600 font-semibold">50 Mbps</td><td class="text-amber-600">6,250,000 B/s</td><td class="text-gray-500">6,250 KB/s</td></tr>
+                <tr><td class="text-teal-600 font-semibold">100 Mbps</td><td class="text-amber-600">12,500,000 B/s</td><td class="text-gray-500">12,500 KB/s</td></tr>
+                <tr><td class="text-teal-600 font-semibold">250 Mbps</td><td class="text-amber-600">31,250,000 B/s</td><td class="text-gray-500">31,250 KB/s</td></tr>
+                <tr><td class="text-teal-600 font-semibold">500 Mbps</td><td class="text-amber-600">62,500,000 B/s</td><td class="text-gray-500">62,500 KB/s</td></tr>
+                <tr><td class="text-teal-600 font-semibold">1,000 Mbps</td><td class="text-amber-600">125,000,000 B/s</td><td class="text-gray-500">125,000 KB/s</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="mb-4 font-semibold text-gray-700">Bytes/s to Mbps</h3>
+          <div class="rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+            <table class="luxury-table">
+              <thead>
+                <tr>
+                  <th>Bytes/s (B/s)</th>
+                  <th>Mbps</th>
+                  <th>MB/s</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="text-amber-600 font-semibold">62,500 B/s</td><td class="text-teal-600">0.5 Mbps</td><td class="text-gray-500">0.0625 MB/s</td></tr>
+                <tr><td class="text-amber-600 font-semibold">125,000 B/s</td><td class="text-teal-600 font-bold">1 Mbps</td><td class="text-gray-500">0.125 MB/s</td></tr>
+                <tr><td class="text-amber-600 font-semibold">500,000 B/s</td><td class="text-teal-600">4 Mbps</td><td class="text-gray-500">0.5 MB/s</td></tr>
+                <tr><td class="text-amber-600 font-semibold">1,000,000 B/s</td><td class="text-teal-600">8 Mbps</td><td class="text-gray-500">1 MB/s</td></tr>
+                <tr><td class="text-amber-600 font-semibold">2,000,000 B/s</td><td class="text-teal-600">16 Mbps</td><td class="text-gray-500">2 MB/s</td></tr>
+                <tr><td class="text-amber-600 font-semibold">5,000,000 B/s</td><td class="text-teal-600">40 Mbps</td><td class="text-gray-500">5 MB/s</td></tr>
+                <tr><td class="text-amber-600 font-semibold">10,000,000 B/s</td><td class="text-teal-600">80 Mbps</td><td class="text-gray-500">10 MB/s</td></tr>
+                <tr><td class="text-amber-600 font-semibold">12,500,000 B/s</td><td class="text-teal-600">100 Mbps</td><td class="text-gray-500">12.5 MB/s</td></tr>
+                <tr><td class="text-amber-600 font-semibold">62,500,000 B/s</td><td class="text-teal-600">500 Mbps</td><td class="text-gray-500">62.5 MB/s</td></tr>
+                <tr><td class="text-amber-600 font-semibold">125,000,000 B/s</td><td class="text-teal-600">1,000 Mbps</td><td class="text-gray-500">125 MB/s</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <p class="mt-8 text-gray-400 text-sm">Note: These conversions use decimal units (base 10). Values in the calculator are rounded based on your Decimals setting.</p>
+    </div>
+  </section>
+
+  <!-- How to Convert Mbps to Bytes Per Second -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">How to Convert Mbps to Bytes per Second</h2>
+
+      <p class="text-gray-600 leading-relaxed mb-6">
+        To convert Megabits per second (Mbps) to Bytes per second (B/s), multiply the Mbps value by 125,000 or apply the formula: <strong class="text-indigo-600">Bytes/s = Mbps × 1,000,000 ÷ 8</strong>.
+      </p>
+
+      <h3 class="font-semibold text-gray-900 mb-4">Conversion Steps</h3>
+      <ol class="space-y-4 mb-8">
+        <li class="flex gap-3 items-start">
+          <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">1</span>
+          <div>
+            <p class="font-medium text-gray-900">Convert Megabits to bits</p>
+            <p class="text-gray-500 text-sm">Multiply Mbps by 1,000,000 to get bits per second</p>
+          </div>
+        </li>
+        <li class="flex gap-3 items-start">
+          <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">2</span>
+          <div>
+            <p class="font-medium text-gray-900">Divide by 8 to get Bytes</p>
+            <p class="text-gray-500 text-sm">Divide the result by 8, as 1 Byte = 8 bits</p>
+          </div>
+        </li>
+        <li class="flex gap-3 items-start">
+          <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">3</span>
+          <div>
+            <p class="font-medium text-gray-900">Get your Bytes/s result</p>
+            <p class="text-gray-500 text-sm">The result is your data transfer rate in Bytes per second</p>
+          </div>
+        </li>
+      </ol>
+
+      <h3 class="font-semibold text-gray-900 mb-4">Formula Summary</h3>
+      <div class="grid sm:grid-cols-2 gap-4 mb-8">
+        <div class="p-4 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <p class="text-xs text-teal-600 font-medium mb-1">Mbps to Bytes/s</p>
+          <code class="text-teal-700 text-sm font-semibold">Bytes/s = Mbps × 125,000</code>
+        </div>
+        <div class="p-4 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">
+          <p class="text-xs text-amber-600 font-medium mb-1">Bytes/s to Mbps</p>
+          <code class="text-amber-700 text-sm font-semibold">Mbps = Bytes/s ÷ 125,000</code>
+        </div>
+        <div class="p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100">
+          <p class="text-xs text-gray-500 font-medium mb-1">Mbps to MB/s</p>
+          <code class="text-gray-600 text-sm font-semibold">MB/s = Mbps ÷ 8</code>
+        </div>
+        <div class="p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100">
+          <p class="text-xs text-gray-500 font-medium mb-1">Mbps to KB/s</p>
+          <code class="text-gray-600 text-sm font-semibold">KB/s = Mbps × 125</code>
+        </div>
+      </div>
+
+      <h3 class="font-semibold text-gray-900 mb-4">Example Calculation</h3>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border border-indigo-100">
+        <p class="font-medium text-gray-900 mb-3">Convert 100 Mbps to Bytes per second:</p>
+        <div class="space-y-2 text-gray-600">
+          <p>100 Mbps = 100 × 1,000,000 bits/s = 100,000,000 bits/s</p>
+          <p>100,000,000 bits/s ÷ 8 = <strong class="text-indigo-600">12,500,000 Bytes/s</strong></p>
+          <p class="text-sm text-gray-500 mt-3">That's 12,500,000 B/s or 12.5 MB/s (12,500 KB/s)</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Practical Applications Section -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Why Understanding Mbps to Bytes Matters</h2>
+
+      <p class="text-gray-600 leading-relaxed mb-6">Understanding the Mbps to Bytes conversion is essential for 5 main reasons: comparing internet speeds with file download times, evaluating bandwidth for video streaming, checking cloud storage upload speeds, assessing online gaming performance, and optimizing network configurations.</p>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-blue-50 to-white border border-blue-100">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+            </svg>
+          </div>
+          <h4 class="font-semibold text-gray-900 mb-2">Download Speed</h4>
+          <p class="text-gray-500 text-sm">Convert ISP speeds to actual file download rates for accurate time estimates.</p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100">
+          <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h4 class="font-semibold text-gray-900 mb-2">Video Streaming</h4>
+          <p class="text-gray-500 text-sm">Determine if your connection supports 4K streaming (requires ~25 Mbps or 3.125 MB/s).</p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-green-50 to-white border border-green-100">
+          <div class="w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center mb-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
+            </svg>
+          </div>
+          <h4 class="font-semibold text-gray-900 mb-2">Cloud Storage</h4>
+          <p class="text-gray-500 text-sm">Calculate backup upload times based on your actual Bytes/s throughput.</p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-red-50 to-white border border-red-100">
+          <div class="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center mb-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
+            </svg>
+          </div>
+          <h4 class="font-semibold text-gray-900 mb-2">Online Gaming</h4>
+          <p class="text-gray-500 text-sm">Verify bandwidth meets game requirements for smooth multiplayer experiences.</p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-orange-50 to-white border border-orange-100">
+          <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center mb-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          <h4 class="font-semibold text-gray-900 mb-2">Speed Tests</h4>
+          <p class="text-gray-500 text-sm">Compare speed test results (Mbps) with real file transfer speeds (MB/s).</p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-cyan-50 to-white border border-cyan-100">
+          <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center mb-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
+            </svg>
+          </div>
+          <h4 class="font-semibold text-gray-900 mb-2">Network Setup</h4>
+          <p class="text-gray-500 text-sm">Configure routers and optimize bandwidth allocation across devices.</p>
+        </div>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border border-indigo-100">
+        <h4 class="font-semibold text-gray-900 mb-2">Quick Reference: Internet Speed vs. Actual Download Speed</h4>
+        <p class="text-gray-600 text-sm leading-relaxed">
+          An ISP advertised speed of 100 Mbps translates to a maximum real-world download speed of approximately <strong>12.5 MB/s</strong> (12,500,000 Bytes/s). Actual speeds may vary due to network latency, Wi-Fi interference, routing overhead, and server limitations.
+        </p>
+      </div>
+    </div>
+  </article>
+
+  <!-- Calculator Logic -->
+  <script is:inline define:vars={{ t }}>
+    const BITS_PER_MEGABIT = 1_000_000;
+    const BITS_PER_BYTE = 8;
+
+    const el = (id) => document.getElementById(id);
+    const $mbps = el("mbps");
+    const $bytes = el("bytes");
+    const $decMinus = el("dec-minus");
+    const $decPlus = el("dec-plus");
+    const $decValue = el("dec-value");
+    const $btnShare = el("btn-share");
+    const $btnReload = el("btn-reload");
+    const $btnClear = el("btn-clear");
+
+    const $resMain = el("result-main");
+    const $resSecondary = el("result-secondary");
+    const $resMbps = el("result-mbps");
+    const $resBps = el("result-bps");
+    const $resKBps = el("result-kbps");
+    const $resMBps = el("result-mBps");
+
+    let state = { mbps: "", bytes: "", decimals: 2, lastEdited: "mbps", dirty: false };
+
+    const num = (x) => Number(String(x).replace(/[^0-9+\-.e]/g, ""));
+    const format = (n) => {
+      if (!Number.isFinite(n)) return "";
+      return Number(n.toFixed(state.decimals)).toLocaleString();
+    };
+
+    const setDirty = (v = true) => {
+      state.dirty = v;
+      $btnClear.disabled = !v;
+      $btnClear.className = v ? "btn-premium btn-danger flex justify-center items-center" : "btn-premium btn-ghost opacity-50 cursor-not-allowed";
+    };
+
+    const toBytesPerSecondFromMbps = (mbps) => (mbps * BITS_PER_MEGABIT) / BITS_PER_BYTE;
+    const toMbpsFromBytesPerSecond = (bytesPerSecond) => (bytesPerSecond * BITS_PER_BYTE) / BITS_PER_MEGABIT;
+
+    const updateSidebar = (mbpsValue, bytesValue) => {
+      if (!mbpsValue && !bytesValue) {
+        $resMain.textContent = "—";
+        $resSecondary.textContent = "";
+        [$resMbps, $resBps, $resKBps, $resMBps].forEach((el, i) => {
+          const labels = [t["Mbps:"], t["Bytes/s:"], t["KB/s:"], t["MB/s:"]];
+          el.innerHTML = `<span class="text-gray-400 text-sm font-medium">${labels[i]}</span><span class="text-gray-600 font-semibold">—</span>`;
+        });
+        return;
+      }
+
+      const mNum = num(mbpsValue);
+      const bNum = num(bytesValue);
+      const mbps = Number.isFinite(mNum) ? mNum : Number.isFinite(bNum) ? toMbpsFromBytesPerSecond(bNum) : NaN;
+      const bytesPerSecond = Number.isFinite(bNum) ? bNum : Number.isFinite(mNum) ? toBytesPerSecondFromMbps(mNum) : NaN;
+
+      const kBps = bytesPerSecond / 1_000;
+      const MBps = bytesPerSecond / 1_000_000;
+
+      const mTxt = Number.isFinite(mbps) ? format(mbps) : "—";
+      const bTxt = Number.isFinite(bytesPerSecond) ? format(bytesPerSecond) : "—";
+      const kTxt = Number.isFinite(kBps) ? format(kBps) : "—";
+      const MBTxt = Number.isFinite(MBps) ? format(MBps) : "—";
+
+      $resMain.textContent = state.lastEdited === "mbps" ? (mTxt !== "" ? mTxt + " Mbps" : "—") : bTxt !== "" ? bTxt + " B/s" : "—";
+      $resSecondary.textContent = state.lastEdited === "mbps" ? (bTxt !== "" ? bTxt + " B/s (≈ " + MBTxt + " MB/s)" : "") : mTxt !== "" ? mTxt + " Mbps (≈ " + MBTxt + " MB/s)" : "";
+
+      $resMbps.innerHTML = `<span class="text-gray-400 text-sm font-medium">${t["Mbps:"]}</span><span class="text-teal-600 font-semibold">${mTxt || "—"}</span>`;
+      $resBps.innerHTML = `<span class="text-gray-400 text-sm font-medium">${t["Bytes/s:"]}</span><span class="text-amber-600 font-semibold">${bTxt || "—"}</span>`;
+      $resKBps.innerHTML = `<span class="text-gray-400 text-sm font-medium">${t["KB/s:"]}</span><span class="text-gray-600 font-semibold">${kTxt || "—"}</span>`;
+      $resMBps.innerHTML = `<span class="text-gray-400 text-sm font-medium">${t["MB/s:"]}</span><span class="text-gray-600 font-semibold">${MBTxt || "—"}</span>`;
+    };
+
+    const updateNumbers = () => {
+      if (state.lastEdited === "mbps") {
+        const m = num(state.mbps);
+        if (!Number.isFinite(m)) {
+          state.bytes = "";
+          $bytes.value = "";
+          updateSidebar("", "");
+        } else {
+          const bytesPerSecond = toBytesPerSecondFromMbps(m);
+          const bFmt = Number(bytesPerSecond.toFixed(state.decimals)).toString();
+          state.bytes = bFmt;
+          $bytes.value = bFmt;
+          updateSidebar(state.mbps, state.bytes);
+        }
+      } else {
+        const b = num(state.bytes);
+        if (!Number.isFinite(b)) {
+          state.mbps = "";
+          $mbps.value = "";
+          updateSidebar("", "");
+        } else {
+          const mbps = toMbpsFromBytesPerSecond(b);
+          const mFmt = Number(mbps.toFixed(state.decimals)).toString();
+          state.mbps = mFmt;
+          $mbps.value = mFmt;
+          updateSidebar(state.mbps, state.bytes);
+        }
+      }
+      $decValue.textContent = state.decimals;
+    };
+
+    const clearAll = () => {
+      state = { mbps: "", bytes: "", decimals: 2, lastEdited: "mbps", dirty: false };
+      $mbps.value = "";
+      $bytes.value = "";
+      $decValue.textContent = state.decimals;
+      updateSidebar("", "");
+      setDirty(false);
+      updateVisualization(0, 0);
+    };
+
+    const shareText = async () => {
+      const m = state.mbps || "—";
+      const b = state.bytes || "—";
+      const mNum = num(state.mbps);
+      const mbps = Number.isFinite(mNum) ? mNum : state.bytes ? toMbpsFromBytesPerSecond(num(state.bytes)) : NaN;
+      const bytesPerSecond = Number.isFinite(mbps) ? toBytesPerSecondFromMbps(mbps) : NaN;
+      const MBTxt = Number.isFinite(bytesPerSecond) ? format(bytesPerSecond / 1_000_000) : "—";
+      const txt = `Mbps↔Bytes/s: ${m} Mbps = ${b} B/s (≈ ${MBTxt} MB/s). via mbpstobytes.com`;
+      try {
+        await navigator.clipboard.writeText(txt);
+      } catch (e) {}
+    };
+
+    $mbps.addEventListener("input", () => {
+      state.mbps = $mbps.value;
+      state.lastEdited = "mbps";
+      setDirty(true);
+      updateNumbers();
+      const mbps = parseFloat($mbps.value) || 0;
+      updateVisualization(mbps, (mbps * 1000000) / 8);
+    });
+
+    $bytes.addEventListener("input", () => {
+      state.bytes = $bytes.value;
+      state.lastEdited = "bytes";
+      setDirty(true);
+      updateNumbers();
+      const bytes = parseFloat($bytes.value) || 0;
+      updateVisualization((bytes * 8) / 1000000, bytes);
+    });
+
+    $decMinus.addEventListener("click", () => {
+      state.decimals = Math.max(0, state.decimals - 1);
+      updateNumbers();
+    });
+    $decPlus.addEventListener("click", () => {
+      state.decimals = Math.min(10, state.decimals + 1);
+      updateNumbers();
+    });
+    $btnShare.addEventListener("click", shareText);
+    $btnReload.addEventListener("click", () => window.location.reload());
+    $btnClear.addEventListener("click", clearAll);
+
+    (function init() {
+      updateSidebar("", "");
+      setDirty(false);
+    })();
+  </script>
+
+  <!-- Visualization Script -->
+  <script is:inline>
+    const vizContainer = document.getElementById("conversion-viz");
+    const canvas = document.getElementById("particle-canvas");
+    const ctx = canvas ? canvas.getContext("2d") : null;
+    const bitBoxes = document.querySelectorAll(".bit-box");
+    const byteBox = document.getElementById("byte-result");
+    const mbpsDisplayViz = document.getElementById("mbps-display");
+    const bytesDisplayViz = document.getElementById("bytes-display");
+    const speedBar = document.getElementById("speed-bar");
+
+    let particles = [];
+    let animationSpeed = 1;
+    let isConverting = false;
+
+    function resizeCanvas() {
+      if (!canvas || !vizContainer) return;
+      canvas.width = vizContainer.offsetWidth;
+      canvas.height = vizContainer.offsetHeight;
+    }
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = canvas.width * 0.12;
+        this.y = canvas.height / 2 + (Math.random() - 0.5) * 40;
+        this.vx = (3 + Math.random() * 2) * animationSpeed;
+        this.size = 4 + Math.random() * 3;
+        this.progress = 0;
+      }
+      update() {
+        this.x += this.vx;
+        this.progress = (this.x - canvas.width * 0.12) / (canvas.width * 0.76);
+        if (this.progress > 0.7) this.size *= 0.97;
+        if (this.x > canvas.width * 0.88) this.reset();
+      }
+      draw() {
+        if (!ctx) return;
+        const t = Math.min(1, this.progress);
+        // Teal to Amber transition
+        const r = Math.round(20 + (245 - 20) * t);
+        const g = Math.round(184 + (158 - 184) * t);
+        const b = Math.round(166 + (11 - 166) * t);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.9)`;
+        ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.5)`;
+        ctx.shadowBlur = 12;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    function animate() {
+      if (!ctx || !canvas) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (isConverting && particles.length < 15) particles.push(new Particle());
+      particles.forEach((p) => {
+        p.update();
+        p.draw();
+      });
+
+      if (isConverting) {
+        bitBoxes.forEach((box, i) => {
+          const phase = (Date.now() / 150 + i) % 8;
+          box.classList.toggle("active", phase < 1);
+          box.textContent = Math.random() > 0.5 ? "1" : "0";
+        });
+        byteBox.classList.add("active");
+      } else {
+        bitBoxes.forEach((box) => box.classList.remove("active"));
+        byteBox.classList.remove("active");
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    window.updateVisualization = function (mbpsValue, bytesValue) {
+      const mbps = parseFloat(mbpsValue) || 0;
+      const bytes = parseFloat(bytesValue) || 0;
+
+      if (mbpsDisplayViz) mbpsDisplayViz.textContent = mbps.toLocaleString();
+      if (bytesDisplayViz) bytesDisplayViz.textContent = Math.round(bytes).toLocaleString();
+
+      const speedPercent = Math.min(100, (mbps / 1000) * 100);
+      if (speedBar) speedBar.style.width = speedPercent + "%";
+
+      animationSpeed = Math.max(0.5, Math.min(4, mbps / 50));
+      isConverting = mbps > 0 || bytes > 0;
+
+      if (vizContainer) {
+        vizContainer.classList.toggle("converting", isConverting);
+        if (!isConverting) particles = [];
+      }
+    };
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+    animate();
+  </script>
+
+  <FAQs faqs={t.faqs} />
+</IndexLayout>

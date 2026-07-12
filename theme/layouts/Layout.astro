@@ -1,0 +1,204 @@
+---
+import Header from '@theme/components/Header.astro';
+import Footer from '@theme/components/Footer.astro';
+
+import { getTranslations, getLocalizedUrl, type Locale, localeToOG, defaultLocale } from '@theme/i18n/utils';
+
+import config from '~/config/config.json';
+import navigation from '~/config/navigation.json';
+
+import '@theme/styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  img?: string;
+}
+
+const { title, description, img } = Astro.props;
+
+const locale: Locale = (Astro.currentLocale as Locale | undefined) ?? defaultLocale;
+const t = getTranslations(locale);
+
+const ogLocale = localeToOG[locale];
+
+const slugify = (str: string) =>
+  str
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+const slug = Astro.url.pathname.replaceAll('/', '');
+
+const siteURL = Astro.url.origin;
+const pageURL = Astro.url.href;
+---
+
+<!doctype html>
+<html lang={locale} dir={(locale === 'ar' || locale === 'ur') ? 'rtl' : 'ltr'}>
+  <head>
+    <!-- theme meta -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{title}</title>
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="/images/favicon.png" />
+
+    <!-- verification -->
+    {config.site.google_verification && <meta name="google-site-verification" content={config.site.google_verification} />}
+
+    {config.site.bing_verification && <meta name="msvalidate.01" content={config.site.bing_verification} />}
+
+    {config.site.yandex_verification && <meta name="yandex-verification" content={config.site.yandex_verification} />}
+
+    <!-- robots -->
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
+
+    <!-- canonical url -->
+    <link rel="canonical" href={pageURL} item-prop="url" />
+
+    <!-- meta-description -->
+    <meta name="description" content={description} />
+
+    <!-- author from config.json -->
+    <meta name="author" content="BigTechies" />
+
+    <!-- og -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageURL} />
+    <meta property="og:site_name" content={t.site_title} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:image" content={`${siteURL}${img || '/images/og.png'}`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:type" content="website" />
+
+    <!-- twitter -->
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${siteURL}${img || '/images/og.png'}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- organization schema -->
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        '@id': `${siteURL}#organization`,
+        name: t.site_title,
+        url: siteURL,
+        legalName: t.site_title,
+        logo: [
+          {
+            '@type': 'ImageObject',
+            url: `${siteURL}/images/logo.png`,
+            width: 512,
+            height: 512,
+          },
+        ],
+        description: t.index_description,
+        sameAs: config.social.map((item) => item.url),
+      })}
+    />
+
+    <!-- navigation schema -->
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@graph': navigation.header.map((item) => ({
+          '@type': 'SiteNavigationElement',
+          '@id': `${siteURL}/#${slugify(t[item.name])}`,
+          name: t[item.name],
+          url: `${siteURL}${item.url === '/' ? getLocalizedUrl(item.url, locale) : item.url}`,
+        })),
+      })}
+    />
+
+    {/* about page schema */}
+    {
+      slug === 'about-us' && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'AboutPage',
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': pageURL,
+            },
+            url: pageURL,
+            headline: title,
+            description: description,
+            publisher: {
+              '@type': 'Organization',
+              name: t.site_title,
+              url: siteURL,
+            },
+          })}
+        />
+      )
+    }
+
+    {/* contact page schema */}
+    {
+      slug === 'contact-us' && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'ContactPage',
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': pageURL,
+            },
+            url: pageURL,
+            headline: title,
+            description: description,
+            publisher: {
+              '@type': 'Organization',
+              name: t.site_title,
+              url: siteURL,
+            },
+          })}
+        />
+      )
+    }
+
+    {
+      config.site.google_analytics_id && (
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=G-${config.site.google_analytics_id}`} />
+        <script
+          is:inline
+          set:html={`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-${config.site.google_analytics_id}');
+          `}
+        />
+      )
+    }
+
+    <slot name="head" />
+  </head>
+  <body class="flex flex-col justify-between min-h-screen">
+    <Header />
+    <main class="mx-auto px-3 md:px-6 py-5 md:py-10 w-full max-w-6xl">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

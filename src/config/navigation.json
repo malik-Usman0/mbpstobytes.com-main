@@ -1,0 +1,50 @@
+{
+	"header": [
+		{
+			"name": "Home",
+			"url": "/"
+		},
+		{
+			"name": "About Us",
+			"url": "/about-us/"
+		},
+		{
+			"name": "Contact Us",
+			"url": "/contact-us/"
+		},
+		{
+			"name": "Terms & Conditions",
+			"url": "/terms/"
+		},
+		{
+			"name": "Privacy Policy",
+			"url": "/privacy/"
+		}
+	],
+	"footer": [
+		{
+			"name": "Home",
+			"url": "/"
+		},
+		{
+			"name": "About Us",
+			"url": "/about-us/"
+		},
+		{
+			"name": "Contact Us",
+			"url": "/contact-us/"
+		},
+		{
+			"name": "Terms & Conditions",
+			"url": "/terms/"
+		},
+		{
+			"name": "Privacy Policy",
+			"url": "/privacy/"
+		},
+		{
+			"name": "Site Map",
+			"url": "/sitemap/"
+		}
+	]
+}

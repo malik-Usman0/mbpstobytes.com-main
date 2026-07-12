@@ -1,0 +1,54 @@
+---
+import { getTranslations } from '@theme/i18n/utils';
+
+interface FAQ {
+  question: string;
+  answer: string;
+}
+
+const locale = Astro.currentLocale;
+const t = getTranslations(locale);
+const faqs = t.faqs ?? [];
+
+const stripHTML = (html: string) => html.replace(/<[^>]+>/g, '');
+
+const siteURL = Astro.url.origin;
+---
+
+<>
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      '@id': `${siteURL}#website`,
+      url: siteURL,
+      name: t.site_title,
+      headLine: t.site_title,
+      description: t.index_description,
+      inLanguage: locale,
+    })}
+  />
+
+  {
+    faqs.length > 0 && (
+      <script
+        is:inline
+        type="application/ld+json"
+        set:html={JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faqs.map((faq: FAQ) => ({
+            '@type': 'Question',
+            name: faq.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: stripHTML(faq.answer),
+            },
+          })),
+        })}
+      />
+    )
+  }
+</>

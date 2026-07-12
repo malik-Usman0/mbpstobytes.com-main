@@ -1,0 +1,28 @@
+{
+  "site": {
+    "base_url": "https://www.mbpstobytes.com",
+    "google_verification": "MRKTylY7YB5gUn8ep27QBCXVsvR6aV-w_H0zN2INm_A",
+    "bing_verification": "",
+    "yandex_verification": "",
+    "language": "en",
+    "google_analytics_id": ""
+  },
+  "social": [
+    {
+      "name": "Twitter",
+      "url": ""
+    },
+    {
+      "name": "Facebook",
+      "url": ""
+    },
+    {
+      "name": "LinkedIn",
+      "url": ""
+    },
+    {
+      "name": "Pinterest",
+      "url": ""
+    }
+  ]
+}

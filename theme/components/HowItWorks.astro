@@ -1,0 +1,16 @@
+---
+import { getTranslations } from '@theme/i18n/utils';
+
+const t = getTranslations(Astro.currentLocale);
+
+const { class: className } = Astro.props;
+---
+
+<section class={`bg-white shadow mt-8 p-6 rounded-xl ${className}`}>
+  <h2 class="font-semibold text-slate-900 text-xl">
+    {t['How the']}
+    {t.site_title}
+    {t['Works']}
+  </h2>
+  <slot />
+</section>

@@ -1,0 +1,578 @@
+{
+  "en": {
+    "faqs": [
+      {
+        "question": "How many Mbps in 1 byte/second?",
+        "answer": "1 byte/second (1 B/s) = 8 bits/second. Since 1 Mbps = 1,000,000 bits/second, 1 B/s = 8 ÷ 1,000,000 Mbps = 0.000008 Mbps (8×10⁻⁶ Mbps)."
+      },
+      {
+        "question": "What Is a Megabit?",
+        "answer": "A megabit (Mb) is a unit of digital data equal to 1,000,000 bits (10⁶ bits) in decimal/SI units. Internet speeds are commonly measured in megabits."
+      },
+      {
+        "question": "What Is a Byte?",
+        "answer": "A byte (B) is a unit of digital information made up of 8 bits. File sizes (KB, MB, GB) are usually expressed in bytes."
+      },
+      {
+        "question": "How Many Bytes Are in a Megabit?",
+        "answer": "1 megabit = 1,000,000 bits. Since 1 byte = 8 bits, 1 megabit = 1,000,000 ÷ 8 = 125,000 bytes (decimal)."
+      },
+      {
+        "question": "How to convert from Mbps to B/s?",
+        "answer": "Use: B/s = Mbps × 1,000,000 ÷ 8. Example: 10 Mbps = 10 × 1,000,000 ÷ 8 = 1,250,000 B/s."
+      },
+      {
+        "question": "Is 1 Mbps or 1 B/s faster?",
+        "answer": "1 Mbps is much faster. 1 Mbps = 1,000,000 bits/s = 125,000 B/s, while 1 B/s is only 8 bits/s."
+      },
+      {
+        "question": "What is Megabits per second?",
+        "answer": "Megabits per second (Mbps) is a data transfer rate showing how many megabits are transmitted each second. It’s commonly used to describe internet and network speeds (for example, 100 Mbps)."
+      }
+    ]
+  },
+  "hi": {
+    "faqs": [
+      {
+        "question": "1 बाइट/सेकंड में कितने Mbps होते हैं?",
+        "answer": "1 बाइट/सेकंड (1 B/s) = 8 बिट/सेकंड। क्योंकि 1 Mbps = 1,000,000 बिट/सेकंड, इसलिए 1 B/s = 8 ÷ 1,000,000 Mbps = 0.000008 Mbps (8×10⁻⁶ Mbps)।"
+      },
+      {
+        "question": "मेगाबिट क्या होता है?",
+        "answer": "मेगाबिट (Mb) डिजिटल डेटा की एक इकाई है जो दशमलव/SI इकाइयों में 1,000,000 बिट (10⁶ बिट) के बराबर होती है। इंटरनेट स्पीड आमतौर पर मेगाबिट में मापी जाती है।"
+      },
+      {
+        "question": "बाइट क्या होता है?",
+        "answer": "बाइट (B) डिजिटल जानकारी की एक इकाई है जो 8 बिट से मिलकर बनती है। फ़ाइल साइज़ (KB, MB, GB) आमतौर पर बाइट में दिखाए जाते हैं।"
+      },
+      {
+        "question": "एक मेगाबिट में कितने बाइट होते हैं?",
+        "answer": "1 मेगाबिट = 1,000,000 बिट। क्योंकि 1 बाइट = 8 बिट, इसलिए 1 मेगाबिट = 1,000,000 ÷ 8 = 125,000 बाइट (दशमलव)।"
+      },
+      {
+        "question": "Mbps से B/s में कैसे बदलें?",
+        "answer": "सूत्र: B/s = Mbps × 1,000,000 ÷ 8। उदाहरण: 10 Mbps = 10 × 1,000,000 ÷ 8 = 1,250,000 B/s।"
+      },
+      {
+        "question": "1 Mbps या 1 B/s में से कौन तेज़ है?",
+        "answer": "1 Mbps कहीं अधिक तेज़ है। 1 Mbps = 1,000,000 बिट/सेकंड = 125,000 B/s, जबकि 1 B/s सिर्फ 8 बिट/सेकंड होता है।"
+      },
+      {
+        "question": "मेगाबिट प्रति सेकंड क्या है?",
+        "answer": "मेगाबिट प्रति सेकंड (Mbps) एक डेटा ट्रांसफर रेट है जो बताता है कि हर सेकंड कितने मेगाबिट ट्रांसमिट होते हैं। यह इंटरनेट और नेटवर्क स्पीड बताने के लिए आम है (जैसे 100 Mbps)।"
+      }
+    ]
+  },
+  "es": {
+    "faqs": [
+      {
+        "question": "¿Cuántos Mbps hay en 1 byte/segundo?",
+        "answer": "1 byte/segundo (1 B/s) = 8 bits/segundo. Como 1 Mbps = 1,000,000 bits/segundo, 1 B/s = 8 ÷ 1,000,000 Mbps = 0.000008 Mbps (8×10⁻⁶ Mbps)."
+      },
+      {
+        "question": "¿Qué es un megabit?",
+        "answer": "Un megabit (Mb) es una unidad de datos digitales equivalente a 1,000,000 bits (10⁶ bits) en unidades decimales/SI. Las velocidades de Internet suelen medirse en megabits."
+      },
+      {
+        "question": "¿Qué es un byte?",
+        "answer": "Un byte (B) es una unidad de información digital compuesta por 8 bits. Los tamaños de archivo (KB, MB, GB) normalmente se expresan en bytes."
+      },
+      {
+        "question": "¿Cuántos bytes hay en un megabit?",
+        "answer": "1 megabit = 1,000,000 bits. Como 1 byte = 8 bits, 1 megabit = 1,000,000 ÷ 8 = 125,000 bytes (decimal)."
+      },
+      {
+        "question": "¿Cómo convertir de Mbps a B/s?",
+        "answer": "Fórmula: B/s = Mbps × 1,000,000 ÷ 8. Ejemplo: 10 Mbps = 10 × 1,000,000 ÷ 8 = 1,250,000 B/s."
+      },
+      {
+        "question": "¿Es más rápido 1 Mbps o 1 B/s?",
+        "answer": "1 Mbps es mucho más rápido. 1 Mbps = 1,000,000 bits/s = 125,000 B/s, mientras que 1 B/s son solo 8 bits/s."
+      },
+      {
+        "question": "¿Qué son los megabits por segundo?",
+        "answer": "Megabits por segundo (Mbps) es una tasa de transferencia de datos que indica cuántos megabits se transmiten cada segundo. Se usa comúnmente para describir velocidades de Internet y redes (por ejemplo, 100 Mbps)."
+      }
+    ]
+  },
+  "ru": {
+    "faqs": [
+      {
+        "question": "Сколько Mbps в 1 байте/секунду?",
+        "answer": "1 байт/с (1 B/s) = 8 бит/с. Поскольку 1 Mbps = 1 000 000 бит/с, то 1 B/s = 8 ÷ 1 000 000 Mbps = 0.000008 Mbps (8×10⁻⁶ Mbps)."
+      },
+      {
+        "question": "Что такое мегабит?",
+        "answer": "Мегабит (Mb) — это единица цифровых данных, равная 1 000 000 бит (10⁶ бит) в десятичной системе (SI). Скорости интернета обычно измеряются в мегабитах."
+      },
+      {
+        "question": "Что такое байт?",
+        "answer": "Байт (B) — единица цифровой информации, состоящая из 8 бит. Размеры файлов (KB, MB, GB) обычно указываются в байтах."
+      },
+      {
+        "question": "Сколько байт в одном мегабите?",
+        "answer": "1 мегабит = 1 000 000 бит. Так как 1 байт = 8 бит, то 1 мегабит = 1 000 000 ÷ 8 = 125 000 байт (десятич.)."
+      },
+      {
+        "question": "Как перевести Mbps в B/s?",
+        "answer": "Формула: B/s = Mbps × 1 000 000 ÷ 8. Пример: 10 Mbps = 10 × 1 000 000 ÷ 8 = 1 250 000 B/s."
+      },
+      {
+        "question": "Что быстрее: 1 Mbps или 1 B/s?",
+        "answer": "1 Mbps намного быстрее. 1 Mbps = 1 000 000 бит/с = 125 000 B/s, а 1 B/s — это всего 8 бит/с."
+      },
+      {
+        "question": "Что такое мегабиты в секунду?",
+        "answer": "Мегабиты в секунду (Mbps) — это скорость передачи данных, показывающая, сколько мегабит передаётся за секунду. Обычно используется для описания скорости интернета и сетей (например, 100 Mbps)."
+      }
+    ]
+  },
+  "fr": {
+    "faqs": [
+      {
+        "question": "Combien de Mbps dans 1 octet/seconde ?",
+        "answer": "1 octet/seconde (1 B/s) = 8 bits/seconde. Comme 1 Mbps = 1 000 000 bits/seconde, 1 B/s = 8 ÷ 1 000 000 Mbps = 0,000008 Mbps (8×10⁻⁶ Mbps)."
+      },
+      {
+        "question": "Qu’est-ce qu’un mégabit ?",
+        "answer": "Un mégabit (Mb) est une unité de données numériques égale à 1 000 000 bits (10⁶ bits) en unités décimales/SI. Les vitesses Internet sont souvent mesurées en mégabits."
+      },
+      {
+        "question": "Qu’est-ce qu’un octet ?",
+        "answer": "Un octet (B) est une unité d’information numérique composée de 8 bits. Les tailles de fichiers (KB, MB, GB) sont généralement exprimées en octets."
+      },
+      {
+        "question": "Combien d’octets dans un mégabit ?",
+        "answer": "1 mégabit = 1 000 000 bits. Comme 1 octet = 8 bits, 1 mégabit = 1 000 000 ÷ 8 = 125 000 octets (décimal)."
+      },
+      {
+        "question": "Comment convertir des Mbps en B/s ?",
+        "answer": "Formule : B/s = Mbps × 1 000 000 ÷ 8. Exemple : 10 Mbps = 10 × 1 000 000 ÷ 8 = 1 250 000 B/s."
+      },
+      {
+        "question": "Qu’est-ce qui est plus rapide : 1 Mbps ou 1 B/s ?",
+        "answer": "1 Mbps est beaucoup plus rapide. 1 Mbps = 1 000 000 bits/s = 125 000 B/s, tandis que 1 B/s ne représente que 8 bits/s."
+      },
+      {
+        "question": "Que sont les mégabits par seconde ?",
+        "answer": "Les mégabits par seconde (Mbps) sont un débit de transfert de données indiquant combien de mégabits sont transmis chaque seconde. On l’utilise couramment pour décrire les vitesses Internet et réseau (par exemple, 100 Mbps)."
+      }
+    ]
+  },
+  "de": {
+    "faqs": [
+      {
+        "question": "Wie viele Mbps sind 1 Byte/Sekunde?",
+        "answer": "1 Byte/Sekunde (1 B/s) = 8 Bit/Sekunde. Da 1 Mbps = 1.000.000 Bit/Sekunde ist, gilt: 1 B/s = 8 ÷ 1.000.000 Mbps = 0,000008 Mbps (8×10⁻⁶ Mbps)."
+      },
+      {
+        "question": "Was ist ein Megabit?",
+        "answer": "Ein Megabit (Mb) ist eine Einheit für digitale Daten und entspricht in Dezimal-/SI-Einheiten 1.000.000 Bit (10⁶ Bit). Internetgeschwindigkeiten werden häufig in Megabit gemessen."
+      },
+      {
+        "question": "Was ist ein Byte?",
+        "answer": "Ein Byte (B) ist eine Einheit digitaler Information, die aus 8 Bit besteht. Dateigrößen (KB, MB, GB) werden meist in Bytes angegeben."
+      },
+      {
+        "question": "Wie viele Bytes sind in einem Megabit?",
+        "answer": "1 Megabit = 1.000.000 Bit. Da 1 Byte = 8 Bit ist, gilt: 1 Megabit = 1.000.000 ÷ 8 = 125.000 Bytes (dezimal)."
+      },
+      {
+        "question": "Wie rechnet man von Mbps in B/s um?",
+        "answer": "Formel: B/s = Mbps × 1.000.000 ÷ 8. Beispiel: 10 Mbps = 10 × 1.000.000 ÷ 8 = 1.250.000 B/s."
+      },
+      {
+        "question": "Was ist schneller: 1 Mbps oder 1 B/s?",
+        "answer": "1 Mbps ist deutlich schneller. 1 Mbps = 1.000.000 Bit/s = 125.000 B/s, während 1 B/s nur 8 Bit/s beträgt."
+      },
+      {
+        "question": "Was bedeutet Megabits pro Sekunde?",
+        "answer": "Megabits pro Sekunde (Mbps) ist eine Datenübertragungsrate, die angibt, wie viele Megabits pro Sekunde übertragen werden. Sie wird häufig verwendet, um Internet- und Netzwerkgeschwindigkeiten zu beschreiben (z. B. 100 Mbps)."
+      }
+    ]
+  },
+  "it": {
+    "faqs": [
+      {
+        "question": "Quanti Mbps ci sono in 1 byte/secondo?",
+        "answer": "1 byte/secondo (1 B/s) = 8 bit/secondo. Poiché 1 Mbps = 1.000.000 bit/secondo, 1 B/s = 8 ÷ 1.000.000 Mbps = 0,000008 Mbps (8×10⁻⁶ Mbps)."
+      },
+      {
+        "question": "Che cos’è un megabit?",
+        "answer": "Un megabit (Mb) è un’unità di dati digitali pari a 1.000.000 di bit (10⁶ bit) nelle unità decimali/SI. Le velocità Internet sono comunemente misurate in megabit."
+      },
+      {
+        "question": "Che cos’è un byte?",
+        "answer": "Un byte (B) è un’unità di informazione digitale composta da 8 bit. Le dimensioni dei file (KB, MB, GB) sono di solito espresse in byte."
+      },
+      {
+        "question": "Quanti byte ci sono in un megabit?",
+        "answer": "1 megabit = 1.000.000 di bit. Poiché 1 byte = 8 bit, 1 megabit = 1.000.000 ÷ 8 = 125.000 byte (decimale)."
+      },
+      {
+        "question": "Come convertire da Mbps a B/s?",
+        "answer": "Formula: B/s = Mbps × 1.000.000 ÷ 8. Esempio: 10 Mbps = 10 × 1.000.000 ÷ 8 = 1.250.000 B/s."
+      },
+      {
+        "question": "È più veloce 1 Mbps o 1 B/s?",
+        "answer": "1 Mbps è molto più veloce. 1 Mbps = 1.000.000 bit/s = 125.000 B/s, mentre 1 B/s è solo 8 bit/s."
+      },
+      {
+        "question": "Che cosa sono i megabit al secondo?",
+        "answer": "I megabit al secondo (Mbps) sono una velocità di trasferimento dati che indica quanti megabit vengono trasmessi ogni secondo. È comunemente usata per descrivere le velocità Internet e di rete (ad esempio, 100 Mbps)."
+      }
+    ]
+  },
+  "pt": {
+    "faqs": [
+      {
+        "question": "Quantos Mbps existem em 1 byte/segundo?",
+        "answer": "1 byte/segundo (1 B/s) = 8 bits/segundo. Como 1 Mbps = 1.000.000 bits/segundo, 1 B/s = 8 ÷ 1.000.000 Mbps = 0,000008 Mbps (8×10⁻⁶ Mbps)."
+      },
+      {
+        "question": "O que é um megabit?",
+        "answer": "Um megabit (Mb) é uma unidade de dados digitais equivalente a 1.000.000 de bits (10⁶ bits) em unidades decimais/SI. Velocidades de internet são comumente medidas em megabits."
+      },
+      {
+        "question": "O que é um byte?",
+        "answer": "Um byte (B) é uma unidade de informação digital composta por 8 bits. Tamanhos de arquivos (KB, MB, GB) geralmente são expressos em bytes."
+      },
+      {
+        "question": "Quantos bytes existem em um megabit?",
+        "answer": "1 megabit = 1.000.000 de bits. Como 1 byte = 8 bits, 1 megabit = 1.000.000 ÷ 8 = 125.000 bytes (decimal)."
+      },
+      {
+        "question": "Como converter de Mbps para B/s?",
+        "answer": "Fórmula: B/s = Mbps × 1.000.000 ÷ 8. Exemplo: 10 Mbps = 10 × 1.000.000 ÷ 8 = 1.250.000 B/s."
+      },
+      {
+        "question": "O que é mais rápido: 1 Mbps ou 1 B/s?",
+        "answer": "1 Mbps é muito mais rápido. 1 Mbps = 1.000.000 bits/s = 125.000 B/s, enquanto 1 B/s é apenas 8 bits/s."
+      },
+      {
+        "question": "O que são megabits por segundo?",
+        "answer": "Megabits por segundo (Mbps) é uma taxa de transferência de dados que mostra quantos megabits são transmitidos a cada segundo. É comumente usada para descrever velocidades de internet e rede (por exemplo, 100 Mbps)."
+      }
+    ]
+  },
+  "bn": {
+    "faqs": [
+      {
+        "question": "১ বাইট/সেকেন্ডে কত Mbps হয়?",
+        "answer": "১ বাইট/সেকেন্ড (1 B/s) = ৮ বিট/সেকেন্ড। যেহেতু ১ Mbps = ১,০০০,০০০ বিট/সেকেন্ড, তাই ১ B/s = ৮ ÷ ১,০০০,০০০ Mbps = ০.০০০০০৮ Mbps (8×10⁻⁶ Mbps)।"
+      },
+      {
+        "question": "মেগাবিট কী?",
+        "answer": "মেগাবিট (Mb) হলো ডিজিটাল ডেটার একটি একক, যা দশমিক/SI এককে ১,০০০,০০০ বিট (10⁶ বিট)-এর সমান। ইন্টারনেট স্পিড সাধারণত মেগাবিটে মাপা হয়।"
+      },
+      {
+        "question": "বাইট কী?",
+        "answer": "বাইট (B) হলো ডিজিটাল তথ্যের একটি একক, যা ৮ বিট দিয়ে গঠিত। ফাইল সাইজ (KB, MB, GB) সাধারণত বাইটে দেখানো হয়।"
+      },
+      {
+        "question": "এক মেগাবিটে কত বাইট থাকে?",
+        "answer": "১ মেগাবিট = ১,০০০,০০০ বিট। যেহেতু ১ বাইট = ৮ বিট, তাই ১ মেগাবিট = ১,০০০,০০০ ÷ ৮ = ১,২৫,০০০ বাইট (দশমিক)।"
+      },
+      {
+        "question": "Mbps থেকে B/s-এ কীভাবে রূপান্তর করবেন?",
+        "answer": "সূত্র: B/s = Mbps × ১,০০০,০০০ ÷ ৮। উদাহরণ: ১০ Mbps = ১০ × ১,০০০,০০০ ÷ ৮ = ১,২৫০,০০০ B/s।"
+      },
+      {
+        "question": "১ Mbps নাকি ১ B/s—কোনটি দ্রুত?",
+        "answer": "১ Mbps অনেক দ্রুত। ১ Mbps = ১,০০০,০০০ বিট/সেকেন্ড = ১,২৫,০০০ B/s, আর ১ B/s মাত্র ৮ বিট/সেকেন্ড।"
+      },
+      {
+        "question": "মেগাবিট/সেকেন্ড কী?",
+        "answer": "মেগাবিট প্রতি সেকেন্ড (Mbps) হলো ডেটা ট্রান্সফার রেট, যা প্রতি সেকেন্ডে কত মেগাবিট প্রেরণ হয় তা দেখায়। ইন্টারনেট ও নেটওয়ার্ক স্পিড বোঝাতে এটি সাধারণভাবে ব্যবহৃত হয় (যেমন ১০০ Mbps)।"
+      }
+    ]
+  },
+  "ja": {
+    "faqs": [
+      {
+        "question": "1バイト/秒は何Mbpsですか？",
+        "answer": "1バイト/秒（1 B/s）= 8ビット/秒。1 Mbps = 1,000,000ビット/秒なので、1 B/s = 8 ÷ 1,000,000 Mbps = 0.000008 Mbps（8×10⁻⁶ Mbps）。"
+      },
+      {
+        "question": "メガビットとは？",
+        "answer": "メガビット（Mb）はデジタルデータの単位で、十進（SI）では1,000,000ビット（10⁶ビット）に相当します。インターネット速度は一般にメガビットで表されます。"
+      },
+      {
+        "question": "バイトとは？",
+        "answer": "バイト（B）は8ビットからなるデジタル情報の単位です。ファイルサイズ（KB、MB、GB）は通常バイトで表されます。"
+      },
+      {
+        "question": "1メガビットは何バイトですか？",
+        "answer": "1メガビット = 1,000,000ビット。1バイト = 8ビットなので、1メガビット = 1,000,000 ÷ 8 = 125,000バイト（十進）。"
+      },
+      {
+        "question": "MbpsからB/sへの変換方法は？",
+        "answer": "式：B/s = Mbps × 1,000,000 ÷ 8。例：10 Mbps = 10 × 1,000,000 ÷ 8 = 1,250,000 B/s。"
+      },
+      {
+        "question": "1 Mbpsと1 B/sはどちらが速いですか？",
+        "answer": "1 Mbpsの方がはるかに速いです。1 Mbps = 1,000,000ビット/秒 = 125,000 B/s、1 B/sは8ビット/秒です。"
+      },
+      {
+        "question": "メガビット毎秒（Mbps）とは？",
+        "answer": "メガビット毎秒（Mbps）は、1秒あたりに送受信されるメガビット数を示すデータ転送速度です。インターネットやネットワーク速度の表現によく使われます（例：100 Mbps）。"
+      }
+    ]
+  },
+  "ko": {
+    "faqs": [
+      {
+        "question": "1바이트/초는 몇 Mbps인가요?",
+        "answer": "1바이트/초(1 B/s) = 8비트/초입니다. 1 Mbps = 1,000,000비트/초이므로, 1 B/s = 8 ÷ 1,000,000 Mbps = 0.000008 Mbps(8×10⁻⁶ Mbps)입니다."
+      },
+      {
+        "question": "메가비트란 무엇인가요?",
+        "answer": "메가비트(Mb)는 디지털 데이터 단위로, 10진/SI 기준 1,000,000비트(10⁶비트)와 같습니다. 인터넷 속도는 보통 메가비트로 측정됩니다."
+      },
+      {
+        "question": "바이트란 무엇인가요?",
+        "answer": "바이트(B)는 8비트로 이루어진 디지털 정보 단위입니다. 파일 크기(KB, MB, GB)는 보통 바이트로 표시됩니다."
+      },
+      {
+        "question": "1메가비트는 몇 바이트인가요?",
+        "answer": "1메가비트 = 1,000,000비트입니다. 1바이트 = 8비트이므로, 1메가비트 = 1,000,000 ÷ 8 = 125,000바이트(10진)입니다."
+      },
+      {
+        "question": "Mbps에서 B/s로 어떻게 변환하나요?",
+        "answer": "공식: B/s = Mbps × 1,000,000 ÷ 8. 예: 10 Mbps = 10 × 1,000,000 ÷ 8 = 1,250,000 B/s."
+      },
+      {
+        "question": "1 Mbps와 1 B/s 중 무엇이 더 빠른가요?",
+        "answer": "1 Mbps가 훨씬 빠릅니다. 1 Mbps = 1,000,000비트/초 = 125,000 B/s이고, 1 B/s는 8비트/초뿐입니다."
+      },
+      {
+        "question": "메가비트/초(Mbps)란 무엇인가요?",
+        "answer": "메가비트/초(Mbps)는 1초당 전송되는 메가비트 수를 나타내는 데이터 전송률입니다. 인터넷 및 네트워크 속도를 설명할 때 흔히 사용됩니다(예: 100 Mbps)."
+      }
+    ]
+  },
+  "ms": {
+    "faqs": [
+      {
+        "question": "Berapa Mbps dalam 1 bait/saat?",
+        "answer": "1 bait/saat (1 B/s) = 8 bit/saat. Memandangkan 1 Mbps = 1,000,000 bit/saat, 1 B/s = 8 ÷ 1,000,000 Mbps = 0.000008 Mbps (8×10⁻⁶ Mbps)."
+      },
+      {
+        "question": "Apakah itu Megabit?",
+        "answer": "Megabit (Mb) ialah unit data digital yang bersamaan dengan 1,000,000 bit (10⁶ bit) dalam unit perpuluhan/SI. Kelajuan internet lazimnya diukur dalam megabit."
+      },
+      {
+        "question": "Apakah itu Bait?",
+        "answer": "Bait (B) ialah unit maklumat digital yang terdiri daripada 8 bit. Saiz fail (KB, MB, GB) biasanya dinyatakan dalam bait."
+      },
+      {
+        "question": "Berapa banyak bait dalam satu megabit?",
+        "answer": "1 megabit = 1,000,000 bit. Oleh sebab 1 bait = 8 bit, 1 megabit = 1,000,000 ÷ 8 = 125,000 bait (perpuluhan)."
+      },
+      {
+        "question": "Bagaimana menukar daripada Mbps kepada B/s?",
+        "answer": "Guna: B/s = Mbps × 1,000,000 ÷ 8. Contoh: 10 Mbps = 10 × 1,000,000 ÷ 8 = 1,250,000 B/s."
+      },
+      {
+        "question": "Adakah 1 Mbps atau 1 B/s lebih laju?",
+        "answer": "1 Mbps jauh lebih laju. 1 Mbps = 1,000,000 bit/s = 125,000 B/s, manakala 1 B/s hanyalah 8 bit/s."
+      },
+      {
+        "question": "Apakah itu Megabit sesaat?",
+        "answer": "Megabit sesaat (Mbps) ialah kadar pemindahan data yang menunjukkan berapa banyak megabit dihantar setiap saat. Ia biasa digunakan untuk menerangkan kelajuan internet dan rangkaian (contohnya, 100 Mbps)."
+      }
+    ]
+  },
+  "pl": {
+    "faqs": [
+      {
+        "question": "Ile Mbps to 1 bajt/sekundę?",
+        "answer": "1 bajt/sekundę (1 B/s) = 8 bitów/sekundę. Ponieważ 1 Mbps = 1 000 000 bitów/sekundę, to 1 B/s = 8 ÷ 1 000 000 Mbps = 0,000008 Mbps (8×10⁻⁶ Mbps)."
+      },
+      {
+        "question": "Czym jest megabit?",
+        "answer": "Megabit (Mb) to jednostka danych cyfrowych równa 1 000 000 bitów (10⁶ bitów) w systemie dziesiętnym/SI. Prędkości internetu często mierzy się w megabitach."
+      },
+      {
+        "question": "Czym jest bajt?",
+        "answer": "Bajt (B) to jednostka informacji cyfrowej składająca się z 8 bitów. Rozmiary plików (KB, MB, GB) zwykle podaje się w bajtach."
+      },
+      {
+        "question": "Ile bajtów jest w megabicie?",
+        "answer": "1 megabit = 1 000 000 bitów. Ponieważ 1 bajt = 8 bitów, 1 megabit = 1 000 000 ÷ 8 = 125 000 bajtów (dziesiętnie)."
+      },
+      {
+        "question": "Jak przeliczyć Mbps na B/s?",
+        "answer": "Wzór: B/s = Mbps × 1 000 000 ÷ 8. Przykład: 10 Mbps = 10 × 1 000 000 ÷ 8 = 1 250 000 B/s."
+      },
+      {
+        "question": "Co jest szybsze: 1 Mbps czy 1 B/s?",
+        "answer": "1 Mbps jest dużo szybsze. 1 Mbps = 1 000 000 bitów/s = 125 000 B/s, natomiast 1 B/s to tylko 8 bitów/s."
+      },
+      {
+        "question": "Co to są megabity na sekundę?",
+        "answer": "Megabity na sekundę (Mbps) to szybkość transferu danych pokazująca, ile megabitów jest przesyłanych w każdej sekundzie. Najczęściej używa się jej do opisu prędkości internetu i sieci (np. 100 Mbps)."
+      }
+    ]
+  },
+  "id": {
+    "faqs": [
+      {
+        "question": "Berapa Mbps dalam 1 byte/detik?",
+        "answer": "1 byte/detik (1 B/s) = 8 bit/detik. Karena 1 Mbps = 1.000.000 bit/detik, maka 1 B/s = 8 ÷ 1.000.000 Mbps = 0,000008 Mbps (8×10⁻⁶ Mbps)."
+      },
+      {
+        "question": "Apa itu Megabit?",
+        "answer": "Megabit (Mb) adalah satuan data digital yang setara dengan 1.000.000 bit (10⁶ bit) dalam satuan desimal/SI. Kecepatan internet umumnya diukur dalam megabit."
+      },
+      {
+        "question": "Apa itu Byte?",
+        "answer": "Byte (B) adalah satuan informasi digital yang terdiri dari 8 bit. Ukuran file (KB, MB, GB) biasanya dinyatakan dalam byte."
+      },
+      {
+        "question": "Berapa Byte dalam satu Megabit?",
+        "answer": "1 megabit = 1.000.000 bit. Karena 1 byte = 8 bit, maka 1 megabit = 1.000.000 ÷ 8 = 125.000 byte (desimal)."
+      },
+      {
+        "question": "Bagaimana mengubah dari Mbps ke B/s?",
+        "answer": "Rumus: B/s = Mbps × 1.000.000 ÷ 8. Contoh: 10 Mbps = 10 × 1.000.000 ÷ 8 = 1.250.000 B/s."
+      },
+      {
+        "question": "Mana yang lebih cepat: 1 Mbps atau 1 B/s?",
+        "answer": "1 Mbps jauh lebih cepat. 1 Mbps = 1.000.000 bit/s = 125.000 B/s, sedangkan 1 B/s hanya 8 bit/s."
+      },
+      {
+        "question": "Apa itu Megabit per detik?",
+        "answer": "Megabit per detik (Mbps) adalah laju transfer data yang menunjukkan berapa banyak megabit yang ditransmisikan setiap detik. Umumnya digunakan untuk menggambarkan kecepatan internet dan jaringan (misalnya, 100 Mbps)."
+      }
+    ]
+  },
+  "ar": {
+    "faqs": [
+      {
+        "question": "كم Mbps في 1 بايت/ثانية؟",
+        "answer": "1 بايت/ثانية (1 B/s) = 8 بت/ثانية. وبما أن 1 Mbps = 1,000,000 بت/ثانية، فإن 1 B/s = 8 ÷ 1,000,000 Mbps = 0.000008 Mbps (8×10⁻⁶ Mbps)."
+      },
+      {
+        "question": "ما هو الميغابت؟",
+        "answer": "الميغابت (Mb) هو وحدة بيانات رقمية تساوي 1,000,000 بت (10⁶ بت) وفق النظام العشري/SI. غالبًا ما تُقاس سرعات الإنترنت بالميغابت."
+      },
+      {
+        "question": "ما هو البايت؟",
+        "answer": "البايت (B) هو وحدة معلومات رقمية تتكون من 8 بتات. عادةً ما تُعرض أحجام الملفات (KB وMB وGB) بالبايت."
+      },
+      {
+        "question": "كم عدد البايتات في ميغابت واحد؟",
+        "answer": "1 ميغابت = 1,000,000 بت. وبما أن 1 بايت = 8 بتات، فإن 1 ميغابت = 1,000,000 ÷ 8 = 125,000 بايت (عشري)."
+      },
+      {
+        "question": "كيف أحوّل من Mbps إلى B/s؟",
+        "answer": "استخدم: B/s = Mbps × 1,000,000 ÷ 8. مثال: 10 Mbps = 10 × 1,000,000 ÷ 8 = 1,250,000 B/s."
+      },
+      {
+        "question": "أيهما أسرع: 1 Mbps أم 1 B/s؟",
+        "answer": "1 Mbps أسرع بكثير. 1 Mbps = 1,000,000 بت/ث = 125,000 B/s، بينما 1 B/s يساوي فقط 8 بت/ث."
+      },
+      {
+        "question": "ما هي الميغابت في الثانية؟",
+        "answer": "الميغابت في الثانية (Mbps) هي معدل نقل بيانات يوضح عدد الميغابتات التي تُنقل في كل ثانية. تُستخدم عادةً لوصف سرعات الإنترنت والشبكات (مثل 100 Mbps)."
+      }
+    ]
+  },
+  "bg": {
+    "faqs": [
+      {
+        "question": "Колко Mbps има в 1 байт/секунда?",
+        "answer": "1 байт/секунда (1 B/s) = 8 бита/секунда. Тъй като 1 Mbps = 1 000 000 бита/секунда, 1 B/s = 8 ÷ 1 000 000 Mbps = 0.000008 Mbps (8×10⁻⁶ Mbps)."
+      },
+      {
+        "question": "Какво е мегабит?",
+        "answer": "Мегабит (Mb) е единица за цифрови данни, равна на 1 000 000 бита (10⁶ бита) в десетични/SI единици. Интернет скоростите често се измерват в мегабити."
+      },
+      {
+        "question": "Какво е байт?",
+        "answer": "Байт (B) е единица цифрова информация, съставена от 8 бита. Размерите на файловете (KB, MB, GB) обикновено се изразяват в байтове."
+      },
+      {
+        "question": "Колко байта има в един мегабит?",
+        "answer": "1 мегабит = 1 000 000 бита. Понеже 1 байт = 8 бита, 1 мегабит = 1 000 000 ÷ 8 = 125 000 байта (десетично)."
+      },
+      {
+        "question": "Как да конвертирам от Mbps към B/s?",
+        "answer": "Формула: B/s = Mbps × 1 000 000 ÷ 8. Пример: 10 Mbps = 10 × 1 000 000 ÷ 8 = 1 250 000 B/s."
+      },
+      {
+        "question": "Кое е по-бързо: 1 Mbps или 1 B/s?",
+        "answer": "1 Mbps е много по-бързо. 1 Mbps = 1 000 000 бита/с = 125 000 B/s, докато 1 B/s е само 8 бита/с."
+      },
+      {
+        "question": "Какво означава мегабита в секунда?",
+        "answer": "Мегабита в секунда (Mbps) е скорост на пренос на данни, която показва колко мегабита се предават всяка секунда. Често се използва за описание на интернет и мрежови скорости (например 100 Mbps)."
+      }
+    ]
+  },
+  "tr": {
+    "faqs": [
+      {
+        "question": "1 bayt/saniyede kaç Mbps vardır?",
+        "answer": "1 bayt/saniye (1 B/s) = 8 bit/saniye. 1 Mbps = 1.000.000 bit/saniye olduğuna göre, 1 B/s = 8 ÷ 1.000.000 Mbps = 0.000008 Mbps (8×10⁻⁶ Mbps)."
+      },
+      {
+        "question": "Megabit nedir?",
+        "answer": "Megabit (Mb), ondalık/SI birimlerde 1.000.000 bit (10⁶ bit) değerine eşit dijital veri birimidir. İnternet hızları genellikle megabit cinsinden ölçülür."
+      },
+      {
+        "question": "Bayt nedir?",
+        "answer": "Bayt (B), 8 bitten oluşan dijital bilgi birimidir. Dosya boyutları (KB, MB, GB) genellikle bayt olarak ifade edilir."
+      },
+      {
+        "question": "Bir megabitte kaç bayt vardır?",
+        "answer": "1 megabit = 1.000.000 bittir. 1 bayt = 8 bit olduğundan, 1 megabit = 1.000.000 ÷ 8 = 125.000 bayt (ondalık) eder."
+      },
+      {
+        "question": "Mbps’den B/s’ye nasıl dönüştürülür?",
+        "answer": "Formül: B/s = Mbps × 1.000.000 ÷ 8. Örnek: 10 Mbps = 10 × 1.000.000 ÷ 8 = 1.250.000 B/s."
+      },
+      {
+        "question": "1 Mbps mi 1 B/s mi daha hızlıdır?",
+        "answer": "1 Mbps çok daha hızlıdır. 1 Mbps = 1.000.000 bit/s = 125.000 B/s iken, 1 B/s yalnızca 8 bit/s’dir."
+      },
+      {
+        "question": "Saniyede megabit (Mbps) nedir?",
+        "answer": "Saniyede megabit (Mbps), her saniye kaç megabit veri aktarıldığını gösteren bir veri aktarım hızıdır. İnternet ve ağ hızlarını tanımlamak için yaygın olarak kullanılır (örneğin 100 Mbps)."
+      }
+    ]
+  },
+  "sv": {
+    "faqs": [
+      {
+        "question": "Hur många Mbps är 1 byte/sekund?",
+        "answer": "1 byte/sekund (1 B/s) = 8 bit/sekund. Eftersom 1 Mbps = 1 000 000 bit/sekund blir 1 B/s = 8 ÷ 1 000 000 Mbps = 0.000008 Mbps (8×10⁻⁶ Mbps)."
+      },
+      {
+        "question": "Vad är en megabit?",
+        "answer": "En megabit (Mb) är en enhet för digital data som motsvarar 1 000 000 bit (10⁶ bit) i decimala/SI-enheter. Internethastigheter mäts ofta i megabit."
+      },
+      {
+        "question": "Vad är en byte?",
+        "answer": "En byte (B) är en enhet för digital information som består av 8 bit. Filstorlekar (KB, MB, GB) anges vanligtvis i byte."
+      },
+      {
+        "question": "Hur många byte finns i en megabit?",
+        "answer": "1 megabit = 1 000 000 bit. Eftersom 1 byte = 8 bit blir 1 megabit = 1 000 000 ÷ 8 = 125 000 byte (decimalt)."
+      },
+      {
+        "question": "Hur konverterar man från Mbps till B/s?",
+        "answer": "Formel: B/s = Mbps × 1 000 000 ÷ 8. Exempel: 10 Mbps = 10 × 1 000 000 ÷ 8 = 1 250 000 B/s."
+      },
+      {
+        "question": "Är 1 Mbps eller 1 B/s snabbare?",
+        "answer": "1 Mbps är mycket snabbare. 1 Mbps = 1 000 000 bit/s = 125 000 B/s, medan 1 B/s bara är 8 bit/s."
+      },
+      {
+        "question": "Vad är megabit per sekund?",
+        "answer": "Megabit per sekund (Mbps) är en datahastighet som visar hur många megabit som överförs varje sekund. Det används ofta för att beskriva internet- och nätverkshastigheter (t.ex. 100 Mbps)."
+      }
+    ]
+  }
+}
