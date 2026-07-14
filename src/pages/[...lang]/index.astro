@@ -4,7 +4,7 @@ import FAQs from "@theme/components/FAQs.astro";
 import Chart from "@theme/components/Chart.astro";
 import { getTranslations, type Locale } from "@theme/i18n/utils";
 import HowItWorks from "@theme/components/HowItWorks.astro";
-import RelatedTools from "@theme/components/RelatedTools.astro";
+import ToolsGrid from "@theme/components/ToolsGrid.astro";
 
 const locale = (Astro.params.lang || "en") as Locale;
 const t = getTranslations(locale);
@@ -948,14 +948,5 @@ export const getStaticPaths = getStaticPathsIndex;
 
   <FAQs faqs={t.faqs} />
 
-  <RelatedTools
-    tools={[
-      {
-        name: "Bytes to Mbps Converter",
-        url: "/converters/bytes-to-mbps/",
-        description: "The reverse conversion — turn Bytes/s, KB/s or MB/s into megabits per second, with SI/IEC support.",
-        icon: "⇄",
-      },
-    ]}
-  />
+  <ToolsGrid title="Explore Our Converters" subtitle="Free, real-time data-rate calculators — more tools launching soon." showViewAll={true} currentUrl="/" />
 </IndexLayout>

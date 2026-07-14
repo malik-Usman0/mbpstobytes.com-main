@@ -1,0 +1,102 @@
+---
+import PageLayout from '@theme/layouts/PageLayout.astro';
+---
+
+<PageLayout title="Calculation Methodology" description="How our data-rate converters work — the formulas, constants, SI/IEC conversion factors, and precision standards behind every result.">
+  <section class="space-y-5 mt-4 text-slate-700">
+    <p>
+      This page explains exactly how our converters work — the formulas, the constants, the precision rules, and the assumptions. We believe in total transparency, so you can verify our math against yours.
+    </p>
+
+    <h2 class="font-semibold text-slate-800 text-2xl">The Core Relationship</h2>
+    <p>Every conversion on this site is built on two facts:</p>
+    <ul class="space-y-2 pl-6 list-disc">
+      <li><strong>1 byte = 8 bits.</strong> This is exact, by definition.</li>
+      <li><strong>1 Mbps = 1,000,000 bits per second.</strong> Data <em>rates</em> always use decimal (SI) prefixes, per IEC 80000-13 and universal industry convention.</li>
+    </ul>
+    <p>From these, the core formulas follow:</p>
+    <ul class="space-y-2 pl-6 list-disc">
+      <li><code>Bytes/s = Mbps × 1,000,000 ÷ 8 = Mbps × 125,000</code></li>
+      <li><code>Mbps = Bytes/s × 8 ÷ 1,000,000</code></li>
+      <li><code>MB/s = Mbps ÷ 8</code> (decimal megabytes)</li>
+      <li><code>KB/s = Mbps × 125</code> (decimal kilobytes)</li>
+    </ul>
+
+    <h2 class="font-semibold text-slate-800 text-2xl">SI vs IEC: How We Handle Both</h2>
+    <p>
+      "Kilobyte" and "megabyte" have two competing definitions, and our calculators support both explicitly instead of silently picking one:
+    </p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm border border-slate-200 rounded-lg overflow-hidden">
+        <thead class="bg-slate-50">
+          <tr>
+            <th class="p-3 font-semibold text-slate-800">Unit</th>
+            <th class="p-3 font-semibold text-slate-800">Standard</th>
+            <th class="p-3 font-semibold text-slate-800">Value in Bytes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-t border-slate-100"><td class="p-3">1 KB (kilobyte)</td><td class="p-3">SI / decimal</td><td class="p-3">1,000 B</td></tr>
+          <tr class="border-t border-slate-100"><td class="p-3">1 KiB (kibibyte)</td><td class="p-3">IEC / binary</td><td class="p-3">1,024 B</td></tr>
+          <tr class="border-t border-slate-100"><td class="p-3">1 MB (megabyte)</td><td class="p-3">SI / decimal</td><td class="p-3">1,000,000 B</td></tr>
+          <tr class="border-t border-slate-100"><td class="p-3">1 MiB (mebibyte)</td><td class="p-3">IEC / binary</td><td class="p-3">1,048,576 B</td></tr>
+          <tr class="border-t border-slate-100"><td class="p-3">1 GB (gigabyte)</td><td class="p-3">SI / decimal</td><td class="p-3">1,000,000,000 B</td></tr>
+          <tr class="border-t border-slate-100"><td class="p-3">1 GiB (gibibyte)</td><td class="p-3">IEC / binary</td><td class="p-3">1,073,741,824 B</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Our calculators default to <strong>SI (decimal)</strong> because that is what ISPs, speed tests, and network equipment use. The <strong>IEC (binary)</strong> toggle is provided because operating systems and many applications report file sizes and transfer speeds in binary units. Megabits per second (Mbps) always use decimal bits regardless of the toggle — there is no "binary Mbps" in ISP marketing or networking practice.
+    </p>
+
+    <h2 class="font-semibold text-slate-800 text-2xl">Conversion Factors We Use</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm border border-slate-200 rounded-lg overflow-hidden">
+        <thead class="bg-slate-50">
+          <tr>
+            <th class="p-3 font-semibold text-slate-800">From</th>
+            <th class="p-3 font-semibold text-slate-800">To</th>
+            <th class="p-3 font-semibold text-slate-800">Factor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-t border-slate-100"><td class="p-3">1 byte</td><td class="p-3">bits</td><td class="p-3">8 (exact)</td></tr>
+          <tr class="border-t border-slate-100"><td class="p-3">1 Mbps</td><td class="p-3">bits/s</td><td class="p-3">1,000,000 (exact)</td></tr>
+          <tr class="border-t border-slate-100"><td class="p-3">1 Mbps</td><td class="p-3">Bytes/s</td><td class="p-3">125,000 (exact)</td></tr>
+          <tr class="border-t border-slate-100"><td class="p-3">1 Mbps</td><td class="p-3">KB/s (SI)</td><td class="p-3">125 (exact)</td></tr>
+          <tr class="border-t border-slate-100"><td class="p-3">1 Mbps</td><td class="p-3">MB/s (SI)</td><td class="p-3">0.125 (exact)</td></tr>
+          <tr class="border-t border-slate-100"><td class="p-3">1 Gbps</td><td class="p-3">Mbps</td><td class="p-3">1,000 (exact)</td></tr>
+          <tr class="border-t border-slate-100"><td class="p-3">1 MiB/s</td><td class="p-3">Mbps</td><td class="p-3">8.388608 (exact)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Because bits, bytes, and SI prefixes are all defined exactly, every factor above is exact — there are no measurement approximations in data-rate conversion, only rounding choices in display.</p>
+
+    <h2 class="font-semibold text-slate-800 text-2xl">Precision Standards</h2>
+    <ul class="space-y-2 pl-6 list-disc">
+      <li>Internal calculations use IEEE 754 double-precision floating-point numbers (15–17 significant digits).</li>
+      <li>Displayed results round to the decimals setting you choose (default 2, adjustable 0–10).</li>
+      <li>The hidden input field always carries at least 6 decimal places so round-trip conversions don't drift.</li>
+      <li>Worked examples in articles round to 2–3 decimal places for readability, with rounding stated explicitly.</li>
+    </ul>
+
+    <h2 class="font-semibold text-slate-800 text-2xl">What Our Calculators Don't Model</h2>
+    <p>
+      Our converters compute the exact mathematical equivalence between units. They intentionally do <strong>not</strong> subtract real-world overhead — TCP/IP headers, retransmissions, Wi-Fi interference, server throttling — because overhead varies by network (typically 5–15%). Where overhead matters, our articles say so explicitly and show how to estimate it. Any future tool that applies an overhead assumption (like a download-time calculator) will label the assumption clearly and let you turn it off.
+    </p>
+
+    <h2 class="font-semibold text-slate-800 text-2xl">Sources</h2>
+    <p>All definitions and factors are verified against:</p>
+    <ul class="space-y-2 pl-6 list-disc">
+      <li><a href="https://physics.nist.gov/cuu/Units/binary.html" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">NIST — Prefixes for Binary Multiples</a></li>
+      <li><a href="https://www.iec.ch/prefixes-binary-multiples" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">IEC — Prefixes for binary multiples (IEC 80000-13)</a></li>
+      <li><a href="https://www.bipm.org/en/measurement-units" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">BIPM — The International System of Units (SI)</a></li>
+      <li>Official platform documentation for real-world figures (e.g., streaming bandwidth requirements published by Netflix and YouTube)</li>
+    </ul>
+
+    <h2 class="font-semibold text-slate-800 text-2xl">Found an Error?</h2>
+    <p>
+      If our methodology differs from your calculation and you think we're wrong, please tell us via the <a href="/contact-us/" class="text-indigo-600 hover:underline">contact page</a>. We'll investigate within 48 hours — see our <a href="/editorial-standards/" class="text-indigo-600 hover:underline">Editorial Standards</a> for the full accuracy promise.
+    </p>
+  </section>
+</PageLayout>

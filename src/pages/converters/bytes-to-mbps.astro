@@ -47,7 +47,8 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
-    { '@type': 'ListItem', position: 2, name: 'Bytes to Mbps Converter', item: pageURL },
+    { '@type': 'ListItem', position: 2, name: 'Converters', item: `${siteURL}/converters/` },
+    { '@type': 'ListItem', position: 3, name: 'Bytes to Mbps Converter', item: pageURL },
   ],
 };
 
@@ -101,6 +102,8 @@ const faqSchema = {
   <!-- Breadcrumb -->
   <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
     <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/converters/" class="hover:text-indigo-600 transition-colors">Converters</a>
     <span class="mx-2">/</span>
     <span class="text-gray-600 font-medium">Bytes to Mbps Converter</span>
   </nav>
@@ -412,6 +415,12 @@ const faqSchema = {
         url: '/',
         description: 'The reverse conversion — turn your internet plan speed (Mbps) into Bytes/s, KB/s and MB/s.',
         icon: '⇄',
+      },
+      {
+        name: 'All Converters & Tools',
+        url: '/converters/',
+        description: 'Browse every data-rate converter and calculator on the site, organized by category.',
+        icon: '🧰',
       },
     ]}
   />

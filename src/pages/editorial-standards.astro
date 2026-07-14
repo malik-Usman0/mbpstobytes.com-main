@@ -1,0 +1,87 @@
+---
+import PageLayout from '@theme/layouts/PageLayout.astro';
+---
+
+<PageLayout title="Editorial Standards" description="How we research, write, fact-check, and update content on mbpstobytes.com. Our commitment to numerical accuracy and reader trust.">
+  <section class="space-y-5 mt-4 text-slate-700">
+    <p>
+      We take numerical accuracy seriously. A wrong conversion factor can make someone believe their internet provider is cheating them, give a student a wrong answer, or lead a sysadmin to under-provision a server. So every article and every calculator on this site goes through the process below before it goes live.
+    </p>
+
+    <h2 class="font-semibold text-slate-800 text-2xl">Our 5-Step Editorial Process</h2>
+
+    <h3 class="font-semibold text-slate-800 text-xl">1. Topic Research</h3>
+    <p>
+      Before writing, we research what readers actually need. We analyze search queries, "People Also Ask" data, Reddit and Stack Exchange discussions (r/HomeNetworking, Super User), and existing competitor content. The goal is to identify what's missing or poorly explained elsewhere — and fill that gap.
+    </p>
+
+    <h3 class="font-semibold text-slate-800 text-xl">2. Formula & Standards Verification</h3>
+    <p>Every formula and conversion factor is cross-referenced against at least two authoritative sources, including:</p>
+    <ul class="space-y-2 pl-6 list-disc">
+      <li><a href="https://physics.nist.gov/cuu/Units/binary.html" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">NIST — prefixes for binary multiples</a> (the official definitions of KB vs KiB, MB vs MiB)</li>
+      <li><a href="https://www.iec.ch/prefixes-binary-multiples" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">IEC 80000-13</a> — the international standard for information-technology units</li>
+      <li>Official platform documentation for real-world figures (e.g., Netflix and YouTube published bandwidth requirements)</li>
+    </ul>
+
+    <h3 class="font-semibold text-slate-800 text-xl">3. Calculation Check</h3>
+    <p>
+      Every worked example is calculated twice — once by the writer, once independently by the reviewer, using the same double-checked factors our calculators use (see our <a href="/methodology/" class="text-indigo-600 hover:underline">Methodology</a>). Numbers must match exactly. When we round, we say so explicitly and state the rounding precision.
+    </p>
+
+    <h3 class="font-semibold text-slate-800 text-xl">4. Real-World Figures Check</h3>
+    <p>
+      When we reference real-world numbers — streaming bitrates, typical game download sizes, ISP plan speeds — we use the provider's published documentation or widely verifiable data, never guesses. If a figure isn't widely known, we cite the source directly in the article.
+    </p>
+
+    <h3 class="font-semibold text-slate-800 text-xl">5. Plain Language Review</h3>
+    <p>
+      A final read-through removes jargon, fixes awkward phrasing, and makes sure the explanation works for the intended reader — usually a non-engineer trying to answer one specific question, like "why does my 100 Mbps plan download at 12.5 MB/s?"
+    </p>
+
+    <h2 class="font-semibold text-slate-800 text-2xl">Use of AI in Our Content</h2>
+    <p>We use AI tools to assist with research, drafting, and structuring. All AI-assisted content is reviewed and fact-checked by a human editor before publishing. We disclose this openly because:</p>
+    <ul class="space-y-2 pl-6 list-disc">
+      <li>Hiding AI use while presenting content as purely human-written violates reader trust.</li>
+      <li>Google's guidance permits AI-assisted content that is helpful, accurate, and human-reviewed.</li>
+      <li>What matters isn't whether AI touched the draft — it's whether the math is right and the explanation is clear.</li>
+    </ul>
+
+    <h2 class="font-semibold text-slate-800 text-2xl">Our Accuracy Promise</h2>
+    <p>If you find an error in any article or calculator on this site:</p>
+    <ul class="space-y-2 pl-6 list-disc">
+      <li>Report it through our <a href="/contact-us/" class="text-indigo-600 hover:underline">contact page</a>.</li>
+      <li>We'll verify within 48 hours.</li>
+      <li>If you're correct, we'll fix the error and credit you in the article (with your permission).</li>
+      <li>We'll add a correction notice to the article showing what changed and when.</li>
+    </ul>
+
+    <h2 class="font-semibold text-slate-800 text-2xl">How We Update Content</h2>
+    <p>Conversion math doesn't change, but our explanations and real-world references sometimes do. Articles are reviewed and updated when:</p>
+    <ul class="space-y-2 pl-6 list-disc">
+      <li>A reader reports an error or unclear section.</li>
+      <li>We find a better way to explain a concept.</li>
+      <li>Real-world figures change (streaming platform requirements, typical plan speeds, game sizes).</li>
+      <li>Calculator improvements affect linked content.</li>
+    </ul>
+    <p>Every article shows two dates: <strong>Published</strong> and <strong>Last Reviewed</strong>.</p>
+
+    <h2 class="font-semibold text-slate-800 text-2xl">What We Don't Do</h2>
+    <ul class="space-y-2 pl-6 list-disc">
+      <li>We don't publish content we haven't verified.</li>
+      <li>We don't accept paid placements disguised as editorial content.</li>
+      <li>We don't fabricate author credentials or experience.</li>
+      <li>We don't cite sources we haven't read.</li>
+      <li>We don't use clickbait headlines that misrepresent the content.</li>
+      <li>We don't display fabricated ratings, reviews, or trust badges.</li>
+    </ul>
+
+    <h2 class="font-semibold text-slate-800 text-2xl">Conflicts of Interest</h2>
+    <p>
+      If an article ever recommends a specific product or service (for example, a router or an ISP), we will disclose any affiliate relationship at the top of that article. Recommendations are based on accuracy, utility, and reader value — never on compensation. As of today, this site contains no affiliate links and no sponsored content.
+    </p>
+
+    <p class="text-slate-500 text-sm">
+      Related: read our <a href="/methodology/" class="text-indigo-600 hover:underline">Calculation Methodology</a> to see the exact formulas, constants, and standards behind every calculator, or learn more <a href="/about-us/" class="text-indigo-600 hover:underline">about this site</a>.
+    </p>
+  </section>
+</PageLayout>

@@ -1,0 +1,22 @@
+{
+  "categories": [
+    {
+      "name": "Speed Converters",
+      "description": "Convert between network speed units — bits and bytes, per second.",
+      "tools": [
+        {
+          "name": "Mbps to Bytes Converter",
+          "url": "/",
+          "description": "Convert megabits per second to Bytes/s, KB/s and MB/s — see the real download speed behind your internet plan.",
+          "icon": "⚡"
+        },
+        {
+          "name": "Bytes to Mbps Converter",
+          "url": "/converters/bytes-to-mbps/",
+          "description": "Convert Bytes/s, KB/s or MB/s into megabits per second, with decimal (SI) and binary (IEC) support.",
+          "icon": "⇄"
+        }
+      ]
+    }
+  ]
+}
