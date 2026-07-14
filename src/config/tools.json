@@ -15,6 +15,12 @@
           "url": "/converters/bytes-to-mbps/",
           "description": "Convert Bytes/s, KB/s or MB/s into megabits per second, with decimal (SI) and binary (IEC) support.",
           "icon": "⇄"
+        },
+        {
+          "name": "Mbps to MB/s Converter",
+          "url": "/converters/mbps-to-mbs/",
+          "description": "See your plan's real download speed — 100 Mbps = 12.5 MB/s. With MiB/s support and plan comparison.",
+          "icon": "🚀"
         }
       ]
     }
