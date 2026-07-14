@@ -59,25 +59,12 @@ const webAppSchema = {
   name: 'Bytes to Mbps Converter',
   url: pageURL,
   description,
-  applicationCategory: 'UtilityApplication',
+  applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Any',
   browserRequirements: 'Requires JavaScript',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
   inLanguage: 'en',
-};
-
-const howToSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'HowTo',
-  name: 'How to Convert Bytes per Second to Mbps',
-  description: 'Convert Bytes per second (B/s) to Megabits per second (Mbps) using the formula Mbps = (B/s × 8) ÷ 1,000,000.',
-  totalTime: 'PT1M',
-  step: [
-    { '@type': 'HowToStep', position: 1, name: 'Convert Bytes to bits', text: 'Multiply the Bytes-per-second value by 8, because every byte contains 8 bits.' },
-    { '@type': 'HowToStep', position: 2, name: 'Divide by 1,000,000', text: 'Divide the bits-per-second result by 1,000,000 to express it in megabits.' },
-    { '@type': 'HowToStep', position: 3, name: 'Read the result', text: 'The result is the speed in Mbps. Example: 12,500,000 B/s × 8 ÷ 1,000,000 = 100 Mbps.' },
-  ],
 };
 
 const faqSchema = {
@@ -95,7 +82,6 @@ const faqSchema = {
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(webAppSchema)} />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </Fragment>
 

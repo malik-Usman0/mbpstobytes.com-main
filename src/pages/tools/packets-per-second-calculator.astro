@@ -70,7 +70,7 @@ const webAppSchema = {
   name: 'Packets Per Second (PPS) Calculator',
   url: pageURL,
   description,
-  applicationCategory: 'UtilityApplication',
+  applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Any',
   browserRequirements: 'Requires JavaScript',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -90,19 +90,6 @@ const articleSchema = {
   publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
   mainEntityOfPage: { '@type': 'WebPage', '@id': pageURL },
   image: `${siteURL}/images/og.png`,
-};
-
-const howToSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'HowTo',
-  name: 'How to Calculate Packets Per Second (PPS)',
-  description: 'Calculate PPS from bandwidth and packet size, including Ethernet wire overhead: PPS = bit rate ÷ ((frame size + 20) × 8).',
-  totalTime: 'PT2M',
-  step: [
-    { '@type': 'HowToStep', position: 1, name: 'Find the on-wire size per packet', text: 'Take the Ethernet frame size and add 20 bytes of wire overhead (7B preamble + 1B start delimiter + 12B inter-frame gap). A 64-byte frame occupies 84 bytes on the wire.' },
-    { '@type': 'HowToStep', position: 2, name: 'Convert to bits', text: 'Multiply the on-wire bytes by 8. Example: 84 bytes × 8 = 672 bits per packet.' },
-    { '@type': 'HowToStep', position: 3, name: 'Divide the link rate by bits per packet', text: 'Example for 1 Gbps at 64-byte frames: 1,000,000,000 ÷ 672 = 1,488,095 packets per second.' },
-  ],
 };
 
 const faqSchema = {
@@ -137,7 +124,6 @@ const toc = [
     <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(webAppSchema)} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </Fragment>
 

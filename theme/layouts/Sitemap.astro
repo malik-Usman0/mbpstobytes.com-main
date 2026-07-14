@@ -1,9 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '@theme/layouts/Layout.astro';
-import { getLocalizedUrl, getTranslations } from '@theme/i18n/utils';
-
-import indexTranslations from '~/i18n/index.json';
+import { getTranslations } from '@theme/i18n/utils';
 
 const siteURL = Astro.url.origin;
 
@@ -34,11 +32,6 @@ const pageLinks = Object.keys(pages)
   })
   .filter(Boolean);
 
-// Get all available locales from index.json in translations
-const availableLocalesPages = Object.keys(indexTranslations).map((locale) => {
-  return { href: getLocalizedUrl('/', locale as any), label: indexTranslations[locale as keyof typeof indexTranslations].site_title };
-});
-
 // 2️⃣ Get Blog Posts
 const posts = await getCollection('blog');
 
@@ -60,7 +53,7 @@ const paginationLinks = Array.from({ length: totalPages }, (_, i) => ({
 const { site_title } = getTranslations();
 ---
 
-<Layout title={`Sitemap | ${site_title}`} description="A list of all pages, blog posts, and pagination links.">
+<Layout title={`Sitemap | ${site_title}`} description="A list of all pages, blog posts, and pagination links." noindex={true}>
   <div class="mx-auto px-6 py-10 max-w-3xl">
     <h1 class="font-semibold text-slate-800 text-3xl">Sitemap</h1>
     <p class="mt-2 text-slate-600 text-sm">A list of all pages, blog posts, and pagination links.</p>
@@ -81,22 +74,11 @@ const { site_title } = getTranslations();
               )
           )
         }
-        {
-          availableLocalesPages.map(
-            (page) =>
-              page && (
-                <li>
-                  <a class="text-sky-600 hover:underline" href={page.href}>
-                    {page.label}
-                  </a>
-                </li>
-              )
-          )
-        }
       </ul>
     </section>
 
     <!-- Blog Posts -->
+    {postLinks.length > 0 && (
     <section class="mt-8">
       <h2 class="font-semibold text-slate-800 text-xl">Blog Posts</h2>
       <ul class="space-y-1 mt-3">
@@ -111,8 +93,10 @@ const { site_title } = getTranslations();
         }
       </ul>
     </section>
+    )}
 
     <!-- Pagination -->
+    {paginationLinks.length > 0 && (
     <section class="mt-8">
       <h2 class="font-semibold text-slate-800 text-xl">Pagination</h2>
       <ul class="space-y-1 mt-3">
@@ -127,5 +111,6 @@ const { site_title } = getTranslations();
         }
       </ul>
     </section>
+    )}
   </div>
 </Layout>

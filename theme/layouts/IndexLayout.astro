@@ -9,15 +9,14 @@ export type Props = Record<string, any>;
 
 // Generate static paths for all available locales
 export async function getStaticPaths({ params }: { params: Props }) {
-  // Return paths for all locales
-  return Object.keys(indexTranslations).map((locale) => {
-    const lang = locale === defaultLocale ? undefined : locale;
-
-    return {
-      params: { lang },
-      props: { locale, ...params },
-    };
-  });
+  // English-only for now: locale homepages were half-translated near-duplicates
+  // (removed per SEO audit July 2026). Re-add per-locale paths only with FULL translations.
+  return [
+    {
+      params: { lang: undefined },
+      props: { locale: defaultLocale, ...params },
+    },
+  ];
 }
 
 const t = getTranslations(Astro.currentLocale);

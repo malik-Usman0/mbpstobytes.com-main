@@ -69,25 +69,12 @@ const webAppSchema = {
   name: 'Mbps to MB/s Converter',
   url: pageURL,
   description,
-  applicationCategory: 'UtilityApplication',
+  applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Any',
   browserRequirements: 'Requires JavaScript',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
   inLanguage: 'en',
-};
-
-const howToSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'HowTo',
-  name: 'How to Convert Mbps to MB/s',
-  description: 'Convert megabits per second (Mbps) to megabytes per second (MB/s) by dividing by 8.',
-  totalTime: 'PT1M',
-  step: [
-    { '@type': 'HowToStep', position: 1, name: 'Take your speed in Mbps', text: 'Use the speed from your internet plan or a speed test result, e.g. 100 Mbps.' },
-    { '@type': 'HowToStep', position: 2, name: 'Divide by 8', text: 'Every byte contains 8 bits, so 100 Mbps ÷ 8 = 12.5 MB/s.' },
-    { '@type': 'HowToStep', position: 3, name: 'Interpret the result', text: '12.5 MB/s is the maximum file download speed of a 100 Mbps connection. Expect 5–15% less in real use due to overhead.' },
-  ],
 };
 
 const faqSchema = {
@@ -117,7 +104,6 @@ const commonValues = [
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(webAppSchema)} />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </Fragment>
 

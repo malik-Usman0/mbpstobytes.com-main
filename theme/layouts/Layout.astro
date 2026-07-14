@@ -2,7 +2,7 @@
 import Header from '@theme/components/Header.astro';
 import Footer from '@theme/components/Footer.astro';
 
-import { getTranslations, getLocalizedUrl, type Locale, localeToOG, defaultLocale, locales } from '@theme/i18n/utils';
+import { getTranslations, getLocalizedUrl, type Locale, localeToOG, defaultLocale } from '@theme/i18n/utils';
 
 import config from '~/config/config.json';
 import navigation from '~/config/navigation.json';
@@ -13,9 +13,10 @@ interface Props {
   title: string;
   description: string;
   img?: string;
+  noindex?: boolean;
 }
 
-const { title, description, img } = Astro.props;
+const { title, description, img, noindex = false } = Astro.props;
 
 const locale: Locale = (Astro.currentLocale as Locale | undefined) ?? defaultLocale;
 const t = getTranslations(locale);
@@ -36,11 +37,7 @@ const siteURL = Astro.url.origin;
 // Canonical must never include query strings or fragments
 const pageURL = `${siteURL}${Astro.url.pathname}`;
 
-// Homepage exists in every locale that has translations — emit hreflang alternates for it
-import indexTranslations from '~/i18n/index.json';
-const translatedLocales = locales.filter((l) => l in indexTranslations);
-const pathWithoutLocale = Astro.url.pathname.replace(new RegExp(`^/(${locales.join('|')})/`), '/');
-const isIndexPage = pathWithoutLocale === '/';
+
 ---
 
 <!doctype html>
@@ -62,16 +59,11 @@ const isIndexPage = pathWithoutLocale === '/';
 
     {config.site.yandex_verification && <meta name="yandex-verification" content={config.site.yandex_verification} />}
 
-    <!-- robots -->
-    <meta name="robots" content="index, follow" />
-    <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
+    <!-- robots (single consolidated tag — applies to all crawlers) -->
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
 
     <!-- canonical url -->
     <link rel="canonical" href={pageURL} item-prop="url" />
-
-    <!-- hreflang alternates (homepage is available in all locales) -->
-    {isIndexPage && translatedLocales.map((l) => <link rel="alternate" hreflang={l} href={`${siteURL}${getLocalizedUrl('/', l)}`} />)}
-    {isIndexPage && <link rel="alternate" hreflang="x-default" href={`${siteURL}/`} />}
 
     <!-- meta-description -->
     <meta name="description" content={description} />

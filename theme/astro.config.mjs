@@ -11,7 +11,7 @@ import mdx from '@astrojs/mdx';
 export default {
   site: config.site.base_url,
   trailingSlash: 'always',
-  integrations: [sitemap(), mdx()],
+  integrations: [sitemap({ filter: (page) => !page.includes('/sitemap/') }), mdx()],
 
   vite: {
     plugins: [tailwindcss()],
