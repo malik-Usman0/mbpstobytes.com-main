@@ -23,6 +23,18 @@
           "icon": "🚀"
         }
       ]
+    },
+    {
+      "name": "Network Tools",
+      "description": "Calculators for network engineering, capacity planning, and performance analysis.",
+      "tools": [
+        {
+          "name": "Packets Per Second (PPS) Calculator",
+          "url": "/tools/packets-per-second-calculator/",
+          "description": "Convert bandwidth to packets per second with correct line-rate math — 1 Gbps at 64B = 1.49M PPS, wire overhead included.",
+          "icon": "📦"
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,770 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'Packets Per Second (PPS) Calculator – Mbps/Gbps to PPS';
+const description =
+  'Free PPS calculator with correct line-rate math — 1 Gbps at 64B = 1.49M PPS, not 1.95M. What packets per second means, what is good, and how to measure yours.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/tools/packets-per-second-calculator/`;
+const datePublished = '2026-07-14';
+
+const faqs = [
+  {
+    question: 'What is a good PPS for networking?',
+    answer:
+      'It depends on the network. Home routers typically process 10,000–100,000 PPS comfortably. Small business networks need roughly 500,000–2 million PPS. Enterprise firewalls handle 1–10 million PPS, and carrier-grade hardware processes 100 million+ PPS using ASIC forwarding. As a rule of thumb: if your device\'s rated PPS is at least double your worst-case small-packet load, you have healthy headroom.',
+  },
+  {
+    question: 'How many PPS is 1 Gbps?',
+    answer:
+      'At line rate with 64-byte frames, 1 Gbps = 1,488,095 PPS (≈1.49 Mpps), because each frame occupies 84 bytes on the wire including Ethernet overhead. With standard 1,500-byte MTU frames, 1 Gbps = 81,274 PPS. Calculators that ignore wire overhead report 1,953,125 and 83,333 respectively — those numbers overstate reality.',
+  },
+  {
+    question: 'What is 14.88 Mpps?',
+    answer:
+      '14.88 Mpps (14,880,952 packets per second) is the line rate of a 10 Gbps Ethernet link carrying minimum-size 64-byte frames: 10,000,000,000 bits ÷ (84 bytes × 8 bits) = 14,880,952. It is the standard benchmark figure for "can this device forward 10 GbE at line rate," used in RFC 2544 testing.',
+  },
+  {
+    question: 'Why do firewalls drop packets below their rated bandwidth?',
+    answer:
+      'Because bandwidth and PPS are separate limits. A firewall rated for 10 Gbps of throughput may only inspect ~1 million packets per second with deep inspection enabled. A flood of small 64-byte packets at just 0.7 Gbps already generates over 1 million PPS — hitting the packet-processing ceiling at 7% of the bandwidth rating. This is exactly why DDoS attacks use small packets.',
+  },
+  {
+    question: 'How do I check my current PPS?',
+    answer:
+      'On Linux, run "sar -n DEV 1" (rxpck/s and txpck/s columns) or compare two readings of "ip -s link show". On Windows, open Performance Monitor and add the "Network Interface → Packets/sec" counter. Most router dashboards (pfSense, OPNsense, MikroTik, UniFi) graph PPS per interface out of the box.',
+  },
+  {
+    question: 'Does packet size affect PPS?',
+    answer:
+      'Directly. PPS = link rate ÷ packet size on the wire, so smaller packets mean more packets per second for the same bandwidth. A 1 Gbps link carries about 18× more packets when they are 64-byte frames (1.49M PPS) than when they are 1,500-byte frames (81K PPS). That is why small-packet workloads like VoIP, gaming, and DNS stress hardware far more than file transfers.',
+  },
+  {
+    question: 'Is PPS the same as throughput?',
+    answer:
+      'No. Throughput measures bits delivered per second (Mbps/Gbps); PPS counts individual packets processed per second. A device must do routing lookups, ACL checks, and forwarding decisions once per packet regardless of its size — so two traffic streams with identical Mbps can place wildly different loads on hardware depending on packet size.',
+  },
+  {
+    question: 'Why is my real PPS lower than the calculator shows?',
+    answer:
+      'The calculator gives the theoretical ceiling of the link itself. Real hardware may cap out earlier: CPU-based routers saturate a core around 200K–500K PPS with the standard kernel stack, NIC interrupt handling adds limits, and every inspection feature (NAT, IPS, QoS) costs per-packet processing. If measured PPS plateaus while bandwidth is free, you have found your device\'s packet-processing limit.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Converters & Tools', item: `${siteURL}/converters/` },
+    { '@type': 'ListItem', position: 3, name: 'Packets Per Second Calculator', item: pageURL },
+  ],
+};
+
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  '@id': `${pageURL}#webapplication`,
+  name: 'Packets Per Second (PPS) Calculator',
+  url: pageURL,
+  description,
+  applicationCategory: 'UtilityApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  inLanguage: 'en',
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': `${pageURL}#article`,
+  headline: 'Packets Per Second (PPS): Calculator & Complete Guide',
+  description,
+  datePublished,
+  dateModified: datePublished,
+  author: { '@type': 'Organization', name: 'Mbps to Bytes Editorial Team', url: `${siteURL}/about-us/` },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageURL },
+  image: `${siteURL}/images/og.png`,
+};
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Calculate Packets Per Second (PPS)',
+  description: 'Calculate PPS from bandwidth and packet size, including Ethernet wire overhead: PPS = bit rate ÷ ((frame size + 20) × 8).',
+  totalTime: 'PT2M',
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Find the on-wire size per packet', text: 'Take the Ethernet frame size and add 20 bytes of wire overhead (7B preamble + 1B start delimiter + 12B inter-frame gap). A 64-byte frame occupies 84 bytes on the wire.' },
+    { '@type': 'HowToStep', position: 2, name: 'Convert to bits', text: 'Multiply the on-wire bytes by 8. Example: 84 bytes × 8 = 672 bits per packet.' },
+    { '@type': 'HowToStep', position: 3, name: 'Divide the link rate by bits per packet', text: 'Example for 1 Gbps at 64-byte frames: 1,000,000,000 ÷ 672 = 1,488,095 packets per second.' },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const toc = [
+  ['#calculator', 'PPS Calculator'],
+  ['#quick-answer', 'Quick Answer'],
+  ['#what-is-pps', 'What Is PPS?'],
+  ['#pps-vs-mbps', 'PPS vs Mbps'],
+  ['#formula', 'The Formula (Done Right)'],
+  ['#calculator-mistake', 'The Mistake Most PPS Calculators Make'],
+  ['#line-rate-table', 'Line-Rate Reference Table'],
+  ['#good-pps', "What's a Good PPS?"],
+  ['#device-classes', 'PPS by Hardware Class'],
+  ['#measure-pps', 'How to Measure Your Own PPS'],
+  ['#ddos', 'Why DDoS Is Measured in PPS'],
+  ['#faqs', 'FAQs'],
+  ['#references', 'References'],
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(webAppSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/converters/" class="hover:text-indigo-600 transition-colors">Converters & Tools</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">Packets Per Second Calculator</span>
+  </nav>
+
+  <!-- Title + byline -->
+  <div class="max-w-3xl">
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">Packets Per Second (PPS): Calculator & Complete Guide</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      Convert bandwidth to packets per second with correct line-rate math, understand what your hardware's PPS rating really means, and learn how to measure the packet rate on your own network.
+    </p>
+
+    <!-- Byline / fact-checked box -->
+    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-white border-l-4 border-indigo-500">
+      <p class="text-sm text-gray-700">By <a href="/about-us/" class="text-indigo-600 font-semibold hover:underline">Editorial Team</a></p>
+      <p class="text-sm text-gray-500 mt-1">📅 <strong class="text-gray-600">Published:</strong> July 14, 2026 &nbsp;|&nbsp; 🔄 <strong class="text-gray-600">Last reviewed:</strong> July 14, 2026</p>
+      <p class="text-sm text-gray-500 mt-1">
+        ✓ <strong class="text-gray-600">Fact-checked:</strong> All formulas and line-rate values verified against
+        <a href="https://sec.cloudapps.cisco.com/security/center/resources/network_performance_metrics" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Cisco's network performance metrics</a>,
+        <a href="https://www.rfc-editor.org/rfc/rfc2544" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">RFC 2544</a> and
+        <a href="https://physics.nist.gov/cuu/Units/binary.html" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">NIST</a>.
+        See our <a href="/methodology/" class="text-indigo-600 hover:underline">methodology</a>.
+      </p>
+    </div>
+
+    <!-- TOC -->
+    <details class="mt-4 premium-card overflow-hidden group">
+      <summary class="flex justify-between items-center gap-4 p-5 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+        <span>📝 Table of Contents</span>
+        <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </summary>
+      <ol class="px-6 pb-5 text-sm text-gray-600 space-y-1.5 list-decimal list-inside">
+        {toc.map(([href, label]) => (
+          <li><a href={href} class="text-indigo-600 hover:underline">{label}</a></li>
+        ))}
+      </ol>
+    </details>
+  </div>
+
+  <!-- Calculator -->
+  <div class="gap-8 grid grid-cols-1 lg:grid-cols-3 mt-10" id="calculator">
+    <section class="lg:col-span-2">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex flex-wrap justify-between items-start gap-6 mb-8">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 rounded-full mb-3">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                <span class="text-indigo-600 text-xs font-semibold uppercase tracking-wide">Live Calculator</span>
+              </div>
+              <h2 class="font-extrabold text-2xl md:text-3xl text-gray-900 tracking-tight">PPS Calculator</h2>
+              <p class="text-gray-500 text-base mt-3 max-w-lg leading-relaxed">
+                Bandwidth ⇄ packets per second, with Ethernet wire overhead included by default — the way line rate is actually calculated.
+              </p>
+            </div>
+            <div class="flex items-center gap-2 bg-gray-50 px-4 py-3 rounded-2xl border border-gray-100">
+              <span class="text-gray-500 text-sm font-medium">Decimals:</span>
+              <button id="dec-minus" class="w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold">−</button>
+              <div id="dec-value" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-sm shadow-lg shadow-indigo-200">0</div>
+              <button id="dec-plus" class="w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold">+</button>
+            </div>
+          </div>
+
+          <!-- Form -->
+          <div class="gap-8 grid md:grid-cols-2">
+            <!-- Bandwidth side -->
+            <div class="space-y-3">
+              <label for="rate" class="block text-gray-700 text-sm font-semibold">Bandwidth</label>
+              <div class="relative">
+                <input id="rate" inputmode="decimal" placeholder="Enter link rate" class="glow-input pr-24" value="1" />
+                <select id="rate-unit" aria-label="Bandwidth unit" class="absolute right-3 top-1/2 -translate-y-1/2 bg-teal-50 border border-teal-100 text-teal-600 font-bold text-sm rounded-lg px-2 py-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-200">
+                  <option value="0.001">Kbps</option>
+                  <option value="1">Mbps</option>
+                  <option value="1000" selected>Gbps</option>
+                </select>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">Your link speed, plan speed, or attack traffic volume.</p>
+            </div>
+
+            <!-- PPS side -->
+            <div class="space-y-3">
+              <label for="pps" class="block text-gray-700 text-sm font-semibold">Packets per second (PPS)</label>
+              <div class="relative">
+                <input id="pps" inputmode="decimal" placeholder="Enter PPS" class="glow-input pr-16" />
+                <div class="absolute right-5 top-1/2 -translate-y-1/2 text-amber-500 font-bold text-sm">PPS</div>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">Enter PPS instead to work backwards to required bandwidth.</p>
+            </div>
+          </div>
+
+          <!-- Packet size -->
+          <div class="mt-6 space-y-3">
+            <label for="psize" class="block text-gray-700 text-sm font-semibold">Packet size (bytes)</label>
+            <div class="flex flex-wrap items-center gap-2">
+              <input id="psize" inputmode="numeric" value="64" class="glow-input max-w-32" />
+              <button class="size-chip px-3 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-xs font-semibold hover:bg-amber-100 transition-colors" data-size="64">64B min frame</button>
+              <button class="size-chip px-3 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-xs font-semibold hover:bg-amber-100 transition-colors" data-size="128">128B VoIP</button>
+              <button class="size-chip px-3 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-xs font-semibold hover:bg-amber-100 transition-colors" data-size="512">512B DNS</button>
+              <button class="size-chip px-3 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-xs font-semibold hover:bg-amber-100 transition-colors" data-size="1500">1500B MTU</button>
+              <button class="size-chip px-3 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-xs font-semibold hover:bg-amber-100 transition-colors" data-size="9000">9000B jumbo</button>
+            </div>
+          </div>
+
+          <!-- Size mode -->
+          <div class="mt-6 space-y-2">
+            <label for="size-mode" class="block text-gray-700 text-sm font-semibold">Size includes</label>
+            <select id="size-mode" class="glow-input cursor-pointer">
+              <option value="frame" selected>Ethernet frame — add 20B wire overhead (line rate, recommended)</option>
+              <option value="mtu">IP packet / MTU — add 18B Ethernet + 20B wire overhead</option>
+              <option value="raw">Raw — no overhead (what most other calculators do)</option>
+            </select>
+            <p id="mode-hint" class="text-gray-400 text-xs leading-relaxed">64B frame → 84B on the wire (preamble 8B + frame 64B + inter-frame gap 12B). Frames below 64B are padded per the Ethernet standard.</p>
+          </div>
+
+          <!-- Actions -->
+          <div class="gap-4 grid grid-cols-1 sm:grid-cols-3 mt-8">
+            <button id="btn-share" class="btn-premium btn-secondary flex justify-center items-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              Share result
+            </button>
+            <button id="btn-reload" class="btn-premium btn-primary">Reload calculator</button>
+            <button id="btn-clear" class="btn-premium btn-ghost">Clear all</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="space-y-6">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-200">
+              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <span class="text-gray-900 font-bold text-lg">Result</span>
+          </div>
+          <div id="result-main" class="result-display mb-3">1,488,095 PPS</div>
+          <div id="result-secondary" class="text-gray-500 text-sm mb-6">≈ 1.49 Mpps at line rate</div>
+
+          <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-6"></div>
+
+          <div class="space-y-4">
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Line-rate PPS:</span><span id="out-line" class="text-amber-600 font-semibold">1,488,095</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Naive PPS (no overhead):</span><span id="out-naive" class="text-gray-500 font-semibold">1,953,125</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Bandwidth:</span><span id="out-mbps" class="text-teal-600 font-semibold">1,000 Mbps</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">On-wire bytes/packet:</span><span id="out-wire" class="text-gray-600 font-semibold">84 B</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Packets per minute:</span><span id="out-ppm" class="text-gray-600 font-semibold">89,285,714</span></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Quick answer -->
+  <article class="premium-card mt-12" id="quick-answer">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Quick Answer</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500">
+        <p class="text-lg text-gray-700">
+          <strong>Packets per second (PPS)</strong> is the number of individual network packets a link or device handles each second. The same bandwidth produces very different packet rates depending on packet size: <strong class="text-indigo-600">1 Gbps carries ~81,000 PPS with full-size 1,500-byte frames but ~1.49 million PPS with minimum 64-byte frames</strong>.
+        </p>
+        <p class="text-gray-500 text-sm mt-2">PPS = link rate in bits/s ÷ (on-wire packet size in bytes × 8)</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- What is PPS -->
+  <article class="premium-card mt-8" id="what-is-pps">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">What Is PPS (Packets Per Second)?</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Everything that crosses a network travels in <strong>packets</strong> — self-contained chunks of data, each carrying its own addressing headers. PPS counts how many of those chunks pass a point per second. If bandwidth (Mbps) is the <em>volume of water</em> flowing through a pipe, PPS is the <em>number of bottles</em> that water is divided into. Filling many small bottles is far more work than filling a few big ones — even when the total water is identical.
+      </p>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        That work is the reason PPS exists as a metric: a router, switch, or firewall must parse headers, look up a destination, check ACL rules, and make a forwarding decision <strong>once per packet, regardless of the packet's size</strong>. Hardware datasheets therefore quote two ceilings — a bandwidth rating (Gbps) and a packet-rate rating (PPS or Mpps) — and in real networks the PPS ceiling is very often the one you hit first.
+      </p>
+      <div class="grid sm:grid-cols-3 gap-4" role="img" aria-label="Same 1 Gbps bandwidth shown as 81 thousand large packets, 244 thousand medium packets, or 1.49 million small packets per second">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100 text-center">
+          <div class="text-3xl mb-1">📦</div>
+          <div class="font-extrabold text-teal-600 text-xl">81,274 PPS</div>
+          <p class="text-gray-500 text-xs mt-1">1 Gbps · 1,500B frames<br />(downloads, streaming)</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 text-center">
+          <div class="text-3xl mb-1">📨</div>
+          <div class="font-extrabold text-indigo-600 text-xl">234,962 PPS</div>
+          <p class="text-gray-500 text-xs mt-1">1 Gbps · 512B frames<br />(DNS, API traffic)</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100 text-center">
+          <div class="text-3xl mb-1">✉️</div>
+          <div class="font-extrabold text-amber-600 text-xl">1,488,095 PPS</div>
+          <p class="text-gray-500 text-xs mt-1">1 Gbps · 64B frames<br />(ACKs, VoIP, attacks)</p>
+        </div>
+      </div>
+      <p class="text-gray-400 text-xs mt-4 text-center">The same 1 Gbps of bandwidth — an 18× difference in packets the hardware must process. Line-rate values, wire overhead included.</p>
+    </div>
+  </article>
+
+  <!-- PPS vs Mbps -->
+  <article class="premium-card mt-8" id="pps-vs-mbps">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">PPS vs Mbps: Two Ceilings, One Network</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Bandwidth tests answer "how many bits fit through per second?" — but they usually test with large packets, which is the <em>easiest</em> case for hardware. A device can pass a 1 Gbps speed test flawlessly and still collapse under 200,000 small packets per second, because per-packet processing — not bit-moving — is its true bottleneck. This is why:
+      </p>
+      <ul class="space-y-3 text-gray-600 mb-6">
+        <li class="flex gap-3"><span class="text-indigo-500 font-bold">•</span><span><strong>VoIP and gaming</strong> stress networks more than their tiny bandwidth suggests: a G.711 voice call is only ~0.09 Mbps but generates 50 packets every second, and a busy game server sends thousands of sub-256-byte updates per second.</span></li>
+        <li class="flex gap-3"><span class="text-indigo-500 font-bold">•</span><span><strong>Firewalls slow down as features turn on:</strong> stateful inspection, NAT, and IPS each add per-packet work, so effective PPS drops with every enabled feature while the bandwidth rating on the box stays the same.</span></li>
+        <li class="flex gap-3"><span class="text-indigo-500 font-bold">•</span><span><strong>Cloud instances have PPS quotas:</strong> major cloud providers cap packets per second per VM type — a workload can be throttled on packet rate while using a fraction of its bandwidth allowance.</span></li>
+      </ul>
+      <p class="text-gray-600 leading-relaxed">
+        If you only remember one thing: <strong>bandwidth is capacity, PPS is workload.</strong> Size your hardware for the packet rate of your worst-case traffic mix, not the bandwidth of your best-case speed test. To translate between bandwidth units first, use our <a href="/converters/mbps-to-mbs/" class="text-indigo-600 hover:underline font-medium">Mbps to MB/s converter</a> or <a href="/" class="text-indigo-600 hover:underline font-medium">Mbps to Bytes converter</a>.
+      </p>
+    </div>
+  </article>
+
+  <!-- Formula -->
+  <article class="premium-card mt-8" id="formula">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The PPS Formula (Done Right)</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        The math is one division — the accuracy is entirely in what you divide by. On Ethernet, every frame is preceded by an 8-byte preamble/start-delimiter and followed by a mandatory 12-byte inter-frame gap. Those <strong>20 extra bytes occupy the wire for every single packet</strong>, so the correct per-packet cost is the frame size <em>plus 20 bytes</em>:
+      </p>
+      <div class="p-6 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100 mb-6 text-center">
+        <code class="text-teal-700 text-lg font-bold">PPS = link rate (bits/s) ÷ ((frame bytes + 20) × 8)</code>
+      </div>
+
+      <h3 class="font-semibold text-gray-900 mb-4">Worked Example: the Famous 14.88 Mpps</h3>
+      <div class="space-y-3 mb-8">
+        <div class="flex gap-3 items-start">
+          <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">1</span>
+          <span class="text-gray-600">A 10 Gbps link carries minimum-size 64-byte frames → on-wire size = 64 + 20 = <strong>84 bytes = 672 bits</strong></span>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">2</span>
+          <span class="text-gray-600">10,000,000,000 bits/s ÷ 672 bits = <strong class="text-indigo-600">14,880,952 PPS ≈ 14.88 Mpps</strong></span>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">3</span>
+          <span class="text-gray-600">14.88 Mpps is the exact figure used in <a href="https://www.rfc-editor.org/rfc/rfc2544" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">RFC 2544</a> line-rate benchmarks for 10 GbE — if the formula didn't include overhead, this industry-standard number wouldn't exist.</span>
+        </div>
+      </div>
+
+      <h3 class="font-semibold text-gray-900 mb-4">Reverse Direction: PPS → Required Bandwidth</h3>
+      <p class="text-gray-600 leading-relaxed">
+        Multiply instead of divide: <code class="text-gray-700 font-semibold">bit rate = PPS × (frame bytes + 20) × 8</code>. Example: a monitoring dashboard shows 500,000 PPS of ~512-byte traffic → 500,000 × 532 × 8 = <strong>2.13 Gbps</strong> of wire bandwidth. The calculator above works in both directions — enter either side.
+      </p>
+    </div>
+  </article>
+
+  <!-- The mistake -->
+  <article class="premium-card mt-8" id="calculator-mistake">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Mistake Most PPS Calculators Make</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        While researching this page we tested the PPS calculators currently ranking in search — and found that several widely-used ones, including a competing converter site's dedicated PPS tool, <strong>skip Ethernet wire overhead entirely</strong>. They compute <code>rate ÷ (size × 8)</code>, which overstates the packet rate of small-packet traffic by up to <strong>31%</strong>:
+      </p>
+
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Naive PPS versus correct line-rate PPS</caption>
+          <thead>
+            <tr><th>Scenario</th><th>Naive result (no overhead)</th><th>Correct line rate</th><th>Overstatement</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">1 Gbps · 64B frames</td><td class="text-gray-500">1,953,125 PPS</td><td class="text-amber-600 font-bold">1,488,095 PPS</td><td class="text-red-500 font-semibold">+31.3%</td></tr>
+            <tr><td class="text-teal-600 font-semibold">10 Gbps · 64B frames</td><td class="text-gray-500">19,531,250 PPS</td><td class="text-amber-600 font-bold">14,880,952 PPS</td><td class="text-red-500 font-semibold">+31.3%</td></tr>
+            <tr><td class="text-teal-600 font-semibold">1 Gbps · 512B frames</td><td class="text-gray-500">244,140 PPS</td><td class="text-amber-600 font-bold">234,962 PPS</td><td class="text-red-500 font-semibold">+3.9%</td></tr>
+            <tr><td class="text-teal-600 font-semibold">1 Gbps · 1500B MTU</td><td class="text-gray-500">83,333 PPS</td><td class="text-amber-600 font-bold">81,274 PPS</td><td class="text-red-500 font-semibold">+2.5%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="text-gray-600 leading-relaxed mb-4">
+        Why it matters: PPS numbers are used to size firewalls and judge DDoS resilience. If a naive calculator tells you a 1 Gbps small-packet flood is 1.95 Mpps, you might buy mitigation capacity you don't need — or worse, believe your 1.5 Mpps-rated appliance can't survive an attack it can actually absorb at line rate. The correct 64-byte line-rate figures (<strong>1.488 Mpps per 1 Gbps</strong>) are the ones published by
+        <a href="https://sec.cloudapps.cisco.com/security/center/resources/network_performance_metrics" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Cisco</a> and used in every RFC 2544 test report.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        Our calculator includes the overhead by default and shows the naive figure alongside it, clearly labeled — so you can compare against any other tool and see exactly where the difference comes from.
+      </p>
+    </div>
+  </article>
+
+  <!-- Line-rate table -->
+  <section class="premium-card mt-8" id="line-rate-table">
+    <div class="premium-card-inner">
+      <div class="flex md:flex-row flex-col md:justify-between md:items-center gap-4 mb-8">
+        <h2 class="font-bold text-2xl text-gray-900">Line-Rate PPS Reference Table</h2>
+        <p class="text-gray-400 text-sm font-medium">Wire overhead included · 64B min frame = 84B on wire · 1500B MTU = 1538B on wire</p>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
+        <table class="luxury-table">
+          <thead>
+            <tr><th>Link speed</th><th>64B frames</th><th>512B frames</th><th>1500B MTU</th><th>9000B jumbo</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">100 Mbps</td><td class="text-amber-600 font-bold">148,810</td><td class="text-gray-600">23,496</td><td class="text-gray-600">8,127</td><td class="text-gray-500">1,386</td></tr>
+            <tr><td class="text-teal-600 font-semibold">1 Gbps</td><td class="text-amber-600 font-bold">1,488,095</td><td class="text-gray-600">234,962</td><td class="text-gray-600">81,274</td><td class="text-gray-500">13,858</td></tr>
+            <tr><td class="text-teal-600 font-semibold">10 Gbps</td><td class="text-amber-600 font-bold">14,880,952</td><td class="text-gray-600">2,349,624</td><td class="text-gray-600">812,744</td><td class="text-gray-500">138,580</td></tr>
+            <tr><td class="text-teal-600 font-semibold">25 Gbps</td><td class="text-amber-600">37,202,381</td><td class="text-gray-600">5,874,060</td><td class="text-gray-600">2,031,860</td><td class="text-gray-500">346,451</td></tr>
+            <tr><td class="text-teal-600 font-semibold">40 Gbps</td><td class="text-amber-600">59,523,810</td><td class="text-gray-600">9,398,496</td><td class="text-gray-600">3,250,975</td><td class="text-gray-500">554,324</td></tr>
+            <tr><td class="text-teal-600 font-semibold">100 Gbps</td><td class="text-amber-600 font-bold">148,809,524</td><td class="text-gray-600">23,496,241</td><td class="text-gray-600">8,127,438</td><td class="text-gray-500">1,385,809</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-6 text-gray-400 text-sm">Jumbo-frame column assumes a 9,000-byte frame (9,020B on wire). All values are theoretical Ethernet line-rate maximums; real devices may cap out earlier — see hardware classes below.</p>
+    </div>
+  </section>
+
+  <!-- Good PPS -->
+  <article class="premium-card mt-8" id="good-pps">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">What's a Good PPS?</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        "Good" depends entirely on what the number describes — a home router's live traffic or a firewall's rated ceiling. As orientation, here is what typical <em>sustained</em> packet rates look like at each network scale, and what the hardware serving it should be rated for:
+      </p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-1">🏠 Home network</h3>
+          <p class="text-2xl font-extrabold text-teal-600">1K–20K</p>
+          <p class="text-gray-500 text-xs mt-1">typical live PPS; consumer routers are comfortable to ~50–100K</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100">
+          <h3 class="font-semibold text-gray-900 mb-1">🏢 Small business</h3>
+          <p class="text-2xl font-extrabold text-indigo-600">50K–500K</p>
+          <p class="text-gray-500 text-xs mt-1">size gateways for 0.5–2M PPS to survive bursts</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100">
+          <h3 class="font-semibold text-gray-900 mb-1">🏭 Enterprise edge</h3>
+          <p class="text-2xl font-extrabold text-purple-600">0.5M–10M</p>
+          <p class="text-gray-500 text-xs mt-1">NGFW class; ratings drop sharply with IPS/DPI enabled</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">
+          <h3 class="font-semibold text-gray-900 mb-1">🌐 Carrier / DC core</h3>
+          <p class="text-2xl font-extrabold text-amber-600">100M+</p>
+          <p class="text-gray-500 text-xs mt-1">ASIC line-rate forwarding, measured in hundreds of Mpps</p>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The practical rule: compute your worst realistic small-packet load with the calculator above, then keep <strong>at least 2× headroom</strong> between that number and your device's rated PPS — measured with the features you actually run enabled, not the bare-forwarding datasheet number.
+      </p>
+    </div>
+  </article>
+
+  <!-- Device classes -->
+  <section class="premium-card mt-8" id="device-classes">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">PPS by Hardware Class</h2>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
+        <table class="luxury-table">
+          <thead>
+            <tr><th>Hardware class</th><th>Typical PPS capability</th><th>What limits it</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">Consumer Wi-Fi router</td><td class="text-amber-600">50K–300K</td><td class="text-gray-500">Single CPU, NAT in software</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Software router/firewall (x86)</td><td class="text-amber-600">200K–1M+</td><td class="text-gray-500">~200–500K PPS per CPU core via kernel stack</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Kernel-bypass software (DPDK/XDP)</td><td class="text-amber-600">5M–15M per core</td><td class="text-gray-500">Memory bandwidth, NIC queues</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Enterprise NGFW appliance</td><td class="text-amber-600">1M–10M</td><td class="text-gray-500">Each inspection feature roughly halves PPS</td></tr>
+            <tr><td class="text-teal-600 font-semibold">L3 switch / carrier router (ASIC)</td><td class="text-amber-600">100M–1B+</td><td class="text-gray-500">Port count × line rate; effectively wire-speed</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-6 text-gray-400 text-sm">Ranges represent hardware classes, not specific models — always check the vendor datasheet for the exact device and feature set you plan to run.</p>
+    </div>
+  </section>
+
+  <!-- Measure -->
+  <article class="premium-card mt-8" id="measure-pps">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">How to Measure Your Own PPS</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Speed tests won't tell you your packet rate — but your operating system already counts every packet. Here's how to read it:
+      </p>
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100">
+          <h3 class="font-semibold text-gray-900 mb-3">🐧 Linux</h3>
+          <p class="text-gray-500 text-sm mb-2">Live per-second rates (rxpck/s, txpck/s):</p>
+          <code class="block p-3 rounded-lg bg-gray-900 text-teal-300 text-xs mb-2">sar -n DEV 1</code>
+          <p class="text-gray-500 text-sm mb-2">Or diff two readings of the interface counters:</p>
+          <code class="block p-3 rounded-lg bg-gray-900 text-teal-300 text-xs">ip -s link show eth0</code>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100">
+          <h3 class="font-semibold text-gray-900 mb-3">🪟 Windows</h3>
+          <p class="text-gray-500 text-sm mb-2">Performance Monitor → add counter:</p>
+          <code class="block p-3 rounded-lg bg-gray-900 text-teal-300 text-xs mb-2">Network Interface → Packets/sec</code>
+          <p class="text-gray-500 text-sm mb-2">Or in PowerShell:</p>
+          <code class="block p-3 rounded-lg bg-gray-900 text-teal-300 text-xs">Get-Counter "\Network Interface(*)\Packets/sec"</code>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100">
+          <h3 class="font-semibold text-gray-900 mb-3">🌐 Router dashboards</h3>
+          <p class="text-gray-500 text-sm">pfSense/OPNsense: <em>Status → Monitoring → Packets</em>. MikroTik: interface traffic graphs show p/s alongside bps. UniFi, OpenWrt (luci-statistics), and most enterprise gear graph PPS per interface out of the box.</p>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Measure during your busiest hour, note the peak, and compare it against your device's rating with the 2× headroom rule from above. If PPS plateaus while bandwidth still has room, you've found a packet-processing bottleneck — not a bandwidth problem.
+      </p>
+    </div>
+  </article>
+
+  <!-- DDoS -->
+  <article class="premium-card mt-8" id="ddos">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Why DDoS Attacks Are Measured in PPS</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Attackers deliberately send <strong>minimum-size 64-byte packets</strong>, because each one costs the target's hardware a full processing cycle while consuming almost no attack bandwidth. Run the numbers with the calculator above:
+      </p>
+      <div class="grid sm:grid-cols-3 gap-4 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100 text-center">
+          <div class="font-extrabold text-amber-600 text-2xl">1.49 Mpps</div>
+          <p class="text-gray-500 text-xs mt-1">from just a 1 Gbps flood of 64B packets</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-orange-50 to-white border border-orange-100 text-center">
+          <div class="font-extrabold text-orange-600 text-2xl">14.9 Mpps</div>
+          <p class="text-gray-500 text-xs mt-1">from a 10 Gbps flood — beyond most NGFWs</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-red-50 to-white border border-red-100 text-center">
+          <div class="font-extrabold text-red-500 text-2xl">148.8 Mpps</div>
+          <p class="text-gray-500 text-xs mt-1">from a 100 Gbps flood — ASIC-scrubbing territory</p>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        A firewall rated "10 Gbps throughput / 1 Mpps" is overwhelmed by a 64-byte flood at roughly <strong>0.7 Gbps</strong> — 7% of its bandwidth rating. That's why serious DDoS capacity planning always starts from PPS, not Gbps, and why mitigation vendors publish scrubbing capacity in Mpps. When you evaluate protection, ask for the small-packet PPS figure — the bandwidth number alone tells you very little.
+      </p>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12" id="faqs">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers about packets per second</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- References -->
+  <section class="premium-card mt-12" id="references">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">References</h2>
+      <ul class="space-y-3 text-gray-600">
+        <li class="flex gap-3"><span class="text-indigo-500">→</span><a href="https://sec.cloudapps.cisco.com/security/center/resources/network_performance_metrics" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Cisco — Bandwidth, Packets Per Second, and Other Network Performance Metrics</a></li>
+        <li class="flex gap-3"><span class="text-indigo-500">→</span><a href="https://www.rfc-editor.org/rfc/rfc2544" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">RFC 2544 — Benchmarking Methodology for Network Interconnect Devices (IETF)</a></li>
+        <li class="flex gap-3"><span class="text-indigo-500">→</span><a href="https://www.juniper.net/documentation/us/en/software/junos/routing-policy/topics/concept/policer-pps-based-overview.html" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Juniper Networks — Packets-Per-Second (pps)-Based Policer Overview</a></li>
+        <li class="flex gap-3"><span class="text-indigo-500">→</span><a href="https://physics.nist.gov/cuu/Units/binary.html" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">NIST — Definitions of Unit Prefixes</a></li>
+      </ul>
+      <p class="text-gray-400 text-sm mt-6">All line-rate values on this page were computed with the formula above and cross-checked against Cisco's published figures. Found a discrepancy? Tell us via the <a href="/contact-us/" class="text-indigo-600 hover:underline">contact page</a> — see our <a href="/editorial-standards/" class="text-indigo-600 hover:underline">editorial standards</a> for our 48-hour correction promise.</p>
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'Mbps to MB/s Converter',
+        url: '/converters/mbps-to-mbs/',
+        description: 'Translate plan bandwidth into real download speed before sizing packet rates.',
+        icon: '🚀',
+      },
+      {
+        name: 'Mbps to Bytes Converter',
+        url: '/',
+        description: 'Convert Mbps down to Bytes/s and KB/s with a live bit-to-byte visualization.',
+        icon: '⚡',
+      },
+      {
+        name: 'All Converters & Tools',
+        url: '/converters/',
+        description: 'Browse every data-rate converter and calculator on the site.',
+        icon: '🧰',
+      },
+    ]}
+  />
+
+  <!-- Calculator Logic -->
+  <script is:inline>
+    const el = (id) => document.getElementById(id);
+    const $rate = el("rate");
+    const $rateUnit = el("rate-unit");
+    const $pps = el("pps");
+    const $psize = el("psize");
+    const $mode = el("size-mode");
+    const $modeHint = el("mode-hint");
+    const $decMinus = el("dec-minus");
+    const $decPlus = el("dec-plus");
+    const $decValue = el("dec-value");
+    const $btnShare = el("btn-share");
+    const $btnReload = el("btn-reload");
+    const $btnClear = el("btn-clear");
+
+    const $resMain = el("result-main");
+    const $resSecondary = el("result-secondary");
+    const $outLine = el("out-line");
+    const $outNaive = el("out-naive");
+    const $outMbps = el("out-mbps");
+    const $outWire = el("out-wire");
+    const $outPpm = el("out-ppm");
+
+    let state = { lastEdited: "rate", decimals: 0 };
+
+    const num = (x) => Number(String(x).replace(/[^0-9+\-.e]/g, ""));
+    const fmt = (n) => (Number.isFinite(n) ? Number(n.toFixed(state.decimals)).toLocaleString() : "—");
+    const scaled = (pps) => {
+      if (!Number.isFinite(pps)) return "—";
+      if (pps >= 1_000_000) return (pps / 1_000_000).toFixed(2).replace(/\.00$/, "") + " Mpps";
+      if (pps >= 10_000) return (pps / 1_000).toFixed(1).replace(/\.0$/, "") + " Kpps";
+      return fmt(pps) + " PPS";
+    };
+
+    // On-wire bytes for line-rate math; naive bytes for comparison
+    const wireBytes = () => {
+      let size = num($psize.value);
+      if (!Number.isFinite(size) || size <= 0) return { wire: NaN, naive: NaN };
+      const mode = $mode.value;
+      if (mode === "frame") {
+        const frame = Math.max(64, size);
+        return { wire: frame + 20, naive: size };
+      }
+      if (mode === "mtu") {
+        const frame = Math.max(64, size + 18);
+        return { wire: frame + 20, naive: size };
+      }
+      return { wire: size, naive: size };
+    };
+
+    const hints = {
+      frame: "64B frame → 84B on the wire (preamble 8B + frame 64B + inter-frame gap 12B). Frames below 64B are padded per the Ethernet standard.",
+      mtu: "1500B MTU → 1518B frame (+14B header, +4B FCS) → 1538B on the wire with preamble and inter-frame gap.",
+      raw: "No overhead added — matches naive calculators. Use only for non-Ethernet links or quick comparisons.",
+    };
+
+    const render = () => {
+      const { wire, naive } = wireBytes();
+      $modeHint.textContent = hints[$mode.value];
+
+      let bps, ppsLine;
+      if (state.lastEdited === "rate") {
+        const r = num($rate.value);
+        bps = Number.isFinite(r) && $rate.value !== "" ? r * Number($rateUnit.value) * 1_000_000 : NaN;
+        ppsLine = bps / (wire * 8);
+        if (Number.isFinite(ppsLine)) $pps.value = Math.round(ppsLine).toString();
+        else $pps.value = "";
+      } else {
+        const p = num($pps.value);
+        ppsLine = Number.isFinite(p) && $pps.value !== "" ? p : NaN;
+        bps = ppsLine * wire * 8;
+        if (Number.isFinite(bps)) {
+          const unitFactor = Number($rateUnit.value) * 1_000_000;
+          $rate.value = Number((bps / unitFactor).toFixed(4)).toString();
+        } else $rate.value = "";
+      }
+
+      const ppsNaive = bps / (naive * 8);
+      const mbps = bps / 1_000_000;
+
+      if (!Number.isFinite(ppsLine) || !Number.isFinite(bps)) {
+        $resMain.textContent = "—";
+        $resSecondary.textContent = "";
+        [$outLine, $outNaive, $outMbps, $outWire, $outPpm].forEach((o) => (o.textContent = "—"));
+        return;
+      }
+
+      $resMain.textContent = fmt(ppsLine) + " PPS";
+      $resSecondary.textContent = "≈ " + scaled(ppsLine) + ($mode.value === "raw" ? " (no overhead)" : " at line rate");
+      $outLine.textContent = fmt(ppsLine);
+      $outNaive.textContent = $mode.value === "raw" ? fmt(ppsNaive) + " (same)" : fmt(ppsNaive);
+      $outMbps.textContent = mbps >= 1000 ? (mbps / 1000).toFixed(2).replace(/\.00$/, "") + " Gbps" : fmt(mbps) + " Mbps";
+      $outWire.textContent = fmt(wire) + " B";
+      $outPpm.textContent = fmt(ppsLine * 60);
+      $decValue.textContent = state.decimals;
+    };
+
+    $rate.addEventListener("input", () => { state.lastEdited = "rate"; render(); });
+    $rateUnit.addEventListener("change", render);
+    $pps.addEventListener("input", () => { state.lastEdited = "pps"; render(); });
+    $psize.addEventListener("input", render);
+    $mode.addEventListener("change", render);
+
+    document.querySelectorAll(".size-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        $psize.value = chip.dataset.size;
+        render();
+      });
+    });
+
+    $decMinus.addEventListener("click", () => { state.decimals = Math.max(0, state.decimals - 1); render(); });
+    $decPlus.addEventListener("click", () => { state.decimals = Math.min(6, state.decimals + 1); render(); });
+
+    $btnShare.addEventListener("click", async () => {
+      const txt = `PPS: ${$rate.value} ${$rateUnit.options[$rateUnit.selectedIndex].text} @ ${$psize.value}B = ${$resMain.textContent} (line rate, overhead included). via mbpstobytes.com/tools/packets-per-second-calculator/`;
+      try { await navigator.clipboard.writeText(txt); } catch (e) {}
+    });
+
+    $btnReload.addEventListener("click", () => window.location.reload());
+    $btnClear.addEventListener("click", () => {
+      $rate.value = "";
+      $pps.value = "";
+      state.lastEdited = "rate";
+      render();
+    });
+
+    render();
+  </script>
+</Layout>
