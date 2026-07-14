@@ -1,0 +1,485 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'Download Time Calculator – How Long Will Your File Take?';
+const description =
+  'Free download time calculator — see how long any file takes: 100 GB at 100 Mbps ≈ 2h 13m. Enter size and speed, with real-world overhead included.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/tools/download-time-calculator/`;
+
+const faqs = [
+  {
+    question: 'How long does a 75 GB game take to download on 100 Mbps?',
+    answer:
+      'About 1 hour 40 minutes in perfect conditions: 75,000 MB × 8 ÷ 100 Mbps = 6,000 seconds. Real downloads typically add 10–15% for protocol overhead and server variation, so plan for roughly 1 hour 50 minutes. On 300 Mbps the same game takes about 33 minutes; on gigabit, about 10 minutes.',
+  },
+  {
+    question: 'How do I calculate download time manually?',
+    answer:
+      'Formula: time in seconds = (file size in MB × 8) ÷ speed in Mbps. The ×8 converts megabytes to megabits so the units match. Example: 5,000 MB (5 GB) on a 50 Mbps connection = (5,000 × 8) ÷ 50 = 800 seconds ≈ 13 minutes 20 seconds.',
+  },
+  {
+    question: 'Why does my download take longer than calculated?',
+    answer:
+      'The calculation gives the theoretical ceiling of your connection. Real downloads lose speed to TCP/IP overhead (5–10%), Wi-Fi signal loss, server-side rate limits, peak-hour congestion, and disk write speeds. Getting 85–90% of the calculated speed over ethernet is normal; Wi-Fi often delivers 60–80%.',
+  },
+  {
+    question: 'Can I download 100 GB overnight on a 25 Mbps connection?',
+    answer:
+      'Yes, just barely. 100 GB at 25 Mbps takes about 8 hours 53 minutes ideal — call it 10 hours with overhead. Start it at 9 pm and it should be done by morning, as long as nothing else uses the connection and the server sustains full speed.',
+  },
+  {
+    question: 'Does a better router make downloads faster?',
+    answer:
+      'Only if the router (or its Wi-Fi link) is the bottleneck. If you pay for 500 Mbps but your old router\'s Wi-Fi tops out at 200 Mbps, upgrading helps enormously. If you already reach your plan speed over ethernet, a new router changes nothing — the plan itself is the ceiling.',
+  },
+  {
+    question: 'Why does Steam show a different speed than this calculator?',
+    answer:
+      'Steam reports in MB/s (megabytes), while plans are sold in Mbps (megabits) — an 8× difference. A 100 Mbps plan showing 11–12 MB/s in Steam is performing correctly. Multiply the Steam number by 8 to compare it with your plan speed.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Converters & Tools', item: `${siteURL}/converters/` },
+    { '@type': 'ListItem', position: 3, name: 'Download Time Calculator', item: pageURL },
+  ],
+};
+
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  '@id': `${pageURL}#webapplication`,
+  name: 'Download Time Calculator',
+  url: pageURL,
+  description,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  inLanguage: 'en',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(webAppSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/converters/" class="hover:text-indigo-600 transition-colors">Converters & Tools</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">Download Time Calculator</span>
+  </nav>
+
+  <div class="gap-8 grid grid-cols-1 lg:grid-cols-3">
+    <!-- Calculator card -->
+    <section class="lg:col-span-2">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex flex-wrap justify-between items-start gap-6 mb-8">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 rounded-full mb-3">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                <span class="text-indigo-600 text-xs font-semibold uppercase tracking-wide">Live Calculator</span>
+              </div>
+              <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">Download Time Calculator</h1>
+              <p class="text-gray-500 text-base mt-3 max-w-lg leading-relaxed">
+                Enter a file size and your internet speed — get the exact download time, with an honest real-world estimate built in.
+              </p>
+            </div>
+          </div>
+
+          <!-- Form -->
+          <div class="gap-8 grid md:grid-cols-2">
+            <!-- File size -->
+            <div class="space-y-3">
+              <label for="fsize" class="block text-gray-700 text-sm font-semibold">File size</label>
+              <div class="relative">
+                <input id="fsize" inputmode="decimal" placeholder="Enter size" class="glow-input pr-20" value="75" />
+                <select id="fsize-unit" aria-label="File size unit" class="absolute right-3 top-1/2 -translate-y-1/2 bg-amber-50 border border-amber-100 text-amber-600 font-bold text-sm rounded-lg px-2 py-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-200">
+                  <option value="1">MB</option>
+                  <option value="1000" selected>GB</option>
+                  <option value="1000000">TB</option>
+                </select>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">Decimal (SI) units: 1 GB = 1,000 MB, matching how downloads are labeled.</p>
+            </div>
+
+            <!-- Speed -->
+            <div class="space-y-3">
+              <label for="speed" class="block text-gray-700 text-sm font-semibold">Internet speed</label>
+              <div class="relative">
+                <input id="speed" inputmode="decimal" placeholder="Enter speed" class="glow-input pr-24" value="100" />
+                <select id="speed-unit" aria-label="Speed unit" class="absolute right-3 top-1/2 -translate-y-1/2 bg-teal-50 border border-teal-100 text-teal-600 font-bold text-sm rounded-lg px-2 py-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-200">
+                  <option value="mbps" selected>Mbps</option>
+                  <option value="mbs">MB/s</option>
+                </select>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">Use Mbps for your plan speed, or MB/s if you're reading it from a download bar.</p>
+            </div>
+          </div>
+
+          <!-- Overhead toggle -->
+          <div class="flex flex-wrap items-center gap-3 mt-6">
+            <label class="flex items-center gap-3 cursor-pointer select-none">
+              <input id="overhead" type="checkbox" checked class="w-5 h-5 rounded accent-indigo-500" />
+              <span class="text-gray-700 text-sm font-semibold">Real-world estimate</span>
+            </label>
+            <span class="text-gray-400 text-xs">adds 10% for protocol overhead and typical slowdowns — clearly the smarter default</span>
+          </div>
+
+          <!-- Presets -->
+          <div class="flex flex-wrap items-center gap-2 mt-6" aria-label="Common file sizes">
+            <span class="text-gray-400 text-xs font-medium mr-1">Try a file:</span>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm font-semibold hover:bg-amber-100 transition-colors" data-mb="75000">🎮 AAA game (75 GB)</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm font-semibold hover:bg-amber-100 transition-colors" data-mb="20000">🎬 4K movie (20 GB)</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm font-semibold hover:bg-amber-100 transition-colors" data-mb="10000">📷 Photo library (10 GB)</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm font-semibold hover:bg-amber-100 transition-colors" data-mb="3000">💿 Linux ISO (3 GB)</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm font-semibold hover:bg-amber-100 transition-colors" data-mb="350">🎞️ 4K video minute (350 MB)</button>
+          </div>
+
+          <!-- Actions -->
+          <div class="gap-4 grid grid-cols-1 sm:grid-cols-3 mt-8">
+            <button id="btn-share" class="btn-premium btn-secondary flex justify-center items-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              Share result
+            </button>
+            <button id="btn-reload" class="btn-premium btn-primary">Reload calculator</button>
+            <button id="btn-clear" class="btn-premium btn-ghost">Clear all</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="space-y-6">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-200">
+              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 8v4l3 3M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <span class="text-gray-900 font-bold text-lg">Download time</span>
+          </div>
+          <div id="result-main" class="result-display mb-3">—</div>
+          <div id="result-secondary" class="text-gray-500 text-sm mb-6"></div>
+
+          <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-6"></div>
+
+          <div class="space-y-4">
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Ideal (no overhead):</span><span id="out-ideal" class="text-teal-600 font-semibold">—</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Real-world (+10%):</span><span id="out-real" class="text-amber-600 font-semibold">—</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Download speed:</span><span id="out-mbs" class="text-gray-600 font-semibold">—</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Data per minute:</span><span id="out-permin" class="text-gray-600 font-semibold">—</span></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Quick answer -->
+  <article class="premium-card mt-12">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Download Time Formula</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500 mb-8">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">Time (seconds) = file size in MB × 8 ÷ speed in Mbps.</strong> The ×8 converts megabytes to megabits so the units match. Example: <strong>100 GB at 100 Mbps = 100,000 × 8 ÷ 100 = 8,000 seconds ≈ 2 hours 13 minutes</strong> — plan for ~2.5 hours with real-world overhead.
+        </p>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The formula exists because of the units mismatch at the heart of every download: files are measured in <strong>bytes</strong> (MB, GB), connections in <strong>bits</strong> (Mbps) — and one byte is 8 bits. If you'd rather convert the speed itself first, our <a href="/converters/mbps-to-mbs/" class="text-indigo-600 hover:underline font-medium">Mbps to MB/s converter</a> shows what your plan delivers per second, and the <a href="/" class="text-indigo-600 hover:underline font-medium">Mbps to Bytes converter</a> breaks it down to the byte.
+      </p>
+    </div>
+  </article>
+
+  <!-- Big chart -->
+  <section class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <div class="flex md:flex-row flex-col md:justify-between md:items-center gap-4 mb-8">
+        <h2 class="font-bold text-2xl text-gray-900">Download Time Chart: Every Size × Every Speed</h2>
+        <p class="text-gray-400 text-sm font-medium">Ideal times — add 10–15% for real conditions</p>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
+        <table class="luxury-table">
+          <caption class="sr-only">Download times for common file sizes at common internet speeds</caption>
+          <thead>
+            <tr><th>File size</th><th>25 Mbps</th><th>50 Mbps</th><th>100 Mbps</th><th>300 Mbps</th><th>500 Mbps</th><th>1 Gbps</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="text-amber-600 font-semibold">1 GB</td><td>5m 20s</td><td>2m 40s</td><td>1m 20s</td><td>27s</td><td>16s</td><td>8s</td></tr>
+            <tr><td class="text-amber-600 font-semibold">5 GB</td><td>26m 40s</td><td>13m 20s</td><td>6m 40s</td><td>2m 13s</td><td>1m 20s</td><td>40s</td></tr>
+            <tr><td class="text-amber-600 font-semibold">20 GB</td><td>1h 47m</td><td>53m 20s</td><td>26m 40s</td><td>8m 53s</td><td>5m 20s</td><td>2m 40s</td></tr>
+            <tr><td class="text-amber-600 font-semibold">50 GB</td><td>4h 27m</td><td>2h 13m</td><td>1h 7m</td><td>22m 13s</td><td>13m 20s</td><td>6m 40s</td></tr>
+            <tr><td class="text-amber-600 font-semibold">75 GB</td><td>6h 40m</td><td>3h 20m</td><td class="text-indigo-600 font-bold">1h 40m</td><td>33m 20s</td><td>20m</td><td>10m</td></tr>
+            <tr><td class="text-amber-600 font-semibold">100 GB</td><td>8h 53m</td><td>4h 27m</td><td class="text-indigo-600 font-bold">2h 13m</td><td>44m 27s</td><td>26m 40s</td><td>13m 20s</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-6 text-gray-400 text-sm">All values computed with time = MB × 8 ÷ Mbps using decimal units (1 GB = 1,000 MB). Real downloads typically run 10–15% longer.</p>
+    </div>
+  </section>
+
+  <!-- Why slower -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Why Real Downloads Are Slower Than the Math</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        The formula gives the ceiling of your connection — the point where nothing else can be squeezed through the line. Four things eat into it, in roughly this order of impact:
+      </p>
+      <div class="grid sm:grid-cols-2 gap-4 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-blue-50 to-white border border-blue-100">
+          <h3 class="font-semibold text-gray-900 mb-2">📶 Wi-Fi signal loss</h3>
+          <p class="text-gray-500 text-sm">The biggest variable. Distance, walls, and interference commonly cut 20–40% versus an ethernet cable. If a download matters, plug in.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100">
+          <h3 class="font-semibold text-gray-900 mb-2">📦 Protocol overhead</h3>
+          <p class="text-gray-500 text-sm">TCP/IP headers, acknowledgments, and encryption consume 5–10% of raw bandwidth before any file data moves. Unavoidable — that's what our +10% estimate covers.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-green-50 to-white border border-green-100">
+          <h3 class="font-semibold text-gray-900 mb-2">🖥️ Server-side limits</h3>
+          <p class="text-gray-500 text-sm">The server has its own cap and load. Game platforms throttle per-connection at peak times; a single-source download rarely sustains gigabit alone.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-orange-50 to-white border border-orange-100">
+          <h3 class="font-semibold text-gray-900 mb-2">🕗 Peak-hour congestion</h3>
+          <p class="text-gray-500 text-sm">Evenings (7–11 pm) are the slowest window on most networks. Overnight downloads regularly finish 10–20% faster than the same download at 9 pm.</p>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Rule of thumb: on ethernet, expect 85–90% of the calculated speed; on Wi-Fi, 60–80%. If you consistently see less than 70% of your plan speed on a wired connection, the problem is worth chasing — start by converting what your download bar shows back into Mbps with the <a href="/converters/bytes-to-mbps/" class="text-indigo-600 hover:underline font-medium">Bytes to Mbps converter</a> and comparing against what you pay for.
+      </p>
+    </div>
+  </article>
+
+  <!-- Popular downloads -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Popular Downloads, Ranked by Pain</h2>
+      <div class="space-y-4">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100">
+          <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
+            <h3 class="font-semibold text-gray-900">🎮 Modern AAA game — 75–150 GB</h3>
+            <span class="text-gray-400 text-sm">100 Mbps: 1h 40m – 3h 20m</span>
+          </div>
+          <p class="text-gray-500 text-sm">The heaviest common download. Pre-load before launch day when platforms allow it — launch-night server congestion can double these times.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100">
+          <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
+            <h3 class="font-semibold text-gray-900">🎬 4K movie file — 15–25 GB</h3>
+            <span class="text-gray-400 text-sm">100 Mbps: 20–33 min</span>
+          </div>
+          <p class="text-gray-500 text-sm">Streaming needs only ~25 Mbps sustained, but downloading the full file up front takes this long — worth it for flights and spotty connections.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100">
+          <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
+            <h3 class="font-semibold text-gray-900">💾 OS / large software update — 5–12 GB</h3>
+            <span class="text-gray-400 text-sm">100 Mbps: 7–16 min</span>
+          </div>
+          <p class="text-gray-500 text-sm">Usually well-mirrored and fast. The install step afterwards often takes longer than the download itself.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100">
+          <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
+            <h3 class="font-semibold text-gray-900">☁️ Cloud photo library restore — 10–50 GB</h3>
+            <span class="text-gray-400 text-sm">100 Mbps: 13 min – 1h 7m</span>
+          </div>
+          <p class="text-gray-500 text-sm">Thousands of small files download slower than one big file of the same size — per-file overhead adds up. Expect the high end of estimates.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- How to speed up -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">How to Make Downloads Finish Sooner</h2>
+      <div class="space-y-3">
+        <div class="flex gap-3 items-start">
+          <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">1</span>
+          <span class="text-gray-600"><strong>Use ethernet for anything over 10 GB.</strong> It's the single biggest improvement available — often 25–40% faster than Wi-Fi on the same connection.</span>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">2</span>
+          <span class="text-gray-600"><strong>Pause other traffic.</strong> A 4K stream takes ~25 Mbps off the top; cloud backup clients can quietly take much more.</span>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">3</span>
+          <span class="text-gray-600"><strong>Schedule big downloads off-peak.</strong> Overnight and early-morning windows avoid neighborhood congestion.</span>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">4</span>
+          <span class="text-gray-600"><strong>Check the disk, not just the network.</strong> Writing 100 GB to an old external hard drive can bottleneck below a fast fiber connection.</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers about download times</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'Mbps to MB/s Converter',
+        url: '/converters/mbps-to-mbs/',
+        description: 'See the per-second download speed behind your plan before estimating times.',
+        icon: '🚀',
+      },
+      {
+        name: 'Mbps to Bytes Converter',
+        url: '/',
+        description: 'Convert your plan speed all the way down to Bytes/s and KB/s.',
+        icon: '⚡',
+      },
+      {
+        name: 'All Converters & Tools',
+        url: '/converters/',
+        description: 'Browse every data-rate converter and calculator on the site.',
+        icon: '🧰',
+      },
+    ]}
+  />
+
+  <!-- Calculator Logic -->
+  <script is:inline>
+    const el = (id) => document.getElementById(id);
+    const $fsize = el("fsize");
+    const $fsizeUnit = el("fsize-unit");
+    const $speed = el("speed");
+    const $speedUnit = el("speed-unit");
+    const $overhead = el("overhead");
+    const $btnShare = el("btn-share");
+    const $btnReload = el("btn-reload");
+    const $btnClear = el("btn-clear");
+
+    const $resMain = el("result-main");
+    const $resSecondary = el("result-secondary");
+    const $outIdeal = el("out-ideal");
+    const $outReal = el("out-real");
+    const $outMbs = el("out-mbs");
+    const $outPerMin = el("out-permin");
+
+    const num = (x) => Number(String(x).replace(/[^0-9+\-.e]/g, ""));
+
+    const fmtTime = (sec) => {
+      if (!Number.isFinite(sec) || sec <= 0) return "—";
+      if (sec < 1) return "under a second";
+      const d = Math.floor(sec / 86400);
+      const h = Math.floor((sec % 86400) / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = Math.round(sec % 60);
+      if (d > 0) return `${d}d ${h}h ${m}m`;
+      if (h > 0) return `${h}h ${m}m`;
+      if (m > 0) return `${m}m ${s}s`;
+      return `${s}s`;
+    };
+
+    const fmtSize = (mb) => (mb >= 1000 ? Number((mb / 1000).toFixed(2)).toLocaleString() + " GB" : Math.round(mb).toLocaleString() + " MB");
+
+    const render = () => {
+      const sizeMB = num($fsize.value) * Number($fsizeUnit.value);
+      let mbps = num($speed.value);
+      if ($speedUnit.value === "mbs") mbps = mbps * 8;
+
+      if (!Number.isFinite(sizeMB) || sizeMB <= 0 || !Number.isFinite(mbps) || mbps <= 0 || $fsize.value === "" || $speed.value === "") {
+        $resMain.textContent = "—";
+        $resSecondary.textContent = "";
+        [$outIdeal, $outReal, $outMbs, $outPerMin].forEach((o) => (o.textContent = "—"));
+        return;
+      }
+
+      const idealSec = (sizeMB * 8) / mbps;
+      const realSec = idealSec / 0.9;
+      const shown = $overhead.checked ? realSec : idealSec;
+      const mbsSpeed = mbps / 8;
+
+      $resMain.textContent = fmtTime(shown);
+      $resSecondary.textContent = ($overhead.checked ? "real-world estimate · " : "ideal conditions · ") + fmtSize(sizeMB) + " at " + Number(mbps.toFixed(2)).toLocaleString() + " Mbps";
+      $outIdeal.textContent = fmtTime(idealSec);
+      $outReal.textContent = fmtTime(realSec);
+      $outMbs.textContent = Number(mbsSpeed.toFixed(2)).toLocaleString() + " MB/s";
+      $outPerMin.textContent = fmtSize(mbsSpeed * 60);
+    };
+
+    [$fsize, $speed].forEach((i) => i.addEventListener("input", render));
+    [$fsizeUnit, $speedUnit].forEach((s) => s.addEventListener("change", render));
+    $overhead.addEventListener("change", render);
+
+    document.querySelectorAll(".preset-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const mb = Number(chip.dataset.mb);
+        if (mb >= 1000) {
+          $fsize.value = (mb / 1000).toString();
+          $fsizeUnit.value = "1000";
+        } else {
+          $fsize.value = mb.toString();
+          $fsizeUnit.value = "1";
+        }
+        render();
+      });
+    });
+
+    $btnShare.addEventListener("click", async () => {
+      if ($resMain.textContent === "—") return;
+      const txt = `Download time: ${$fsize.value} ${$fsizeUnit.options[$fsizeUnit.selectedIndex].text} at ${$speed.value} ${$speedUnit.options[$speedUnit.selectedIndex].text} = ${$resMain.textContent}. via mbpstobytes.com/tools/download-time-calculator/`;
+      try { await navigator.clipboard.writeText(txt); } catch (e) {}
+    });
+
+    $btnReload.addEventListener("click", () => window.location.reload());
+    $btnClear.addEventListener("click", () => {
+      $fsize.value = "";
+      $speed.value = "";
+      render();
+    });
+
+    render();
+  </script>
+</Layout>

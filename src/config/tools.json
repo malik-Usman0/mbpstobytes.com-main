@@ -29,6 +29,12 @@
       "description": "Calculators for network engineering, capacity planning, and performance analysis.",
       "tools": [
         {
+          "name": "Download Time Calculator",
+          "url": "/tools/download-time-calculator/",
+          "description": "How long will any file take? Enter size and speed — 100 GB at 100 Mbps ≈ 2h 13m, with real-world overhead.",
+          "icon": "⏱️"
+        },
+        {
           "name": "Packets Per Second (PPS) Calculator",
           "url": "/tools/packets-per-second-calculator/",
           "description": "Convert bandwidth to packets per second with correct line-rate math — 1 Gbps at 64B = 1.49M PPS, wire overhead included.",
