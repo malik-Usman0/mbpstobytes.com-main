@@ -17,7 +17,11 @@ export default {
     plugins: [tailwindcss()],
   },
 
-  adapter: vercel(),
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true,
+    },
+  }),
 
   devToolbar: {
     enabled: false,

@@ -1,6 +1,7 @@
 ---
 import Header from '@theme/components/Header.astro';
 import Footer from '@theme/components/Footer.astro';
+import Analytics from '@vercel/analytics/astro';
 
 import { getTranslations, getLocalizedUrl, type Locale, localeToOG, defaultLocale, locales } from '@theme/i18n/utils';
 
@@ -204,6 +205,7 @@ const isIndexPage = pathWithoutLocale === '/';
     }
 
     <slot name="head" />
+    <Analytics />
   </head>
   <body class="flex flex-col justify-between min-h-screen">
     <Header />
