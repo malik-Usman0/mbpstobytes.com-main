@@ -47,7 +47,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
-    { '@type': 'ListItem', position: 2, name: 'Converters & Tools', item: `${siteURL}/converters/` },
+    { '@type': 'ListItem', position: 2, name: 'Tools', item: `${siteURL}/tools/` },
     { '@type': 'ListItem', position: 3, name: 'Download Time Calculator', item: pageURL },
   ],
 };
@@ -89,7 +89,7 @@ const faqSchema = {
   <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
     <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
     <span class="mx-2">/</span>
-    <a href="/converters/" class="hover:text-indigo-600 transition-colors">Converters & Tools</a>
+    <a href="/tools/" class="hover:text-indigo-600 transition-colors">Tools</a>
     <span class="mx-2">/</span>
     <span class="text-gray-600 font-medium">Download Time Calculator</span>
   </nav>
@@ -125,7 +125,14 @@ const faqSchema = {
                   <option value="1000000">TB</option>
                 </select>
               </div>
-              <p class="text-gray-400 text-xs leading-relaxed">Decimal (SI) units: 1 GB = 1,000 MB, matching how downloads are labeled.</p>
+              <div class="flex flex-wrap items-center gap-2 pt-1">
+                <span class="text-gray-400 text-xs font-medium">Size shown by:</span>
+                <div class="inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5" role="group" aria-label="Size standard">
+                  <button id="size-si" type="button" aria-pressed="true" class="px-3 py-1 rounded-md text-xs font-semibold bg-white text-indigo-600 shadow-sm transition-all duration-200">Website (GB)</button>
+                  <button id="size-iec" type="button" aria-pressed="false" class="px-3 py-1 rounded-md text-xs font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200">Steam / Windows (GiB)</button>
+                </div>
+              </div>
+              <p id="size-hint" class="text-gray-400 text-xs leading-relaxed">Decimal (SI): 1 GB = 1,000 MB — how most websites label downloads.</p>
             </div>
 
             <!-- Speed -->
@@ -142,13 +149,15 @@ const faqSchema = {
             </div>
           </div>
 
-          <!-- Overhead toggle -->
+          <!-- Connection selector (drives the real-world estimate) -->
           <div class="flex flex-wrap items-center gap-3 mt-6">
-            <label class="flex items-center gap-3 cursor-pointer select-none">
-              <input id="overhead" type="checkbox" checked class="w-5 h-5 rounded accent-indigo-500" />
-              <span class="text-gray-700 text-sm font-semibold">Real-world estimate</span>
-            </label>
-            <span class="text-gray-400 text-xs">adds 10% for protocol overhead and typical slowdowns — clearly the smarter default</span>
+            <span class="text-gray-700 text-sm font-semibold">Connection:</span>
+            <div class="inline-flex rounded-xl border border-gray-200 bg-gray-50 p-1" role="group" aria-label="Connection type">
+              <button id="conn-ideal" type="button" aria-pressed="false" class="px-4 py-1.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200">Ideal</button>
+              <button id="conn-eth" type="button" aria-pressed="true" class="px-4 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-600 shadow-sm transition-all duration-200">Ethernet</button>
+              <button id="conn-wifi" type="button" aria-pressed="false" class="px-4 py-1.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200">Wi-Fi</button>
+            </div>
+            <span id="conn-hint" class="text-gray-400 text-xs">wired: ~10% slower than ideal (protocol overhead)</span>
           </div>
 
           <!-- Presets -->
@@ -195,7 +204,8 @@ const faqSchema = {
 
           <div class="space-y-4">
             <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Ideal (no overhead):</span><span id="out-ideal" class="text-teal-600 font-semibold">—</span></div>
-            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Real-world (+10%):</span><span id="out-real" class="text-amber-600 font-semibold">—</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Ethernet (~10% loss):</span><span id="out-real" class="text-amber-600 font-semibold">—</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Wi-Fi (~30% loss):</span><span id="out-wifi" class="text-orange-500 font-semibold">—</span></div>
             <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Download speed:</span><span id="out-mbs" class="text-gray-600 font-semibold">—</span></div>
             <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Data per minute:</span><span id="out-permin" class="text-gray-600 font-semibold">—</span></div>
           </div>
@@ -213,6 +223,9 @@ const faqSchema = {
           <strong class="text-indigo-600">Time (seconds) = file size in MB × 8 ÷ speed in Mbps.</strong> The ×8 converts megabytes to megabits so the units match. Example: <strong>100 GB at 100 Mbps = 100,000 × 8 ÷ 100 = 8,000 seconds ≈ 2 hours 13 minutes</strong> — plan for ~2.5 hours with real-world overhead.
         </p>
       </div>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        One accuracy detail most calculators ignore: <strong>Steam and Windows label sizes "GB" but actually report binary GiB</strong> — so a "75 GB" Steam game is really 80.5 decimal GB, 7.4% more data than the label suggests. Use the <em>Steam / Windows (GiB)</em> toggle above when your size comes from those sources, and the estimate accounts for it.
+      </p>
       <p class="text-gray-600 leading-relaxed">
         The formula exists because of the units mismatch at the heart of every download: files are measured in <strong>bytes</strong> (MB, GB), connections in <strong>bits</strong> (Mbps) — and one byte is 8 bits. If you'd rather convert the speed itself first, our <a href="/converters/mbps-to-mbs/" class="text-indigo-600 hover:underline font-medium">Mbps to MB/s converter</a> shows what your plan delivers per second, and the <a href="/" class="text-indigo-600 hover:underline font-medium">Mbps to Bytes converter</a> breaks it down to the byte.
       </p>
@@ -395,7 +408,16 @@ const faqSchema = {
     const $fsizeUnit = el("fsize-unit");
     const $speed = el("speed");
     const $speedUnit = el("speed-unit");
-    const $overhead = el("overhead");
+    const $sizeSi = el("size-si");
+    const $sizeIec = el("size-iec");
+    const $sizeHint = el("size-hint");
+    const $connIdeal = el("conn-ideal");
+    const $connEth = el("conn-eth");
+    const $connWifi = el("conn-wifi");
+    const $connHint = el("conn-hint");
+    const $outWifi = el("out-wifi");
+    let sizeStd = "si"; // si = GB (decimal) | iec = GiB (Steam/Windows)
+    let conn = "eth"; // ideal | eth | wifi
     const $btnShare = el("btn-share");
     const $btnReload = el("btn-reload");
     const $btnClear = el("btn-clear");
@@ -424,34 +446,72 @@ const faqSchema = {
 
     const fmtSize = (mb) => (mb >= 1000 ? Number((mb / 1000).toFixed(2)).toLocaleString() + " GB" : Math.round(mb).toLocaleString() + " MB");
 
+    // GiB factor: Steam and Windows label sizes "GB" but report binary GiB —
+    // a "75 GB" Steam game is 75 GiB = 80,530 MB, 7.4% more data.
+    const IEC_FACTOR = 1.073741824; // per GB step; MB uses 1.048576
+    const sizeToMB = () => {
+      const v = num($fsize.value);
+      const unit = Number($fsizeUnit.value); // 1 MB, 1000 GB, 1000000 TB
+      if (!Number.isFinite(v)) return NaN;
+      if (sizeStd === "si") return v * unit;
+      if (unit === 1) return v * 1.048576; // MiB → MB
+      if (unit === 1000) return v * 1073.741824; // GiB → MB
+      return v * 1099511.627776; // TiB → MB
+    };
+
+    const connUI = () => {
+      const cls_on = "px-4 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-600 shadow-sm transition-all duration-200";
+      const cls_off = "px-4 py-1.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200";
+      $connIdeal.className = conn === "ideal" ? cls_on : cls_off;
+      $connEth.className = conn === "eth" ? cls_on : cls_off;
+      $connWifi.className = conn === "wifi" ? cls_on : cls_off;
+      [$connIdeal, $connEth, $connWifi].forEach((b) => b.setAttribute("aria-pressed", "false"));
+      ({ ideal: $connIdeal, eth: $connEth, wifi: $connWifi })[conn].setAttribute("aria-pressed", "true");
+      $connHint.textContent = conn === "ideal" ? "theoretical maximum — nothing real downloads this fast" : conn === "eth" ? "wired: ~10% slower than ideal (protocol overhead)" : "wireless: ~30% slower than ideal (signal loss + overhead)";
+      const s_on = "px-3 py-1 rounded-md text-xs font-semibold bg-white text-indigo-600 shadow-sm transition-all duration-200";
+      const s_off = "px-3 py-1 rounded-md text-xs font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200";
+      $sizeSi.className = sizeStd === "si" ? s_on : s_off;
+      $sizeIec.className = sizeStd === "iec" ? s_on : s_off;
+      $sizeSi.setAttribute("aria-pressed", String(sizeStd === "si"));
+      $sizeIec.setAttribute("aria-pressed", String(sizeStd === "iec"));
+      $sizeHint.textContent = sizeStd === "si" ? "Decimal (SI): 1 GB = 1,000 MB — how most websites label downloads." : "Binary (IEC): Steam and Windows call it \"GB\" but mean GiB — a 75 GB Steam game is really 80.5 decimal GB (7.4% more).";
+    };
+
     const render = () => {
-      const sizeMB = num($fsize.value) * Number($fsizeUnit.value);
+      const sizeMB = sizeToMB();
       let mbps = num($speed.value);
       if ($speedUnit.value === "mbs") mbps = mbps * 8;
 
       if (!Number.isFinite(sizeMB) || sizeMB <= 0 || !Number.isFinite(mbps) || mbps <= 0 || $fsize.value === "" || $speed.value === "") {
         $resMain.textContent = "—";
         $resSecondary.textContent = "";
-        [$outIdeal, $outReal, $outMbs, $outPerMin].forEach((o) => (o.textContent = "—"));
+        [$outIdeal, $outReal, $outWifi, $outMbs, $outPerMin].forEach((o) => (o.textContent = "—"));
         return;
       }
 
       const idealSec = (sizeMB * 8) / mbps;
-      const realSec = idealSec / 0.9;
-      const shown = $overhead.checked ? realSec : idealSec;
+      const ethSec = idealSec / 0.9;
+      const wifiSec = idealSec / 0.7;
+      const shown = conn === "ideal" ? idealSec : conn === "eth" ? ethSec : wifiSec;
       const mbsSpeed = mbps / 8;
+      const connLabel = conn === "ideal" ? "ideal conditions" : conn === "eth" ? "over ethernet" : "over Wi-Fi";
 
       $resMain.textContent = fmtTime(shown);
-      $resSecondary.textContent = ($overhead.checked ? "real-world estimate · " : "ideal conditions · ") + fmtSize(sizeMB) + " at " + Number(mbps.toFixed(2)).toLocaleString() + " Mbps";
+      $resSecondary.textContent = connLabel + " · " + fmtSize(sizeMB) + (sizeStd === "iec" ? " (from GiB)" : "") + " at " + Number(mbps.toFixed(2)).toLocaleString() + " Mbps";
       $outIdeal.textContent = fmtTime(idealSec);
-      $outReal.textContent = fmtTime(realSec);
+      $outReal.textContent = fmtTime(ethSec);
+      $outWifi.textContent = fmtTime(wifiSec);
       $outMbs.textContent = Number(mbsSpeed.toFixed(2)).toLocaleString() + " MB/s";
       $outPerMin.textContent = fmtSize(mbsSpeed * 60);
     };
 
     [$fsize, $speed].forEach((i) => i.addEventListener("input", render));
     [$fsizeUnit, $speedUnit].forEach((s) => s.addEventListener("change", render));
-    $overhead.addEventListener("change", render);
+    $sizeSi.addEventListener("click", () => { sizeStd = "si"; connUI(); render(); });
+    $sizeIec.addEventListener("click", () => { sizeStd = "iec"; connUI(); render(); });
+    $connIdeal.addEventListener("click", () => { conn = "ideal"; connUI(); render(); });
+    $connEth.addEventListener("click", () => { conn = "eth"; connUI(); render(); });
+    $connWifi.addEventListener("click", () => { conn = "wifi"; connUI(); render(); });
 
     document.querySelectorAll(".preset-chip").forEach((chip) => {
       chip.addEventListener("click", () => {
@@ -480,6 +540,7 @@ const faqSchema = {
       render();
     });
 
+    connUI();
     render();
   </script>
 </Layout>

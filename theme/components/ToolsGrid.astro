@@ -6,11 +6,13 @@ interface Props {
   subtitle?: string;
   showViewAll?: boolean;
   currentUrl?: string;
+  onlyCategories?: string[];
 }
 
-const { title = 'All Converters & Tools', subtitle = 'Free, real-time data-rate calculators — no ads, no sign-up.', showViewAll = false, currentUrl } = Astro.props;
+const { title = 'All Converters & Tools', subtitle = 'Free, real-time data-rate calculators — no ads, no sign-up.', showViewAll = false, currentUrl, onlyCategories } = Astro.props;
 
 const categories = toolsConfig.categories
+  .filter((cat) => !onlyCategories || onlyCategories.includes(cat.name))
   .map((cat) => ({
     ...cat,
     tools: cat.tools.filter((tool) => tool.url !== currentUrl),

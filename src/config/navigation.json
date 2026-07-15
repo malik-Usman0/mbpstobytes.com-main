@@ -9,6 +9,10 @@
 			"url": "/converters/"
 		},
 		{
+			"name": "Tools",
+			"url": "/tools/"
+		},
+		{
 			"name": "About Us",
 			"url": "/about-us/"
 		},
@@ -33,6 +37,10 @@
 		{
 			"name": "Converters",
 			"url": "/converters/"
+		},
+		{
+			"name": "Tools",
+			"url": "/tools/"
 		},
 		{
 			"name": "Bytes to Mbps",

@@ -1,0 +1,82 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import ToolsGrid from '@theme/components/ToolsGrid.astro';
+import toolsConfig from '~/config/tools.json';
+
+const title = 'Network Tools & Calculators – Download Time, PPS & More';
+const description =
+  'Free network calculators: download time, packets per second, and more. Built on verified formulas with real-world overhead — see our published methodology.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/tools/`;
+
+const netTools = toolsConfig.categories.filter((c) => c.name === 'Network Tools').flatMap((c) => c.tools);
+
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${pageURL}#collectionpage`,
+  name: title,
+  url: pageURL,
+  description,
+  hasPart: netTools.map((tool) => ({
+    '@type': 'WebApplication',
+    name: tool.name,
+    url: `${siteURL}${tool.url}`,
+    description: tool.description,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  })),
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Tools', item: pageURL },
+  ],
+};
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">Tools</span>
+  </nav>
+
+  <div class="text-center max-w-3xl mx-auto mb-4">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 rounded-full mb-4">
+      <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+      <span class="text-indigo-600 text-xs font-semibold uppercase tracking-wide">Free Calculators</span>
+    </div>
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">Network Tools & Calculators</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      Where the converters answer "what does this unit equal?", these calculators answer the practical questions behind it — how long a download takes, how many packets your hardware must process, and how much bandwidth a workload really needs. Every tool uses verified formulas with real-world overhead handled explicitly, per our
+      <a href="/methodology/" class="text-indigo-600 hover:underline font-medium">calculation methodology</a>.
+    </p>
+  </div>
+
+  <ToolsGrid title="All Calculators" subtitle="Practical answers, not just unit math." onlyCategories={['Network Tools']} />
+
+  <!-- Cross-silo link -->
+  <article class="premium-card mt-12">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-4">Need a Unit Conversion Instead?</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        If you're translating between units — Mbps to MB/s, Bytes to Mbps — rather than calculating a result, the converters are the faster path. Each one includes formulas, conversion tables, and SI/IEC standard support.
+      </p>
+      <a href="/converters/" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-semibold text-sm shadow-lg shadow-indigo-200 hover:opacity-90 transition-opacity duration-300">
+        Browse all converters →
+      </a>
+    </div>
+  </article>
+</Layout>

@@ -1,5 +1,4 @@
 import tailwindcss from '@tailwindcss/vite';
-import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
 
 import config from './src/config/config.json';
@@ -17,7 +16,6 @@ export default {
     plugins: [tailwindcss()],
   },
 
-  adapter: vercel(),
 
   devToolbar: {
     enabled: false,
