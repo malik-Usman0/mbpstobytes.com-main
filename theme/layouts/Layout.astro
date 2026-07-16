@@ -59,6 +59,9 @@ const pageURL = `${siteURL}${Astro.url.pathname}`;
 
     {config.site.yandex_verification && <meta name="yandex-verification" content={config.site.yandex_verification} />}
 
+    <!-- Google AdSense -->
+    {config.site.adsense_client && <script async is:inline src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${config.site.adsense_client}`} crossorigin="anonymous" />}
+
     <!-- robots (single consolidated tag — applies to all crawlers) -->
     <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
 
