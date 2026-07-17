@@ -112,6 +112,7 @@ const toc = [
   ['#line-rate-table', 'Line-Rate Reference Table'],
   ['#good-pps', "What's a Good PPS?"],
   ['#device-classes', 'PPS by Hardware Class'],
+  ['#cloud-pps', 'PPS in the Cloud'],
   ['#measure-pps', 'How to Measure Your Own PPS'],
   ['#ddos', 'Why DDoS Is Measured in PPS'],
   ['#faqs', 'FAQs'],
@@ -429,15 +430,15 @@ const toc = [
       <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
         <table class="luxury-table">
           <thead>
-            <tr><th>Link speed</th><th>64B frames</th><th>512B frames</th><th>1500B MTU</th><th>9000B jumbo</th></tr>
+            <tr><th>Link speed</th><th>64B frames</th><th>128B frames</th><th>512B frames</th><th>1024B frames</th><th>1500B MTU</th><th>9000B jumbo</th></tr>
           </thead>
           <tbody>
-            <tr><td class="text-teal-600 font-semibold">100 Mbps</td><td class="text-amber-600 font-bold">148,810</td><td class="text-gray-600">23,496</td><td class="text-gray-600">8,127</td><td class="text-gray-500">1,386</td></tr>
-            <tr><td class="text-teal-600 font-semibold">1 Gbps</td><td class="text-amber-600 font-bold">1,488,095</td><td class="text-gray-600">234,962</td><td class="text-gray-600">81,274</td><td class="text-gray-500">13,858</td></tr>
-            <tr><td class="text-teal-600 font-semibold">10 Gbps</td><td class="text-amber-600 font-bold">14,880,952</td><td class="text-gray-600">2,349,624</td><td class="text-gray-600">812,744</td><td class="text-gray-500">138,580</td></tr>
-            <tr><td class="text-teal-600 font-semibold">25 Gbps</td><td class="text-amber-600">37,202,381</td><td class="text-gray-600">5,874,060</td><td class="text-gray-600">2,031,860</td><td class="text-gray-500">346,451</td></tr>
-            <tr><td class="text-teal-600 font-semibold">40 Gbps</td><td class="text-amber-600">59,523,810</td><td class="text-gray-600">9,398,496</td><td class="text-gray-600">3,250,975</td><td class="text-gray-500">554,324</td></tr>
-            <tr><td class="text-teal-600 font-semibold">100 Gbps</td><td class="text-amber-600 font-bold">148,809,524</td><td class="text-gray-600">23,496,241</td><td class="text-gray-600">8,127,438</td><td class="text-gray-500">1,385,809</td></tr>
+            <tr><td class="text-teal-600 font-semibold">100 Mbps</td><td class="text-amber-600 font-bold">148,810</td><td class="text-gray-600">84,459</td><td class="text-gray-600">23,496</td><td class="text-gray-600">11,973</td><td class="text-gray-600">8,127</td><td class="text-gray-500">1,386</td></tr>
+            <tr><td class="text-teal-600 font-semibold">1 Gbps</td><td class="text-amber-600 font-bold">1,488,095</td><td class="text-gray-600">844,595</td><td class="text-gray-600">234,962</td><td class="text-gray-600">119,732</td><td class="text-gray-600">81,274</td><td class="text-gray-500">13,858</td></tr>
+            <tr><td class="text-teal-600 font-semibold">10 Gbps</td><td class="text-amber-600 font-bold">14,880,952</td><td class="text-gray-600">8,445,946</td><td class="text-gray-600">2,349,624</td><td class="text-gray-600">1,197,318</td><td class="text-gray-600">812,744</td><td class="text-gray-500">138,580</td></tr>
+            <tr><td class="text-teal-600 font-semibold">25 Gbps</td><td class="text-amber-600">37,202,381</td><td class="text-gray-600">21,114,865</td><td class="text-gray-600">5,874,060</td><td class="text-gray-600">2,993,295</td><td class="text-gray-600">2,031,860</td><td class="text-gray-500">346,451</td></tr>
+            <tr><td class="text-teal-600 font-semibold">40 Gbps</td><td class="text-amber-600">59,523,810</td><td class="text-gray-600">33,783,784</td><td class="text-gray-600">9,398,496</td><td class="text-gray-600">4,789,272</td><td class="text-gray-600">3,250,975</td><td class="text-gray-500">554,324</td></tr>
+            <tr><td class="text-teal-600 font-semibold">100 Gbps</td><td class="text-amber-600 font-bold">148,809,524</td><td class="text-gray-600">84,459,459</td><td class="text-gray-600">23,496,241</td><td class="text-gray-600">11,973,180</td><td class="text-gray-600">8,127,438</td><td class="text-gray-500">1,385,809</td></tr>
           </tbody>
         </table>
       </div>
@@ -499,8 +500,55 @@ const toc = [
         </table>
       </div>
       <p class="mt-6 text-gray-400 text-sm">Ranges represent hardware classes, not specific models — always check the vendor datasheet for the exact device and feature set you plan to run.</p>
+
+      <h3 class="font-semibold text-gray-900 mt-10 mb-4">Named Examples (Vendor-Published Figures Only)</h3>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        To make the classes concrete, here are real devices whose packet-rate performance is published by their vendors. Unlike some comparison tables online, we only list figures a vendor actually publishes — where a vendor doesn't state a PPS number, we say so instead of inventing one.
+      </p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
+        <table class="luxury-table">
+          <thead>
+            <tr><th>Device</th><th>Category</th><th>Vendor-published performance</th><th>Reality check</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">Fortinet FortiGate 100F</td><td class="text-gray-500">Enterprise NGFW</td><td class="text-amber-600 font-bold">15 Mpps firewall throughput (10 Gbps at 64B UDP)</td><td class="text-gray-500">Drops to 2.6 Gbps with IPS enabled — the feature tax in action</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Cisco ASR 1002-HX</td><td class="text-gray-500">Enterprise edge router</td><td class="text-amber-600">Up to 200 Gbps data-plane throughput (RFC 2544)</td><td class="text-gray-500">Mpps depends on ESP module and frame size</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Juniper MX204</td><td class="text-gray-500">Service-provider edge</td><td class="text-amber-600">400 Gbps system capacity, ASIC forwarding</td><td class="text-gray-500">Effectively line-rate at any packet size</td></tr>
+            <tr><td class="text-teal-600 font-semibold">MikroTik CCR2004-1G-12S+2XS</td><td class="text-gray-500">ISP / SMB router</td><td class="text-amber-600">Full per-frame-size RFC 2544 test tables on its product page</td><td class="text-gray-500">Fast-path vs normal forwarding differ several-fold — read the right row</td></tr>
+            <tr><td class="text-teal-600 font-semibold">pfSense on 4-core x86</td><td class="text-gray-500">Software firewall</td><td class="text-amber-600">No official rating — community benchmarks cluster around ~1M PPS</td><td class="text-gray-500">Scales with cores, NIC queues, and tuning</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-4 text-gray-400 text-sm">Sources: <a href="https://www.fortinet.com/products/next-generation-firewall" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Fortinet datasheets</a>, <a href="https://www.cisco.com/c/en/us/products/collateral/routers/asr-1000-series-aggregation-services-routers/datasheet-c78-731632.html" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Cisco ASR 1000 datasheet</a>, <a href="https://mikrotik.com/product/ccr2004_1g_12s_2xs" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">MikroTik test results</a>. Ratings assume RFC 2544 conditions with security features off — always re-check the current datasheet for your configuration.</p>
     </div>
   </section>
+
+  <!-- Cloud & virtualization -->
+  <article class="premium-card mt-8" id="cloud-pps">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">PPS in the Cloud: VM Quotas, SR-IOV, and Kubernetes</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Cloud instances hit packet-rate ceilings that have nothing to do with their advertised bandwidth — and unlike hardware datasheets, most of these limits are enforced quietly. What matters is knowing the mechanisms and how to see them:
+      </p>
+      <div class="space-y-4 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-orange-50 to-white border border-orange-100">
+          <h3 class="font-semibold text-gray-900 mb-2">☁️ AWS — per-instance PPS allowances</h3>
+          <p class="text-gray-500 text-sm">Every EC2 instance type carries a packets-per-second allowance alongside its bandwidth allowance, scaling with instance size. AWS doesn't publish the exact numbers, but it does expose when you hit them: the ENA driver's <code class="text-teal-700">pps_allowance_exceeded</code> and <code class="text-teal-700">bw_in_allowance_exceeded</code> counters (visible via <code class="text-teal-700">ethtool -S</code>) increment every time packets are queued or dropped for exceeding the quota. If that counter is climbing while bandwidth looks fine, you've found a PPS ceiling — resize the instance or shard the traffic.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-blue-50 to-white border border-blue-100">
+          <h3 class="font-semibold text-gray-900 mb-2">☁️ Azure — Accelerated Networking (SR-IOV)</h3>
+          <p class="text-gray-500 text-sm">Azure's Accelerated Networking gives the VM direct hardware access to the NIC (SR-IOV), bypassing the host's virtual switch. The result is a large jump in achievable PPS and much lower jitter — it's off on some older sizes and images, so verifying it's enabled is the first check for any packet-heavy Azure workload.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100">
+          <h3 class="font-semibold text-gray-900 mb-2">⎈ Kubernetes — the CNI is the bottleneck</h3>
+          <p class="text-gray-500 text-sm">Per-pod packet rates are governed by the CNI dataplane: iptables-based kube-proxy paths process rules per packet and degrade as services multiply, while eBPF dataplanes (like Cilium) short-circuit that work and sustain several times the PPS on identical hardware. Service-mesh sidecars add another per-packet hop — every proxy in the path pays the packet tax again.</p>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The measurement approach is the same as on bare metal — use the OS counters from the <a href="#measure-pps" class="text-indigo-600 hover:underline font-medium">measurement section</a> inside the VM, and correlate with the provider's allowance metrics before assuming you need more bandwidth. Nine times out of ten in packet-heavy cloud workloads, it's the PPS quota, not the pipe.
+      </p>
+    </div>
+  </article>
 
   <!-- Measure -->
   <article class="premium-card mt-8" id="measure-pps">

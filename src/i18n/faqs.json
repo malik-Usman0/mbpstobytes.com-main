@@ -28,6 +28,14 @@
       {
         "question": "What is Megabits per second?",
         "answer": "Megabits per second (Mbps) is a data transfer rate showing how many megabits are transmitted each second. It’s commonly used to describe internet and network speeds (for example, 100 Mbps)."
+      },
+      {
+        "question": "How many Bytes per second is 300 Mbps?",
+        "answer": "300 Mbps = 37,500,000 Bytes per second (300 × 125,000), which is 37.5 MB/s or 37,500 KB/s in decimal units. That data transfer rate moves roughly ten smartphone photos every second."
+      },
+      {
+        "question": "Why do networks use bits but files use bytes?",
+        "answer": "Telecommunications has measured transmission in bits per second since the telegraph era, because a wire carries one bit at a time — so network bandwidth kept the convention. Storage grew up around the byte because one byte encodes one character, making it the natural unit for files. Your internet connection sits at the boundary between the two systems, which is exactly why this converter exists."
       }
     ]
   },

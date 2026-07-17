@@ -220,6 +220,29 @@ export const getStaticPaths = getStaticPathsIndex;
     </aside>
   </div>
 
+  <!-- Trust strip -->
+  <div class="mt-12 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-white border-l-4 border-indigo-500">
+    <p class="text-sm text-gray-500">
+      ✓ <strong class="text-gray-600">Fact-checked:</strong> every conversion factor on this page follows
+      <a href="https://physics.nist.gov/cuu/Units/binary.html" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">NIST</a> and
+      <a href="https://www.iec.ch/prefixes-binary-multiples" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">IEC 80000-13</a> definitions — see our
+      <a href="/methodology/" class="text-indigo-600 hover:underline">calculation methodology</a>. 🔄 <strong class="text-gray-600">Last reviewed:</strong> July 2026
+    </p>
+  </div>
+
+  <!-- Quick Answer -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Quick Answer: Mbps to Bytes</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500">
+        <p class="text-lg text-gray-700">
+          To convert Mbps to Bytes per second, <strong class="text-indigo-600">multiply by 125,000</strong> — because 1 megabit is 1,000,000 bits and every byte holds 8 bits. So <strong class="text-indigo-600">1 Mbps = 125,000 B/s</strong>, and a 100 Mbps internet connection moves a maximum of 12,500,000 Bytes (12.5 MB) of data every second.
+        </p>
+        <p class="text-gray-500 text-sm mt-2">Bytes/s = Mbps × 1,000,000 ÷ 8 &nbsp;·&nbsp; works for any data transfer rate, upload or download</p>
+      </div>
+    </div>
+  </article>
+
   <!-- What is Megabit Section -->
   <article class="premium-card mt-12">
     <div class="premium-card-inner">
@@ -617,6 +640,57 @@ export const getStaticPaths = getStaticPathsIndex;
           An ISP advertised speed of 100 Mbps translates to a maximum real-world download speed of approximately <strong>12.5 MB/s</strong> (12,500,000 Bytes/s). Actual speeds may vary due to network latency, Wi-Fi interference, routing overhead, and server limitations. For plan-by-plan download speeds, use our <a href="/converters/mbps-to-mbs/" class="text-indigo-600 hover:underline font-medium">Mbps to MB/s converter</a>.
         </p>
       </div>
+    </div>
+  </article>
+
+  <!-- Real files section -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">What Those Bytes Mean for Real Files</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Bytes per second only becomes intuitive when you attach it to the files you actually move. Every file on your device — photos, songs, documents — is measured in bytes, so converting your network speed into Bytes per second tells you directly how fast those files travel. Here is what common connection speeds move in one second, and what that adds up to over a minute:
+      </p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">What different Mbps speeds move in bytes, per second and per minute</caption>
+          <thead>
+            <tr><th>Connection</th><th>Bytes per second</th><th>In one second</th><th>In one minute</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">10 Mbps</td><td class="text-amber-600">1,250,000 B/s</td><td class="text-gray-500">a 1 MB document + change</td><td class="text-gray-500">75 MB — about 25 phone photos</td></tr>
+            <tr><td class="text-teal-600 font-semibold">50 Mbps</td><td class="text-amber-600">6,250,000 B/s</td><td class="text-gray-500">a 5 MB song, with room to spare</td><td class="text-gray-500">375 MB — an episode in SD</td></tr>
+            <tr><td class="text-teal-600 font-semibold">100 Mbps</td><td class="text-amber-600 font-bold">12,500,000 B/s</td><td class="text-gray-500">3–4 smartphone photos</td><td class="text-gray-500">750 MB — a short HD video</td></tr>
+            <tr><td class="text-teal-600 font-semibold">500 Mbps</td><td class="text-amber-600">62,500,000 B/s</td><td class="text-gray-500">a 60 MB app update</td><td class="text-gray-500">3.75 GB — a full 4K movie's worth</td></tr>
+            <tr><td class="text-teal-600 font-semibold">1,000 Mbps</td><td class="text-amber-600 font-bold">125,000,000 B/s</td><td class="text-gray-500">125 MB — a small game patch</td><td class="text-gray-500">7.5 GB — a AAA game slice</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Assumptions: typical file sizes (photo ≈ 3–4 MB, song ≈ 5 MB, SD episode ≈ 350 MB) and ideal network bandwidth — real-world throughput runs 10–15% lower on a wired connection. To turn any specific file size and speed into an exact time, use the <a href="/tools/download-time-calculator/" class="text-indigo-600 hover:underline font-medium">download time calculator</a>.
+      </p>
+    </div>
+  </article>
+
+  <!-- Mb vs MB notation section -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Mb vs MB: One Letter, 8× Difference</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        The entire Mbps-to-Bytes confusion hangs on capitalization: a lowercase <strong>b</strong> means bits, an uppercase <strong>B</strong> means bytes. "Mb" (megabit) and "MB" (megabyte) differ by a factor of 8 — so misreading one letter makes a speed or file size look eight times bigger or smaller than it really is. Networks, internet plans, and speed tests use bits (Mbps, Gbps, Kbps); files, storage, and download managers use bytes (MB, GB, KB/s).
+      </p>
+      <div class="grid sm:grid-cols-2 gap-6 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100 text-center">
+          <p class="text-3xl font-extrabold text-teal-600 mb-1">Mb = megabit</p>
+          <p class="text-gray-500 text-sm">1,000,000 bits · the unit of network speed and bandwidth</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100 text-center">
+          <p class="text-3xl font-extrabold text-amber-600 mb-1">MB = megabyte</p>
+          <p class="text-gray-500 text-sm">1,000,000 bytes = 8,000,000 bits · the unit of files and storage</p>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        When you see a plan advertised at "100 Mbps" and a download running at "12.5 MB/s", both numbers describe exactly the same speed in different units. For the plan-by-plan comparison, see our <a href="/converters/mbps-to-mbs/" class="text-indigo-600 hover:underline font-medium">Mbps to MB/s converter</a>; to go the other direction from an app's readout, use the <a href="/converters/bytes-to-mbps/" class="text-indigo-600 hover:underline font-medium">Bytes to Mbps converter</a>.
+      </p>
     </div>
   </article>
 
