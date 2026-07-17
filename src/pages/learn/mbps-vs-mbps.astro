@@ -1,0 +1,476 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'Mbps vs MBps: What’s the Difference? (bits vs Bytes)';
+const description =
+  'Mbps measures megabits, MBps megabytes — 8× apart. Why a 100 Mbps plan downloads at 12.5 MBps, how to read the units, with a live converter and cheat table.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/learn/mbps-vs-mbps/`;
+const datePublished = '2026-07-20';
+
+const faqs = [
+  {
+    question: 'Is Mbps the same as MBps?',
+    answer:
+      'No. Mbps (lowercase b) means megabits per second; MBps (uppercase B) means megabytes per second. Because 1 byte = 8 bits, MBps is always 8 times larger than Mbps for the same speed: 100 Mbps = 12.5 MBps. They describe the same connection at different scales.',
+  },
+  {
+    question: 'How many Mbps is 1 MBps?',
+    answer:
+      '1 MBps = 8 Mbps. Multiply any MBps (megabytes per second) value by 8 to get Mbps (megabits per second). Example: a download running at 25 MBps is using 200 Mbps of bandwidth.',
+  },
+  {
+    question: 'Which is bigger, Mb or MB?',
+    answer:
+      'MB (megabyte) is 8 times bigger than Mb (megabit). The capitalization is the entire difference: lowercase b = bit, uppercase B = byte, and one byte contains 8 bits. The same holds up the whole ladder — GB is 8× Gb, KB is 8× Kb.',
+  },
+  {
+    question: 'Why do internet providers use Mbps instead of MBps?',
+    answer:
+      'Two reasons. Telecommunications has measured transmission in bits per second since long before home internet, because a wire physically carries one bit at a time — networking simply kept the convention. And commercially, the bit figure is 8× larger: "100 Mbps" reads better in an ad than "12.5 MBps", even though they are identical.',
+  },
+  {
+    question: 'Is 100 Mbps equal to 12.5 MBps?',
+    answer:
+      'Yes, exactly — 100 ÷ 8 = 12.5. A 100 Mbps connection delivers a theoretical maximum of 12.5 megabytes per second. In practice, expect around 11–12 MBps on a wired connection after protocol overhead, and less over Wi-Fi.',
+  },
+  {
+    question: 'Are MBps and MB/s the same thing?',
+    answer:
+      'Yes. MBps and MB/s are two notations for the same unit: megabytes per second. Download managers and apps typically write MB/s, while articles comparing it against Mbps often write MBps to highlight the capital B.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Learn', item: `${siteURL}/learn/` },
+    { '@type': 'ListItem', position: 3, name: 'Mbps vs MBps', item: pageURL },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': `${pageURL}#article`,
+  headline: 'Mbps vs MBps: The One-Letter Difference That Changes Everything',
+  description,
+  datePublished,
+  dateModified: datePublished,
+  author: { '@type': 'Organization', name: 'Mbps to Bytes Editorial Team', url: `${siteURL}/about-us/` },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageURL },
+  image: `${siteURL}/images/og.png`,
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const toc = [
+  ['#quick-answer', 'Quick Answer'],
+  ['#capital-letter', 'The Capital-Letter Rule'],
+  ['#the-math', 'The 8× Math'],
+  ['#converter', 'Live Converter'],
+  ['#where-used', 'Where Each Unit Appears'],
+  ['#cheat-table', 'The Full Cheat Table'],
+  ['#the-trap', 'The Classic Trap (Try It)'],
+  ['#why-confusion', 'Why the Confusion Exists'],
+  ['#binary-wrinkle', 'The MiB Wrinkle'],
+  ['#faqs', 'FAQs'],
+  ['#references', 'References'],
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/learn/" class="hover:text-indigo-600 transition-colors">Learn</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">Mbps vs MBps</span>
+  </nav>
+
+  <!-- Title + byline -->
+  <div class="max-w-3xl">
+    <p class="text-indigo-600 text-xs font-semibold uppercase tracking-wide mb-3">Learn · Units & Notation</p>
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">Mbps vs MBps: The One-Letter Difference That Changes Everything</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      A lowercase b and an uppercase B look interchangeable — and they're a factor of eight apart. This is why your 100 Mbps internet plan "only" downloads at 12.5 MBps, why file transfers take longer than you calculated, and why nobody can agree on what "fast" means.
+    </p>
+
+    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-white border-l-4 border-indigo-500">
+      <p class="text-sm text-gray-700">By <a href="/about-us/" class="text-indigo-600 font-semibold hover:underline">Editorial Team</a></p>
+      <p class="text-sm text-gray-500 mt-1">📅 <strong class="text-gray-600">Published:</strong> July 20, 2026 &nbsp;|&nbsp; 🔄 <strong class="text-gray-600">Last reviewed:</strong> July 20, 2026</p>
+      <p class="text-sm text-gray-500 mt-1">
+        ✓ <strong class="text-gray-600">Fact-checked:</strong> All unit definitions follow
+        <a href="https://physics.nist.gov/cuu/Units/binary.html" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">NIST</a> and
+        <a href="https://www.iec.ch/prefixes-binary-multiples" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">IEC 80000-13</a> —
+        see our <a href="/methodology/" class="text-indigo-600 hover:underline">methodology</a>.
+      </p>
+    </div>
+
+    <details class="mt-4 premium-card overflow-hidden group">
+      <summary class="flex justify-between items-center gap-4 p-5 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+        <span>📝 Table of Contents</span>
+        <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </summary>
+      <ol class="px-6 pb-5 text-sm text-gray-600 space-y-1.5 list-decimal list-inside">
+        {toc.map(([href, label]) => (
+          <li><a href={href} class="text-indigo-600 hover:underline">{label}</a></li>
+        ))}
+      </ol>
+    </details>
+  </div>
+
+  <!-- Quick Answer -->
+  <article class="premium-card mt-10" id="quick-answer">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Quick Answer</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500">
+        <p class="text-lg text-gray-700">
+          <strong>Mbps</strong> (lowercase b) is <strong>megabits</strong> per second — the unit of internet speed. <strong>MBps</strong> (uppercase B) is <strong>megabytes</strong> per second — the unit of file transfer. One byte holds 8 bits, so <strong class="text-indigo-600">the Mbps number is always 8× bigger for the same speed: 100 Mbps = 12.5 MBps</strong>. Neither is wrong; they're two rulers measuring one thing.
+        </p>
+      </div>
+    </div>
+  </article>
+
+  <!-- Capital letter rule -->
+  <article class="premium-card mt-8" id="capital-letter">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Capital-Letter Rule</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Everything in this topic comes down to one typographic convention, set by the international standards bodies: <strong>lowercase b = bit</strong>, the smallest unit of data (a single 1 or 0), and <strong>uppercase B = byte</strong>, a group of exactly 8 bits. That single letter is the only visual difference between a megabit and a megabyte — and mixing them up changes every number by a factor of eight.
+      </p>
+      <div class="grid sm:grid-cols-2 gap-6 mb-6" role="img" aria-label="Comparison: Mb lowercase b is a megabit, one million bits; MB uppercase B is a megabyte, eight million bits">
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-teal-50 to-white border-2 border-teal-100 text-center">
+          <p class="text-5xl font-black text-teal-600 mb-2">Mb<span class="text-2xl align-top">↓</span></p>
+          <p class="font-semibold text-gray-900">megabit — lowercase b</p>
+          <p class="text-gray-500 text-sm mt-2">1,000,000 bits<br />the network's unit: internet plans, speed tests, routers</p>
+        </div>
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-amber-50 to-white border-2 border-amber-100 text-center">
+          <p class="text-5xl font-black text-amber-600 mb-2">MB<span class="text-2xl align-top">↑</span></p>
+          <p class="font-semibold text-gray-900">megabyte — uppercase B</p>
+          <p class="text-gray-500 text-sm mt-2">1,000,000 bytes = 8,000,000 bits<br />the file's unit: sizes, storage, download bars</p>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Add "ps" (per second) to either and you get the two speed units this article is about: <strong>Mbps</strong> for network bandwidth, <strong>MBps</strong> (also written MB/s — same thing) for file transfer rates. The rule scales across the entire unit ladder: Kb vs KB, Gb vs GB, Tb vs TB — always ×8 between the small-b and big-B versions.
+      </p>
+    </div>
+  </article>
+
+  <!-- The math -->
+  <article class="premium-card mt-8" id="the-math">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The 8× Math, Worked Out</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Converting between the two units is one multiplication or division — no lookup tables required once you know the direction:
+      </p>
+      <div class="grid sm:grid-cols-2 gap-4 mb-8">
+        <div class="p-4 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <p class="text-xs text-teal-600 font-medium mb-1">Mbps → MBps (plan speed → download speed)</p>
+          <code class="text-teal-700 text-sm font-semibold">MBps = Mbps ÷ 8</code>
+        </div>
+        <div class="p-4 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">
+          <p class="text-xs text-amber-600 font-medium mb-1">MBps → Mbps (download speed → plan speed)</p>
+          <code class="text-amber-700 text-sm font-semibold">Mbps = MBps × 8</code>
+        </div>
+      </div>
+      <h3 class="font-semibold text-gray-900 mb-4">Example: the 100 Mbps plan</h3>
+      <div class="space-y-3">
+        <div class="flex gap-3 items-start">
+          <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">1</span>
+          <span class="text-gray-600">Your provider sells "100 Mbps" — 100 million <em>bits</em> arriving per second</span>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">2</span>
+          <span class="text-gray-600">Your download manager counts <em>bytes</em>: 100,000,000 ÷ 8 = <strong class="text-indigo-600">12,500,000 bytes/s = 12.5 MBps</strong></span>
+        </div>
+        <div class="flex gap-3 items-start">
+          <span class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center flex-shrink-0">3</span>
+          <span class="text-gray-600">Both numbers describe the identical stream of data — nothing is missing, nothing is throttled</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Live mini converter -->
+  <section class="premium-card mt-8" id="converter">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">Try It Live</h2>
+      <p class="text-gray-500 mb-6">Type in either box — the other updates instantly.</p>
+      <div class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-teal-50 via-white to-amber-50 border-2 border-gray-100">
+        <div class="grid sm:grid-cols-2 gap-6 items-center">
+          <div class="space-y-2">
+            <label for="mvm-mbps" class="block text-gray-700 text-sm font-semibold">Mbps <span class="text-gray-400 font-normal">(megabits/s — plan speed)</span></label>
+            <div class="relative">
+              <input id="mvm-mbps" inputmode="decimal" value="100" class="glow-input pr-16" />
+              <div class="absolute right-5 top-1/2 -translate-y-1/2 text-teal-500 font-bold text-sm">Mbps</div>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <label for="mvm-mbytes" class="block text-gray-700 text-sm font-semibold">MBps <span class="text-gray-400 font-normal">(megabytes/s — download speed)</span></label>
+            <div class="relative">
+              <input id="mvm-mbytes" inputmode="decimal" value="12.5" class="glow-input pr-16" />
+              <div class="absolute right-5 top-1/2 -translate-y-1/2 text-amber-500 font-bold text-sm">MBps</div>
+            </div>
+          </div>
+        </div>
+        <p class="text-gray-400 text-xs mt-4 text-center">Decimal (SI) units. For KB/s, GB/hour and full unit options, use the <a href="/converters/mbps-to-mbs/" class="text-indigo-600 hover:underline font-medium">full Mbps to MB/s converter</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Where used -->
+  <article class="premium-card mt-8" id="where-used">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Where You'll See Each Unit</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        The two units aren't competing standards — they own different territories, and knowing the map instantly tells you which one you're looking at:
+      </p>
+      <div class="grid sm:grid-cols-2 gap-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-3">Bits territory (Mbps, Gbps, Kbps)</h3>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span>Internet plans and ISP advertising</span></li>
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span>Speed test results (Ookla, Fast.com)</span></li>
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span>Router and Wi-Fi specifications</span></li>
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span>Streaming bitrates (a 25 Mbps 4K stream)</span></li>
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span>Mobile network speeds (4G/5G)</span></li>
+          </ul>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">
+          <h3 class="font-semibold text-gray-900 mb-3">Bytes territory (MBps/MB/s, GB, KB)</h3>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>Browser and Steam download bars</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>File sizes and folder properties</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>Storage capacity (SSDs, phones, cloud)</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>Drive transfer speeds (a 550 MB/s SSD)</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>Data caps on mobile plans (measured in GB)</span></li>
+          </ul>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed mt-6">
+        The pattern: <strong>data in motion across a network → bits; data at rest or written to a device → bytes.</strong> Your internet connection is the one place both worlds meet, which is exactly where the confusion lives.
+      </p>
+    </div>
+  </article>
+
+  <!-- Cheat table -->
+  <section class="premium-card mt-8" id="cheat-table">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Full Cheat Table: Every b vs B Pair</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Bookmark-worthy: the complete ladder of bit and byte units in decimal (SI) form, with their per-second speed versions. Every row follows the same ×8 rule.
+      </p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
+        <table class="luxury-table">
+          <caption class="sr-only">Bit units versus byte units across the full ladder with speed forms</caption>
+          <thead>
+            <tr><th>Bit unit (b)</th><th>Byte unit (B)</th><th>Relationship</th><th>Speed forms</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">1 bit</td><td class="text-amber-600 font-semibold">1 Byte = 8 bits</td><td class="text-gray-500">×8</td><td class="text-gray-500">bps · B/s</td></tr>
+            <tr><td class="text-teal-600 font-semibold">1 Kb = 1,000 bits</td><td class="text-amber-600 font-semibold">1 KB = 8,000 bits</td><td class="text-gray-500">KB = 8 × Kb</td><td class="text-gray-500">Kbps · KBps (KB/s)</td></tr>
+            <tr><td class="text-teal-600 font-semibold">1 Mb = 1,000,000 bits</td><td class="text-amber-600 font-bold">1 MB = 8,000,000 bits</td><td class="text-gray-500">MB = 8 × Mb</td><td class="text-gray-500 font-semibold">Mbps · MBps (MB/s)</td></tr>
+            <tr><td class="text-teal-600 font-semibold">1 Gb = 10⁹ bits</td><td class="text-amber-600 font-semibold">1 GB = 8 × 10⁹ bits</td><td class="text-gray-500">GB = 8 × Gb</td><td class="text-gray-500">Gbps · GBps (GB/s)</td></tr>
+            <tr><td class="text-teal-600 font-semibold">1 Tb = 10¹² bits</td><td class="text-amber-600 font-semibold">1 TB = 8 × 10¹² bits</td><td class="text-gray-500">TB = 8 × Tb</td><td class="text-gray-500">Tbps · TBps (TB/s)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-6 text-gray-400 text-sm">All values decimal (SI), per NIST and IEC 80000-13 — 1 Mb is exactly 1,000,000 bits, not 1,048,576. Some guides mix binary values into this table without saying so; the binary units have their own names (Kib, Mib, KiB, MiB) — see <a href="#binary-wrinkle" class="text-indigo-600 hover:underline">the MiB wrinkle</a> below.</p>
+    </div>
+  </section>
+
+  <!-- The trap -->
+  <section class="premium-card mt-8" id="the-trap">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">The Classic Trap — Try It Yourself</h2>
+      <p class="text-gray-500 mb-6">Estimate a download time while confusing the units, and see how far off you land.</p>
+      <div class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-teal-50 via-white to-amber-50 border-2 border-gray-100">
+        <div class="flex flex-wrap gap-4 items-end mb-6">
+          <div class="space-y-2">
+            <label for="trap-size" class="block text-gray-700 text-sm font-semibold">File size</label>
+            <select id="trap-size" class="glow-input cursor-pointer">
+              <option value="500" selected>500 MB video</option>
+              <option value="5000">5 GB game update</option>
+              <option value="75000">75 GB full game</option>
+            </select>
+          </div>
+          <div class="space-y-2">
+            <label for="trap-speed" class="block text-gray-700 text-sm font-semibold">Internet plan</label>
+            <select id="trap-speed" class="glow-input cursor-pointer">
+              <option value="25">25 Mbps</option>
+              <option value="100" selected>100 Mbps</option>
+              <option value="500">500 Mbps</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="p-5 rounded-2xl bg-white border-2 border-red-100 text-center">
+            <p class="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-1">❌ Units confused ("100 Mbps moves 100 MB/s")</p>
+            <p id="trap-wrong" class="text-3xl font-extrabold text-red-400">5 seconds</p>
+          </div>
+          <div class="p-5 rounded-2xl bg-white border-2 border-teal-100 text-center">
+            <p class="text-gray-400 text-xs font-semibold uppercase tracking-wide mb-1">✓ Units correct (÷8 applied)</p>
+            <p id="trap-right" class="text-3xl font-extrabold text-teal-600">40 seconds</p>
+          </div>
+        </div>
+        <p id="trap-note" class="text-gray-500 text-sm mt-4 text-center">The mistake makes every estimate exactly 8× too optimistic — here, 35 seconds of "where did my speed go?"</p>
+      </div>
+      <p class="text-gray-600 leading-relaxed mt-6">
+        This is the single most common speed-math error, and it's also why unit confusion generates so many angry support calls: the connection is delivering exactly what was promised — in bits — while the customer measured the promise in bytes. For precise download-time planning with real-world overhead, use the <a href="/tools/download-time-calculator/" class="text-indigo-600 hover:underline font-medium">download time calculator</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Why confusion -->
+  <article class="premium-card mt-8" id="why-confusion">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Why the Confusion Exists at All</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        The split is historical, not a conspiracy. Telegraph and telephone engineering measured transmission in individual pulses — bits — because that's what a wire physically carries, one at a time. When computer networking arrived, it inherited the bits-per-second convention wholesale. Storage engineering developed separately around the byte, because one byte encodes one character of text — the natural unit for measuring <em>information kept</em>, rather than <em>information moving</em>.
+      </p>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        For decades the two systems never had to meet in consumer life. Then home internet put a network interface in every house, and suddenly the same person sees both units daily: the plan they bought (bits) and the files they download (bytes). Marketing does play a supporting role — providers have no incentive to switch to the 8×-smaller byte figure — but the underlying convention predates internet advertising entirely.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        The practical takeaway is a habit, not a formula: <strong>whenever a speed looks 8× too slow or a download 8× too long, check the letter case before blaming the connection.</strong>
+      </p>
+    </div>
+  </article>
+
+  <!-- Binary wrinkle -->
+  <article class="premium-card mt-8" id="binary-wrinkle">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">One More Wrinkle: MB vs MiB</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        Once you've mastered b vs B, there's a second, smaller trap: some software counts megabytes in binary (1 MiB = 1,048,576 bytes) while labeling them "MB" (properly 1,000,000 bytes). Windows and Steam both do this, which shaves about 5% off displayed speeds and inflates file sizes relative to the decimal standard.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        It's a different confusion from Mbps vs MBps — a 4.9% discrepancy rather than 800% — but it explains why numbers can still look slightly "off" after you've converted correctly. Our <a href="/converters/mbps-to-mbs/" class="text-indigo-600 hover:underline font-medium">Mbps to MB/s converter</a> handles both standards with an SI/IEC toggle, and our <a href="/methodology/" class="text-indigo-600 hover:underline font-medium">methodology page</a> documents every factor we use.
+      </p>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12" id="faqs">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers about Mbps vs MBps</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- References -->
+  <section class="premium-card mt-12" id="references">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">References</h2>
+      <ul class="space-y-3 text-gray-600">
+        <li class="flex gap-3"><span class="text-indigo-500">→</span><a href="https://physics.nist.gov/cuu/Units/binary.html" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">NIST — Prefixes for Binary Multiples (definitions of bit/byte units)</a></li>
+        <li class="flex gap-3"><span class="text-indigo-500">→</span><a href="https://www.iec.ch/prefixes-binary-multiples" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">IEC — Prefixes for binary multiples (IEC 80000-13)</a></li>
+        <li class="flex gap-3"><span class="text-indigo-500">→</span><a href="https://www.bipm.org/en/measurement-units" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">BIPM — The International System of Units (SI)</a></li>
+      </ul>
+      <p class="text-gray-400 text-sm mt-6">Spotted an error? Report it via the <a href="/contact-us/" class="text-indigo-600 hover:underline">contact page</a> — our <a href="/editorial-standards/" class="text-indigo-600 hover:underline">editorial standards</a> include a 48-hour correction promise.</p>
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'Mbps to MB/s Converter',
+        url: '/converters/mbps-to-mbs/',
+        description: 'The full converter: every plan speed in MB/s, with MiB/s support and plan comparison.',
+        icon: '🚀',
+      },
+      {
+        name: 'Mbps to Bytes Converter',
+        url: '/',
+        description: 'Convert plan speeds all the way down to Bytes/s and KB/s with a live visualization.',
+        icon: '⚡',
+      },
+      {
+        name: 'Download Time Calculator',
+        url: '/tools/download-time-calculator/',
+        description: 'Apply the correct math automatically — file size + speed → exact download time.',
+        icon: '⏱️',
+      },
+    ]}
+  />
+
+  <!-- Widget scripts -->
+  <script is:inline>
+    // Mini converter
+    const $mvmMbps = document.getElementById("mvm-mbps");
+    const $mvmMB = document.getElementById("mvm-mbytes");
+    const mvmNum = (x) => Number(String(x).replace(/[^0-9+\-.e]/g, ""));
+    const mvmFmt = (n) => (Number.isFinite(n) ? Number(n.toFixed(4)).toString() : "");
+    $mvmMbps.addEventListener("input", () => {
+      const v = mvmNum($mvmMbps.value);
+      $mvmMB.value = $mvmMbps.value === "" ? "" : mvmFmt(v / 8);
+    });
+    $mvmMB.addEventListener("input", () => {
+      const v = mvmNum($mvmMB.value);
+      $mvmMbps.value = $mvmMB.value === "" ? "" : mvmFmt(v * 8);
+    });
+
+    // Trap demo
+    const $trapSize = document.getElementById("trap-size");
+    const $trapSpeed = document.getElementById("trap-speed");
+    const $trapWrong = document.getElementById("trap-wrong");
+    const $trapRight = document.getElementById("trap-right");
+    const $trapNote = document.getElementById("trap-note");
+    const trapFmt = (sec) => {
+      if (sec >= 3600) { const h = Math.floor(sec / 3600); const m = Math.round((sec % 3600) / 60); return `${h}h ${m}m`; }
+      if (sec >= 90) { const m = Math.floor(sec / 60); const s = Math.round(sec % 60); return s ? `${m}m ${s}s` : `${m} minutes`; }
+      return `${Math.round(sec)} seconds`;
+    };
+    const trapRender = () => {
+      const mb = Number($trapSize.value);
+      const mbps = Number($trapSpeed.value);
+      const wrong = mb / mbps;            // treating Mbps as if it were MBps
+      const right = (mb * 8) / mbps;      // correct
+      $trapWrong.textContent = trapFmt(wrong);
+      $trapRight.textContent = trapFmt(right);
+      const diff = right - wrong;
+      $trapNote.textContent = `The mistake makes every estimate exactly 8× too optimistic — here, ${trapFmt(diff)} of "where did my speed go?"`;
+    };
+    $trapSize.addEventListener("change", trapRender);
+    $trapSpeed.addEventListener("change", trapRender);
+    trapRender();
+  </script>
+</Layout>

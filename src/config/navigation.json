@@ -13,16 +13,12 @@
 			"url": "/tools/"
 		},
 		{
+			"name": "Learn",
+			"url": "/learn/"
+		},
+		{
 			"name": "About Us",
 			"url": "/about-us/"
-		},
-		{
-			"name": "Editorial Standards",
-			"url": "/editorial-standards/"
-		},
-		{
-			"name": "Methodology",
-			"url": "/methodology/"
 		},
 		{
 			"name": "Contact Us",
@@ -41,6 +37,10 @@
 		{
 			"name": "Tools",
 			"url": "/tools/"
+		},
+		{
+			"name": "Learn",
+			"url": "/learn/"
 		},
 		{
 			"name": "Bytes to Mbps",

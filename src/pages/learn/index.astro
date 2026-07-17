@@ -1,0 +1,89 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+
+const title = 'Learn Data Units – Bits, Bytes, Mbps & the Confusions Explained';
+const description =
+  'Plain-English guides to data measurement: Mbps vs MBps, bits vs bytes, decimal vs binary units — the confusions behind every speed and storage number, explained properly.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/learn/`;
+
+const articles = [
+  {
+    title: 'Mbps vs MBps: The One-Letter Difference That Changes Everything',
+    url: '/learn/mbps-vs-mbps/',
+    category: 'Units & Notation',
+    description: 'Why a lowercase b and an uppercase B are 8× apart, why your 100 Mbps plan downloads at 12.5 MBps, and how to never confuse them again — with a live converter and the full cheat table.',
+  },
+];
+
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${pageURL}#collectionpage`,
+  name: title,
+  url: pageURL,
+  description,
+  hasPart: articles.map((a) => ({
+    '@type': 'TechArticle',
+    headline: a.title,
+    url: `${siteURL}${a.url}`,
+    description: a.description,
+  })),
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Learn', item: pageURL },
+  ],
+};
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">Learn</span>
+  </nav>
+
+  <div class="text-center max-w-3xl mx-auto mb-10">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 rounded-full mb-4">
+      <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+      <span class="text-indigo-600 text-xs font-semibold uppercase tracking-wide">Guides</span>
+    </div>
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">Learn Data Units, Properly</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      Every number about internet speed or storage hides a unit decision — bits or bytes, decimal or binary, capacity or rate — and most confusion online traces back to exactly those decisions. These guides untangle them one at a time, in plain English, with the math shown and every definition checked against
+      <a href="https://physics.nist.gov/cuu/Units/binary.html" rel="noopener" target="_blank" class="text-indigo-600 hover:underline font-medium">NIST</a> and IEC standards per our <a href="/methodology/" class="text-indigo-600 hover:underline font-medium">methodology</a>. Where a calculator answers "how much?", these pages answer the more useful question: "wait — why?"
+    </p>
+  </div>
+
+  <div class="max-w-3xl mx-auto space-y-6">
+    {
+      articles.map((a) => (
+        <a href={a.url} class="premium-card block p-8 group hover:shadow-lg transition-all duration-300">
+          <p class="text-indigo-600 text-xs font-semibold uppercase tracking-wide mb-2">{a.category}</p>
+          <h2 class="font-bold text-2xl text-gray-900 group-hover:text-indigo-600 transition-colors duration-300">{a.title}</h2>
+          <p class="text-gray-500 mt-3 leading-relaxed">{a.description}</p>
+          <p class="text-indigo-600 text-sm font-semibold mt-4">Read the guide →</p>
+        </a>
+      ))
+    }
+  </div>
+
+  <div class="max-w-3xl mx-auto mt-10 p-6 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100">
+    <h2 class="font-semibold text-gray-900 mb-2">Coming next in this section</h2>
+    <p class="text-gray-500 text-sm leading-relaxed">
+      GB vs GiB (why your drive looks smaller than the box says) · bit vs byte fundamentals · bandwidth vs throughput vs latency · what bitrate really means. Each guide publishes with the same standard: sourced definitions, worked math, and a live tool where it helps. Meanwhile, the <a href="/converters/" class="text-indigo-600 hover:underline font-medium">converters</a> and <a href="/tools/" class="text-indigo-600 hover:underline font-medium">calculators</a> cover the "how much" side.
+    </p>
+  </div>
+</Layout>
