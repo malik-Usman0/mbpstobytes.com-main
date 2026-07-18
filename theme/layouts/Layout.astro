@@ -47,6 +47,22 @@ const pageURL = `${siteURL}${Astro.url.pathname}`;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- Google tag (gtag.js) — placed immediately after head metas per Google guidance -->
+    {
+      config.site.google_analytics_id && (
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=G-${config.site.google_analytics_id}`} />
+        <script
+          is:inline
+          set:html={`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-${config.site.google_analytics_id}');
+          `}
+        />
+      )
+    }
+
     <title>{title}</title>
 
     <!-- favicon -->
@@ -183,20 +199,6 @@ const pageURL = `${siteURL}${Astro.url.pathname}`;
       )
     }
 
-    {
-      config.site.google_analytics_id && (
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=G-${config.site.google_analytics_id}`} />
-        <script
-          is:inline
-          set:html={`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-${config.site.google_analytics_id}');
-          `}
-        />
-      )
-    }
 
     <slot name="head" />
   </head>

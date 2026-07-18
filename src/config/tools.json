@@ -21,6 +21,18 @@
           "url": "/converters/mbps-to-mbs/",
           "description": "See your plan's real download speed — 100 Mbps = 12.5 MB/s. With MiB/s support and plan comparison.",
           "icon": "🚀"
+        },
+        {
+          "name": "Gbps to Mbps Converter",
+          "url": "/converters/gbps-to-mbps/",
+          "description": "1 Gbps = 1,000 Mbps, exactly — multi-gig plans converted, with real-world ~940 Mbps context.",
+          "icon": "🌐"
+        },
+        {
+          "name": "Kbps to Mbps Converter",
+          "url": "/converters/kbps-to-mbps/",
+          "description": "1,000 Kbps = 1 Mbps — with the audio-bitrate ladder: what 128, 320 and 1,411 Kbps really mean.",
+          "icon": "🎵"
         }
       ]
     },

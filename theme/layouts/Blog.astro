@@ -31,7 +31,7 @@ const makeHref = (n: number) => (n === 1 ? firstUrl : `${firstUrl}${n}/`);
 const siteURL = Astro.url.origin;
 ---
 
-<Layout title={`Blog | ${site_title}`} description={`Guides, tips, and updates from ${site_title}.`}>
+<Layout title={`Blog | ${site_title}`} description={`Guides, tips, and updates from ${site_title}.`} noindex={page.data.length === 0}>
   <script
     is:inline
     type="application/ld+json"

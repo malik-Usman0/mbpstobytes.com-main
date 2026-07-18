@@ -1,0 +1,451 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'Kbps to Mbps Converter – Kilobits to Megabits per Second';
+const description =
+  'Convert Kbps to Mbps instantly: 1,000 Kbps = 1 Mbps. Free converter with audio bitrate context — what 128, 320 and 1,411 kbps really mean for streaming and calls.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/converters/kbps-to-mbps/`;
+
+const faqs = [
+  {
+    question: 'How many Kbps are in 1 Mbps?',
+    answer:
+      '1 Mbps = 1,000 Kbps exactly. Data rates use decimal (SI) prefixes, so converting is a clean shift of three decimal places: divide Kbps by 1,000 to get Mbps, or multiply Mbps by 1,000 to get Kbps.',
+  },
+  {
+    question: 'What is 320 Kbps in Mbps?',
+    answer:
+      '320 Kbps = 0.32 Mbps. This is the highest common MP3 bitrate and the top tier of several music streaming services — a tiny fraction of any modern connection, which is why music streaming almost never strains bandwidth.',
+  },
+  {
+    question: 'Is 500 Kbps fast enough for streaming?',
+    answer:
+      'For music, easily — even lossless CD-quality audio needs about 1,411 Kbps (1.4 Mbps). For video, 500 Kbps only supports low-resolution playback around 360p; comfortable HD video streaming starts around 5 Mbps (5,000 Kbps).',
+  },
+  {
+    question: 'What is 20 Mbps in Kbps?',
+    answer:
+      '20 Mbps = 20,000 Kbps. Going this direction, multiply by 1,000. In byte terms, 20 Mbps is 2.5 MB/s of download speed.',
+  },
+  {
+    question: 'Why do audio bitrates use Kbps while internet plans use Mbps?',
+    answer:
+      'Scale. Audio streams are small — 96 to 320 Kbps covers nearly all music — so kilobits keep the numbers readable. Internet plans moved to Mbps as speeds crossed 1,000 Kbps decades ago. Both are the same decimal system: kilobits and megabits per second, 1,000 apart.',
+  },
+  {
+    question: 'Is Kbps the same as KB/s?',
+    answer:
+      'No — lowercase b is bits, uppercase B is bytes, and 1 KB/s = 8 Kbps. A 320 Kbps audio stream downloads at just 40 KB/s. The capitalization trap works exactly as it does with Mbps vs MBps.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Converters', item: `${siteURL}/converters/` },
+    { '@type': 'ListItem', position: 3, name: 'Kbps to Mbps Converter', item: pageURL },
+  ],
+};
+
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  '@id': `${pageURL}#webapplication`,
+  name: 'Kbps to Mbps Converter',
+  url: pageURL,
+  description,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  inLanguage: 'en',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(webAppSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/converters/" class="hover:text-indigo-600 transition-colors">Converters</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">Kbps to Mbps Converter</span>
+  </nav>
+
+  <div class="gap-8 grid grid-cols-1 lg:grid-cols-3">
+    <!-- Calculator card -->
+    <section class="lg:col-span-2">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex flex-wrap justify-between items-start gap-6 mb-8">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 rounded-full mb-3">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                <span class="text-indigo-600 text-xs font-semibold uppercase tracking-wide">Live Calculator</span>
+              </div>
+              <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">Kbps to Mbps Converter</h1>
+              <p class="text-gray-500 text-base mt-3 max-w-lg leading-relaxed">
+                Kilobits to megabits per second, both directions — with the audio-bitrate context that makes small numbers meaningful.
+              </p>
+            </div>
+            <div class="flex items-center gap-2 bg-gray-50 px-4 py-3 rounded-2xl border border-gray-100">
+              <span class="text-gray-500 text-sm font-medium">Decimals:</span>
+              <button id="dec-minus" class="w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold">−</button>
+              <div id="dec-value" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-sm shadow-lg shadow-indigo-200">3</div>
+              <button id="dec-plus" class="w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold">+</button>
+            </div>
+          </div>
+
+          <!-- Form -->
+          <div class="gap-8 grid md:grid-cols-2">
+            <div class="space-y-3">
+              <label for="kbps" class="block text-gray-700 text-sm font-semibold">Kilobits per second (Kbps)</label>
+              <div class="relative">
+                <input id="kbps" inputmode="decimal" placeholder="Enter speed in Kbps" class="glow-input pr-16" value="320" />
+                <div class="absolute right-5 top-1/2 -translate-y-1/2 text-teal-500 font-bold text-sm">Kbps</div>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">Audio bitrates, voice calls, and legacy connection speeds.</p>
+            </div>
+            <div class="space-y-3">
+              <label for="mbps" class="block text-gray-700 text-sm font-semibold">Megabits per second (Mbps)</label>
+              <div class="relative">
+                <input id="mbps" inputmode="decimal" placeholder="Enter speed in Mbps" class="glow-input pr-16" value="0.32" />
+                <div class="absolute right-5 top-1/2 -translate-y-1/2 text-amber-500 font-bold text-sm">Mbps</div>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">Internet plans, speed tests, and video bitrates.</p>
+            </div>
+          </div>
+
+          <!-- Preset chips -->
+          <div class="flex flex-wrap items-center gap-2 mt-6" aria-label="Common bitrates">
+            <span class="text-gray-400 text-xs font-medium mr-1">Try a bitrate:</span>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-kbps="128">128 Kbps MP3</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-kbps="320">320 Kbps MP3</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-kbps="1411">1,411 Kbps CD</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-kbps="5000">5,000 Kbps HD video</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-kbps="25000">25,000 Kbps 4K</button>
+          </div>
+
+          <!-- Actions -->
+          <div class="gap-4 grid grid-cols-1 sm:grid-cols-3 mt-8">
+            <button id="btn-share" class="btn-premium btn-secondary flex justify-center items-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              Share result
+            </button>
+            <button id="btn-reload" class="btn-premium btn-primary">Reload calculator</button>
+            <button id="btn-clear" class="btn-premium btn-ghost">Clear all</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="space-y-6">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-200">
+              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <span class="text-gray-900 font-bold text-lg">Result</span>
+          </div>
+          <div id="result-main" class="result-display mb-3">0.32 Mbps</div>
+          <div id="result-secondary" class="text-gray-500 text-sm mb-6">320 Kbps = 0.32 Mbps</div>
+
+          <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-6"></div>
+
+          <div class="space-y-4">
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Kbps:</span><span id="out-kbps" class="text-teal-600 font-semibold">320</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Mbps:</span><span id="out-mbps" class="text-amber-600 font-semibold">0.32</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">bits per second:</span><span id="out-bps" class="text-gray-600 font-semibold">320,000</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Download speed (KB/s):</span><span id="out-kbs" class="text-gray-600 font-semibold">40</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">MB per hour:</span><span id="out-mbhr" class="text-gray-600 font-semibold">144</span></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Quick answer -->
+  <article class="premium-card mt-12">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">How Many Kbps in 1 Mbps?</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500 mb-8">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">1 Mbps = 1,000 Kbps</strong>, exactly — a kilobit is 1,000 bits and a megabit is 1,000,000 bits, so the conversion is a three-place decimal shift in either direction. <strong class="text-indigo-600">320 Kbps = 0.32 Mbps; 20 Mbps = 20,000 Kbps.</strong>
+        </p>
+        <p class="text-gray-500 text-sm mt-2">Mbps = Kbps ÷ 1,000 &nbsp;·&nbsp; Kbps = Mbps × 1,000 &nbsp;·&nbsp; decimal (SI) by standard — no 1,024 involved</p>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Kilobits per second once described entire internet connections — dial-up peaked at 56 Kbps. Today the unit lives on where data streams are genuinely small: <strong>audio bitrates, voice calls, and sensor traffic</strong>. That's why you meet Kbps mostly inside app settings ("stream at 320 Kbps") while your connection itself is quoted 1,000× higher in Mbps — and why converting between them is usually about checking how little of your bandwidth an audio stream really needs.
+      </p>
+    </div>
+  </article>
+
+  <!-- Bitrate ladder -->
+  <section class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">The Kbps Ladder: What Common Bitrates Mean</h2>
+      <p class="text-gray-500 mb-8">Where real-world streams sit between 8 Kbps and 25,000 Kbps — with each one converted.</p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
+        <table class="luxury-table">
+          <caption class="sr-only">Common bitrates in Kbps with Mbps equivalents and what they are used for</caption>
+          <thead><tr><th>Bitrate</th><th>Mbps</th><th>What it is</th><th>Data per hour</th></tr></thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">8 Kbps</td><td class="text-amber-600">0.008</td><td class="text-gray-500">Minimal voice codec (barely intelligible)</td><td class="text-gray-500">3.6 MB</td></tr>
+            <tr><td class="text-teal-600 font-semibold">64 Kbps</td><td class="text-amber-600">0.064</td><td class="text-gray-500">Classic telephone-quality voice (G.711)</td><td class="text-gray-500">28.8 MB</td></tr>
+            <tr><td class="text-teal-600 font-semibold">96 Kbps</td><td class="text-amber-600">0.096</td><td class="text-gray-500">Low-quality music streaming tier</td><td class="text-gray-500">43.2 MB</td></tr>
+            <tr><td class="text-teal-600 font-semibold">128 Kbps</td><td class="text-amber-600">0.128</td><td class="text-gray-500">Standard MP3 / default streaming quality</td><td class="text-gray-500">57.6 MB</td></tr>
+            <tr><td class="text-teal-600 font-semibold">320 Kbps</td><td class="text-amber-600 font-bold">0.32</td><td class="text-gray-500">"Very high" music streaming / best MP3</td><td class="text-gray-500">144 MB</td></tr>
+            <tr><td class="text-teal-600 font-semibold">1,411 Kbps</td><td class="text-amber-600">1.411</td><td class="text-gray-500">Uncompressed CD-quality audio (16-bit/44.1 kHz)</td><td class="text-gray-500">635 MB</td></tr>
+            <tr><td class="text-teal-600 font-semibold">5,000 Kbps</td><td class="text-amber-600 font-bold">5</td><td class="text-gray-500">1080p HD video streaming class</td><td class="text-gray-500">2.25 GB</td></tr>
+            <tr><td class="text-teal-600 font-semibold">25,000 Kbps</td><td class="text-amber-600">25</td><td class="text-gray-500">4K video streaming class</td><td class="text-gray-500">11.25 GB</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-6 text-gray-400 text-sm">Hourly figures are the bitrate sustained for 60 minutes (bitrate ÷ 8 × 3,600). Streaming services vary bitrates dynamically — treat these as representative classes, not exact platform specs.</p>
+    </div>
+  </section>
+
+  <!-- Conversion tables -->
+  <section class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <div class="flex md:flex-row flex-col md:justify-between md:items-center gap-4 mb-8">
+        <h2 class="font-bold text-2xl text-gray-900">Kbps to Mbps Conversion Table</h2>
+        <p class="text-gray-400 text-sm font-medium">Formula: <span class="text-gray-600">Mbps = Kbps ÷ 1,000</span></p>
+      </div>
+      <div class="gap-8 grid md:grid-cols-2">
+        <div>
+          <h3 class="mb-4 font-semibold text-gray-700">Kbps to Mbps</h3>
+          <div class="rounded-2xl border border-gray-100 overflow-x-auto shadow-sm">
+            <table class="luxury-table">
+              <thead><tr><th>Kbps</th><th>Mbps</th><th>KB/s</th></tr></thead>
+              <tbody>
+                <tr><td class="text-teal-600 font-semibold">100 Kbps</td><td class="text-amber-600">0.1</td><td class="text-gray-500">12.5</td></tr>
+                <tr><td class="text-teal-600 font-semibold">128 Kbps</td><td class="text-amber-600">0.128</td><td class="text-gray-500">16</td></tr>
+                <tr><td class="text-teal-600 font-semibold">256 Kbps</td><td class="text-amber-600">0.256</td><td class="text-gray-500">32</td></tr>
+                <tr><td class="text-teal-600 font-semibold">320 Kbps</td><td class="text-amber-600 font-bold">0.32</td><td class="text-gray-500">40</td></tr>
+                <tr><td class="text-teal-600 font-semibold">500 Kbps</td><td class="text-amber-600">0.5</td><td class="text-gray-500">62.5</td></tr>
+                <tr><td class="text-teal-600 font-semibold">1,000 Kbps</td><td class="text-amber-600 font-bold">1</td><td class="text-gray-500">125</td></tr>
+                <tr><td class="text-teal-600 font-semibold">2,500 Kbps</td><td class="text-amber-600">2.5</td><td class="text-gray-500">312.5</td></tr>
+                <tr><td class="text-teal-600 font-semibold">5,000 Kbps</td><td class="text-amber-600">5</td><td class="text-gray-500">625</td></tr>
+                <tr><td class="text-teal-600 font-semibold">10,000 Kbps</td><td class="text-amber-600">10</td><td class="text-gray-500">1,250</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h3 class="mb-4 font-semibold text-gray-700">Mbps to Kbps</h3>
+          <div class="rounded-2xl border border-gray-100 overflow-x-auto shadow-sm">
+            <table class="luxury-table">
+              <thead><tr><th>Mbps</th><th>Kbps</th><th>Typical context</th></tr></thead>
+              <tbody>
+                <tr><td class="text-amber-600 font-semibold">0.5 Mbps</td><td class="text-teal-600">500</td><td class="text-gray-500">Low-res video</td></tr>
+                <tr><td class="text-amber-600 font-semibold">1 Mbps</td><td class="text-teal-600 font-bold">1,000</td><td class="text-gray-500">Music + browsing floor</td></tr>
+                <tr><td class="text-amber-600 font-semibold">3 Mbps</td><td class="text-teal-600">3,000</td><td class="text-gray-500">SD video streaming</td></tr>
+                <tr><td class="text-amber-600 font-semibold">5 Mbps</td><td class="text-teal-600">5,000</td><td class="text-gray-500">1080p HD video</td></tr>
+                <tr><td class="text-amber-600 font-semibold">10 Mbps</td><td class="text-teal-600">10,000</td><td class="text-gray-500">Comfortable single-user</td></tr>
+                <tr><td class="text-amber-600 font-semibold">20 Mbps</td><td class="text-teal-600 font-bold">20,000</td><td class="text-gray-500">Multi-device households</td></tr>
+                <tr><td class="text-amber-600 font-semibold">25 Mbps</td><td class="text-teal-600">25,000</td><td class="text-gray-500">4K streaming class</td></tr>
+                <tr><td class="text-amber-600 font-semibold">100 Mbps</td><td class="text-teal-600">100,000</td><td class="text-gray-500">Standard fast broadband</td></tr>
+                <tr><td class="text-amber-600 font-semibold">300 Mbps</td><td class="text-teal-600">300,000</td><td class="text-gray-500">Fiber mid-tier</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why kbps still matters -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Why Kbps Still Matters in a Gigabit World</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        It's tempting to dismiss kilobits as a legacy unit — dial-up nostalgia. In practice, three modern domains still run on Kbps math:
+      </p>
+      <div class="grid sm:grid-cols-3 gap-4 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-2">🎵 Audio quality settings</h3>
+          <p class="text-gray-500 text-sm">Every music app's quality tiers are Kbps values in disguise — knowing that "very high = 320 Kbps = 144 MB/hour" is how you budget a mobile data cap.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100">
+          <h3 class="font-semibold text-gray-900 mb-2">📞 Calls & conferencing</h3>
+          <p class="text-gray-500 text-sm">Voice codecs run 8–100 Kbps; a video call's audio channel is a Kbps figure riding alongside a Mbps video channel. Call quality problems are rarely bandwidth — at these rates, it's latency.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">
+          <h3 class="font-semibold text-gray-900 mb-2">📡 Constrained links</h3>
+          <p class="text-gray-500 text-sm">Satellite messengers, LoRa/IoT sensors, tethered fallbacks and congested hotspots all operate in Kbps territory — where knowing that 500 Kbps can't carry HD video saves real frustration.</p>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        And one trap carries over from the bigger units: <strong>Kbps is not KB/s</strong>. The lowercase-b/uppercase-B rule applies all the way down the ladder — 1 KB/s = 8 Kbps — exactly as explained in our <a href="/learn/mbps-vs-mbps/" class="text-indigo-600 hover:underline font-medium">Mbps vs MBps guide</a>.
+      </p>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers about Kbps and Mbps</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'Gbps to Mbps Converter',
+        url: '/converters/gbps-to-mbps/',
+        description: 'The other end of the ladder — gigabit and multi-gig plans in Mbps.',
+        icon: '🌐',
+      },
+      {
+        name: 'Mbps to MB/s Converter',
+        url: '/converters/mbps-to-mbs/',
+        description: 'Turn any Mbps figure into real download speed, with MiB/s support.',
+        icon: '🚀',
+      },
+      {
+        name: 'All Converters & Tools',
+        url: '/converters/',
+        description: 'Browse every data-rate converter and calculator on the site.',
+        icon: '🧰',
+      },
+    ]}
+  />
+
+  <!-- Calculator Logic -->
+  <script is:inline>
+    const el = (id) => document.getElementById(id);
+    const $kbps = el("kbps");
+    const $mbps = el("mbps");
+    const $decMinus = el("dec-minus");
+    const $decPlus = el("dec-plus");
+    const $decValue = el("dec-value");
+    const $btnShare = el("btn-share");
+    const $btnReload = el("btn-reload");
+    const $btnClear = el("btn-clear");
+
+    const $resMain = el("result-main");
+    const $resSecondary = el("result-secondary");
+    const $outKbps = el("out-kbps");
+    const $outMbps = el("out-mbps");
+    const $outBps = el("out-bps");
+    const $outKBs = el("out-kbs");
+    const $outMbHr = el("out-mbhr");
+
+    let state = { lastEdited: "kbps", decimals: 3 };
+
+    const num = (x) => Number(String(x).replace(/[^0-9+\-.e]/g, ""));
+    const fmt = (n) => (Number.isFinite(n) ? Number(n.toFixed(state.decimals)).toLocaleString() : "—");
+
+    const render = () => {
+      let kbps;
+      if (state.lastEdited === "kbps") {
+        const k = num($kbps.value);
+        kbps = Number.isFinite(k) && $kbps.value !== "" ? k : NaN;
+        $mbps.value = Number.isFinite(kbps) ? Number((kbps / 1000).toFixed(Math.max(state.decimals, 6))).toString() : "";
+      } else {
+        const m = num($mbps.value);
+        kbps = Number.isFinite(m) && $mbps.value !== "" ? m * 1000 : NaN;
+        $kbps.value = Number.isFinite(kbps) ? Number(kbps.toFixed(Math.max(state.decimals, 6))).toString() : "";
+      }
+
+      if (!Number.isFinite(kbps)) {
+        $resMain.textContent = "—";
+        $resSecondary.textContent = "";
+        [$outKbps, $outMbps, $outBps, $outKBs, $outMbHr].forEach((o) => (o.textContent = "—"));
+        $decValue.textContent = state.decimals;
+        return;
+      }
+
+      const mbps = kbps / 1000;
+      const bps = kbps * 1000;
+      const kBs = kbps / 8;
+      const mbHr = (kBs * 3600) / 1000;
+
+      $resMain.textContent = state.lastEdited === "kbps" ? fmt(mbps) + " Mbps" : fmt(kbps) + " Kbps";
+      $resSecondary.textContent = fmt(kbps) + " Kbps = " + fmt(mbps) + " Mbps";
+      $outKbps.textContent = fmt(kbps);
+      $outMbps.textContent = fmt(mbps);
+      $outBps.textContent = Math.round(bps).toLocaleString();
+      $outKBs.textContent = fmt(kBs);
+      $outMbHr.textContent = fmt(mbHr);
+      $decValue.textContent = state.decimals;
+    };
+
+    $kbps.addEventListener("input", () => { state.lastEdited = "kbps"; render(); });
+    $mbps.addEventListener("input", () => { state.lastEdited = "mbps"; render(); });
+
+    document.querySelectorAll(".preset-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        $kbps.value = chip.dataset.kbps;
+        state.lastEdited = "kbps";
+        render();
+      });
+    });
+
+    $decMinus.addEventListener("click", () => { state.decimals = Math.max(0, state.decimals - 1); render(); });
+    $decPlus.addEventListener("click", () => { state.decimals = Math.min(10, state.decimals + 1); render(); });
+
+    $btnShare.addEventListener("click", async () => {
+      if ($resMain.textContent === "—") return;
+      const txt = `Kbps↔Mbps: ${$kbps.value} Kbps = ${$mbps.value} Mbps. via mbpstobytes.com/converters/kbps-to-mbps/`;
+      try { await navigator.clipboard.writeText(txt); } catch (e) {}
+    });
+
+    $btnReload.addEventListener("click", () => window.location.reload());
+    $btnClear.addEventListener("click", () => {
+      $kbps.value = "";
+      $mbps.value = "";
+      state.lastEdited = "kbps";
+      render();
+    });
+
+    render();
+  </script>
+</Layout>
