@@ -1,0 +1,374 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'Is 300 Mbps Good? What Upgrading From 100 Actually Buys';
+const description =
+  'Is 300 Mbps worth it? It\'s 37.5 MB/s — triple the capacity of 100 Mbps. See exactly what the upgrade buys, who genuinely needs it, and when it\'s wasted money.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/internet-speed/is-300-mbps-good/`;
+const datePublished = '2026-07-25';
+
+const faqs = [
+  {
+    question: 'Is 300 Mbps fast enough for a large family?',
+    answer:
+      'Yes, with room to spare. 300 Mbps carries twelve 4K streams\' worth of raw bandwidth, so even a household of 5–6 heavy users — multiple 4K TVs, calls, gaming, and background devices at once — typically peaks below half the pipe. Large families are exactly who this tier is for.',
+  },
+  {
+    question: 'Is 300 Mbps worth it over 100 Mbps?',
+    answer:
+      'It depends on one question: how often do you wait on large downloads? Streaming, calls, and gaming feel identical on both tiers. The upgrade buys download time — a 75 GB game drops from ~1h 40m to ~33 minutes — plus headroom for 5+ simultaneous heavy users. If neither describes your household, the extra monthly cost buys little.',
+  },
+  {
+    question: 'How many MB/s is 300 Mbps?',
+    answer:
+      '300 Mbps = 37.5 MB/s maximum download speed (about 34–36 MB/s sustained in practice on a wired connection). That is 2.25 GB of data per minute, or 135 GB per hour.',
+  },
+  {
+    question: 'Is 300 Mbps good for gaming?',
+    answer:
+      'For gameplay, 300 Mbps is no better than 100 — games use 3–6 Mbps and are latency-bound, not bandwidth-bound. Where it shines for gamers is patches and installs: a 30 GB update lands in ~15 minutes instead of ~44. A gaming household that pre-loads titles regularly feels this tier every week.',
+  },
+  {
+    question: 'Why does my 300 Mbps plan test at 280 or less?',
+    answer:
+      'Wired tests at 280–290 Mbps reflect normal protocol overhead. Over Wi-Fi, expect 180–250 Mbps depending on router generation and distance — older Wi-Fi 5 gear in particular can cap real throughput below the plan. Test over ethernet before blaming the provider.',
+  },
+  {
+    question: 'Should I get 300 Mbps or go straight to gigabit?',
+    answer:
+      'Price the gap. 300 Mbps already removes every everyday bottleneck for most households; gigabit\'s advantage is again download time (75 GB: ~33 min vs ~10) plus capacity for 8+ heavy users. If the gigabit tier costs much more, or your router/devices can\'t carry ~940 Mbps anyway, 300 is the rational stop.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Internet Speed', item: `${siteURL}/internet-speed/` },
+    { '@type': 'ListItem', position: 3, name: 'Is 300 Mbps Good?', item: pageURL },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': `${pageURL}#article`,
+  headline: 'Is 300 Mbps Good? What Upgrading From 100 Actually Buys',
+  description,
+  datePublished,
+  dateModified: datePublished,
+  author: { '@type': 'Organization', name: 'Mbps to Bytes Editorial Team', url: `${siteURL}/about-us/` },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageURL },
+  image: `${siteURL}/images/og.png`,
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const toc = [
+  ['#verdict', 'Quick Verdict'],
+  ['#what-it-buys', 'What 300 Buys Over 100'],
+  ['#time-machine', 'The Download Time Machine'],
+  ['#who-needs-it', 'Who Genuinely Needs 300'],
+  ['#who-doesnt', 'Who Is Wasting Money'],
+  ['#diminishing', 'The Diminishing Returns Curve'],
+  ['#hardware', 'Can Your Wi-Fi Even Carry It?'],
+  ['#faqs', 'FAQs'],
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/internet-speed/" class="hover:text-indigo-600 transition-colors">Internet Speed</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">Is 300 Mbps Good?</span>
+  </nav>
+
+  <!-- Title + byline -->
+  <div class="max-w-3xl">
+    <p class="text-indigo-600 text-xs font-semibold uppercase tracking-wide mb-3">Internet Speed · Plan Verdicts</p>
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">Is 300 Mbps Good? What Upgrading From 100 Actually Buys</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      300 Mbps is the tier ISPs love to upsell — usually against a 100 Mbps plan that already handles most households. This page treats it as the purchase decision it really is: what triples, what stays identical, and the honest line between "worth every penny" and "paying for headroom you'll never touch."
+    </p>
+
+    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-white border-l-4 border-indigo-500">
+      <p class="text-sm text-gray-700">By <a href="/about-us/" class="text-indigo-600 font-semibold hover:underline">Editorial Team</a></p>
+      <p class="text-sm text-gray-500 mt-1">📅 <strong class="text-gray-600">Published:</strong> July 25, 2026 &nbsp;|&nbsp; 🔄 <strong class="text-gray-600">Last reviewed:</strong> July 25, 2026</p>
+      <p class="text-sm text-gray-500 mt-1">
+        ✓ <strong class="text-gray-600">Fact-checked:</strong> benchmark figures follow the
+        <a href="https://www.fcc.gov/consumers/guides/broadband-speed-guide" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">FCC broadband guidance</a> and
+        <a href="https://help.netflix.com/en/node/306" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Netflix</a> /
+        <a href="https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0060748" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Zoom</a> published requirements ·
+        <a href="/methodology/" class="text-indigo-600 hover:underline">methodology</a>
+      </p>
+    </div>
+
+    <details class="mt-4 premium-card overflow-hidden group">
+      <summary class="flex justify-between items-center gap-4 p-5 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+        <span>📝 Table of Contents</span>
+        <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </summary>
+      <ol class="px-6 pb-5 text-sm text-gray-600 space-y-1.5 list-decimal list-inside">
+        {toc.map(([href, label]) => (
+          <li><a href={href} class="text-indigo-600 hover:underline">{label}</a></li>
+        ))}
+      </ol>
+    </details>
+  </div>
+
+  <!-- Verdict -->
+  <article class="premium-card mt-10" id="verdict">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Quick Verdict</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">300 Mbps is excellent — and more than most households can use.</strong> It delivers 37.5 MB/s of download speed, triple the headroom of 100 Mbps, and comfortably absorbs 5+ heavy users. But streaming, calls, and gaming feel <strong>identical</strong> to a healthy 100 Mbps plan — the upgrade genuinely pays off in exactly two cases: <strong>frequent large downloads</strong> and <strong>big, busy households</strong>.
+        </p>
+      </div>
+    </div>
+  </article>
+
+  <!-- What it buys -->
+  <article class="premium-card mt-8" id="what-it-buys">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">What 300 Buys Over 100 — and What It Doesn't</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        The 3× number on the bill translates into exactly three real-world changes — and three things that don't change at all:
+      </p>
+      <div class="grid sm:grid-cols-2 gap-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-3">✓ What changes</h3>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span><strong>Download waits shrink 3×</strong> — 37.5 MB/s vs 12.5 MB/s on every file</span></li>
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span><strong>Simultaneous capacity triples</strong> — twelve 4K streams' worth vs four</span></li>
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span><strong>Congestion evenings disappear</strong> — a download no longer fights the family's streams</span></li>
+          </ul>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">
+          <h3 class="font-semibold text-gray-900 mb-3">✗ What doesn't change</h3>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span><strong>Streaming quality</strong> — a 25 Mbps 4K stream is the same stream on any tier above it</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span><strong>Gaming feel</strong> — latency rules, and the tier doesn't move your ping</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span><strong>Page loads and calls</strong> — already instant at 100; can't get more instant</span></li>
+          </ul>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed mt-6">
+        In byte terms: 300 Mbps moves <strong>2.25 GB per minute, 135 GB per hour</strong> — full numbers in the <a href="/converters/mbps-to-mbs/" class="text-indigo-600 hover:underline font-medium">Mbps to MB/s converter</a>. Already read our <a href="/internet-speed/is-100-mbps-good/" class="text-indigo-600 hover:underline font-medium">100 Mbps verdict</a>? This page is its sequel: everything 100 does well, 300 does identically — the delta is entirely in the two columns above.
+      </p>
+    </div>
+  </article>
+
+  <!-- Download time machine -->
+  <section class="premium-card mt-8" id="time-machine">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">The Download Time Machine</h2>
+      <p class="text-gray-500 mb-6">Pick what you download and see the wait on each tier — this is the entire upgrade argument, interactive.</p>
+
+      <div class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-teal-50 via-white to-amber-50 border-2 border-gray-100">
+        <div class="flex flex-wrap gap-2 mb-6" aria-label="File choices">
+          <button class="tm-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-gb="4">🎬 HD movie (4 GB)</button>
+          <button class="tm-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-gb="30">🔄 Game update (30 GB)</button>
+          <button class="tm-chip px-4 py-1.5 rounded-full border-2 border-indigo-300 bg-white text-indigo-600 text-sm font-semibold" data-gb="75">🎮 AAA game (75 GB)</button>
+          <button class="tm-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-gb="150">🎮 Big AAA game (150 GB)</button>
+          <button class="tm-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-gb="256">📱 Phone restore (256 GB)</button>
+        </div>
+
+        <div class="space-y-4" role="img" aria-label="Download time comparison across plan tiers for the selected file">
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-gray-700">100 Mbps</span><span id="tm-100" class="text-gray-600 font-semibold">1h 40m</span></div>
+            <div class="h-5 rounded-full bg-white border border-gray-200 overflow-hidden"><div id="tm-bar-100" class="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500 transition-all duration-500" style="width: 100%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-indigo-700">300 Mbps</span><span id="tm-300" class="text-indigo-600 font-semibold">33m 20s</span></div>
+            <div class="h-5 rounded-full bg-white border border-gray-200 overflow-hidden"><div id="tm-bar-300" class="h-full rounded-full bg-gradient-to-r from-indigo-400 to-indigo-500 transition-all duration-500" style="width: 33.3%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-teal-700">1 Gbps</span><span id="tm-1000" class="text-teal-600 font-semibold">10m</span></div>
+            <div class="h-5 rounded-full bg-white border border-gray-200 overflow-hidden"><div id="tm-bar-1000" class="h-full rounded-full bg-gradient-to-r from-teal-400 to-teal-500 transition-all duration-500" style="width: 10%"></div></div>
+          </div>
+        </div>
+        <p id="tm-note" class="text-gray-400 text-xs mt-4">Ideal-conditions math (size × 8 ÷ Mbps); real downloads run ~10% longer. The 300 tier saves 1h 7m on this file versus 100 Mbps.</p>
+      </div>
+      <p class="text-gray-600 leading-relaxed mt-6">
+        Run any custom size and speed in the <a href="/tools/download-time-calculator/" class="text-indigo-600 hover:underline font-medium">download time calculator</a> — including the GiB-labeled sizes Steam shows.
+      </p>
+    </div>
+  </section>
+
+  <!-- Who needs it -->
+  <article class="premium-card mt-8" id="who-needs-it">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Who Genuinely Needs 300 Mbps</h2>
+      <div class="space-y-4">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-1">🎮 The download-heavy household</h3>
+          <p class="text-gray-500 text-sm">Weekly game installs, patch days, video projects. This is the clearest win: every wait divides by three, forever. A 150 GB flagship title lands in ~67 minutes instead of ~3 hours 20.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100">
+          <h3 class="font-semibold text-gray-900 mb-1">👨‍👩‍👧‍👦 The 5+ person peak-hour house</h3>
+          <p class="text-gray-500 text-sm">Two 4K TVs (50), two calls (8), two gamers (10), music and devices (10) is ~78 Mbps — over the comfort line on 100, barely a quarter of 300. If your evenings look like this, the upgrade removes the ceiling entirely.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100">
+          <h3 class="font-semibold text-gray-900 mb-1">🏠 The work-from-home pair with cloud workflows</h3>
+          <p class="text-gray-500 text-sm">Large file pulls from cloud storage all day change the calculus — repeated 2–10 GB syncs feel dramatically different at 37.5 MB/s. (But check the upload tier too — that's often the real WFH constraint.)</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Who doesn't -->
+  <article class="premium-card mt-8" id="who-doesnt">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Who's Wasting Money on 300</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        The honest list, since we don't sell plans: <strong>streaming-first households</strong> (even three 4K TVs use 75 Mbps — a 100 plan covers it), <strong>solo users and couples</strong> whose peak is a stream plus a call, and <strong>anyone upgrading to "fix lag"</strong> — lag is latency or Wi-Fi, and a bigger pipe changes neither. If your current plan tests healthy and your evenings never buffer, the extra monthly spend buys a number on a bill.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        The five-minute self-check: run our <a href="/tools/bandwidth-calculator/" class="text-indigo-600 hover:underline font-medium">bandwidth calculator</a> with your real simultaneous activities. If the recommendation lands at or below 100 Mbps, you have your answer — keep the cheaper plan and put the difference toward a better router, which improves every device's experience immediately.
+      </p>
+    </div>
+  </article>
+
+  <!-- Diminishing returns -->
+  <article class="premium-card mt-8" id="diminishing">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Diminishing Returns Curve</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Each tier jump costs real money and returns less felt benefit than the last. The pattern across the ladder:
+      </p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">What each speed tier upgrade actually improves</caption>
+          <thead><tr><th>Upgrade</th><th>Felt difference</th><th>Verdict</th></tr></thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">25 → 100 Mbps</td><td class="text-gray-600">Transformative — buffering ends, 4K unlocks, household capacity real</td><td class="text-amber-600 font-bold">Almost always worth it</td></tr>
+            <tr><td class="text-teal-600 font-semibold">100 → 300 Mbps</td><td class="text-gray-600">Situational — downloads 3× faster, big households breathe</td><td class="text-amber-600">Worth it for the two profiles above</td></tr>
+            <tr><td class="text-teal-600 font-semibold">300 → 1,000 Mbps</td><td class="text-gray-600">Narrow — downloads 3× faster again; nothing else moves</td><td class="text-amber-600">Only for download-obsessed homes with gigabit-ready gear</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The gigabit step has its own honest treatment — including the ~940 Mbps wired reality and the hardware that silently caps multi-gig plans — in our <a href="/converters/gbps-to-mbps/" class="text-indigo-600 hover:underline font-medium">Gbps guide</a>.
+      </p>
+    </div>
+  </article>
+
+  <!-- Hardware -->
+  <article class="premium-card mt-8" id="hardware">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Can Your Wi-Fi Even Carry 300?</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        The quiet upgrade-killer: plenty of homes pay for 300 Mbps and receive 150 over the air. Wi-Fi 5 routers at range commonly deliver 100–250 Mbps of real throughput; add a wall or a floor and the premium tier evaporates. Before upgrading the plan, sanity-check the chain: a <strong>Wi-Fi 6 (or newer) router</strong>, devices that support it, and gigabit ethernet ports for anything stationary.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        The test that settles it: measure wired, then measure over Wi-Fi where you actually sit. If wired shows ~280+ but your couch gets 120, the router — not the plan — is the bottleneck, and a router upgrade is cheaper than 12 months of tier difference. (Reading the results correctly matters too: speed tests report Mbps while downloads show MB/s — the <a href="/learn/mbps-vs-mbps/" class="text-indigo-600 hover:underline font-medium">one-letter trap</a> explained.)
+      </p>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12" id="faqs">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers about 300 Mbps</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'Is 100 Mbps Good?',
+        url: '/internet-speed/is-100-mbps-good/',
+        description: 'The tier below, stress-tested — start here if you\'re deciding whether to upgrade at all.',
+        icon: '⚖️',
+      },
+      {
+        name: 'Bandwidth Calculator',
+        url: '/tools/bandwidth-calculator/',
+        description: 'Compute your household\'s real peak demand before paying for headroom.',
+        icon: '📶',
+      },
+      {
+        name: 'Mbps to MB/s Converter',
+        url: '/converters/mbps-to-mbs/',
+        description: '300 Mbps = 37.5 MB/s — see every tier in real download terms.',
+        icon: '🚀',
+      },
+    ]}
+  />
+
+  <!-- Time machine logic -->
+  <script is:inline>
+    const tmChips = document.querySelectorAll(".tm-chip");
+    const tmEls = { 100: [document.getElementById("tm-100"), document.getElementById("tm-bar-100")],
+                    300: [document.getElementById("tm-300"), document.getElementById("tm-bar-300")],
+                    1000: [document.getElementById("tm-1000"), document.getElementById("tm-bar-1000")] };
+    const $tmNote = document.getElementById("tm-note");
+
+    const tmFmt = (sec) => {
+      if (sec >= 3600) { const h = Math.floor(sec/3600); const m = Math.round((sec%3600)/60); return `${h}h ${m}m`; }
+      if (sec >= 60) { const m = Math.floor(sec/60); const s = Math.round(sec%60); return s ? `${m}m ${s}s` : `${m}m`; }
+      return `${Math.round(sec)}s`;
+    };
+
+    const tmRender = (gb) => {
+      const t100 = (gb * 8000) / 100;
+      Object.entries(tmEls).forEach(([mbps, [label, bar]]) => {
+        const sec = (gb * 8000) / Number(mbps);
+        label.textContent = tmFmt(sec);
+        bar.style.width = Math.max(3, (sec / t100) * 100) + "%";
+      });
+      const saved = t100 - (gb * 8000) / 300;
+      $tmNote.textContent = `Ideal-conditions math (size × 8 ÷ Mbps); real downloads run ~10% longer. The 300 tier saves ${tmFmt(saved)} on this file versus 100 Mbps.`;
+    };
+
+    tmChips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        tmChips.forEach((c) => (c.className = "tm-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors"));
+        chip.className = "tm-chip px-4 py-1.5 rounded-full border-2 border-indigo-300 bg-white text-indigo-600 text-sm font-semibold";
+        tmRender(Number(chip.dataset.gb));
+      });
+    });
+    tmRender(75);
+  </script>
+</Layout>
