@@ -17,6 +17,10 @@
 			"url": "/learn/"
 		},
 		{
+			"name": "Internet Speed",
+			"url": "/internet-speed/"
+		},
+		{
 			"name": "About Us",
 			"url": "/about-us/"
 		},
@@ -41,6 +45,10 @@
 		{
 			"name": "Learn",
 			"url": "/learn/"
+		},
+		{
+			"name": "Internet Speed",
+			"url": "/internet-speed/"
 		},
 		{
 			"name": "Bytes to Mbps",

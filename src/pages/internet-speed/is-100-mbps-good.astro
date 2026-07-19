@@ -1,0 +1,457 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'Is 100 Mbps Good? Honest Verdict for 2026 (Test It Live)';
+const description =
+  'Is 100 Mbps fast enough? It\'s the FCC broadband floor — good for most homes of 2–4. Stress-test your evening against it live and see where it breaks.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/internet-speed/is-100-mbps-good/`;
+const datePublished = '2026-07-24';
+
+const faqs = [
+  {
+    question: 'Is 100 Mbps good for gaming?',
+    answer:
+      'Yes — gameplay itself uses only 3–6 Mbps, so 100 Mbps leaves enormous headroom. What actually determines gaming quality is latency: per FCC measurement data, fiber connections typically deliver 5–12 ms, cable 18–24 ms, DSL 27–55 ms. The place 100 Mbps does pinch gamers is downloads: a 75 GB title takes about 1 hour 40 minutes.',
+  },
+  {
+    question: 'Is 100 Mbps enough for a family of 4?',
+    answer:
+      'Usually, yes. A realistic worst case — one 4K stream (25 Mbps), two HD streams (10), a video call (4), gaming (5), and background devices (5) — totals around 49 Mbps, half the pipe. It becomes tight when two 4K TVs, cloud backups, and a game download all land at once, which is the upgrade signal.',
+  },
+  {
+    question: 'Is 100 Mbps fast enough for 4K streaming?',
+    answer:
+      'Yes — comfortably. Netflix recommends about 25 Mbps per 4K stream, so 100 Mbps carries up to four simultaneous 4K streams in raw bandwidth, or one 4K stream with 75 Mbps left for everything else.',
+  },
+  {
+    question: 'Is 100 Mbps good for working from home?',
+    answer:
+      'For the download side, easily — video calls need ~4 Mbps each. The real work-from-home question is upload: many cable "100 Mbps" plans pair it with only 10–20 Mbps up, which strains simultaneous HD calls plus cloud sync. Check the upload figure before judging the plan.',
+  },
+  {
+    question: 'Why does my 100 Mbps plan test below 100?',
+    answer:
+      'A wired test at 93–95 Mbps is normal and healthy — protocol overhead consumes the rest. Over Wi-Fi, 60–80 Mbps is typical. Consistently below ~70 Mbps on ethernet is worth a call to your provider. In download terms, a healthy 100 Mbps plan delivers about 11–12 MB/s.',
+  },
+  {
+    question: 'When should I upgrade past 100 Mbps?',
+    answer:
+      'Three reliable signals: you download large files often and resent the wait (300+ Mbps cuts a 75 GB game from 100 to 33 minutes); your household regularly runs two or more 4K streams plus heavy use simultaneously; or you upload seriously — video calls all day, content creation, cloud backups — in which case chase a better upload tier, often fiber, rather than just a bigger download number.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Internet Speed', item: `${siteURL}/internet-speed/` },
+    { '@type': 'ListItem', position: 3, name: 'Is 100 Mbps Good?', item: pageURL },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': `${pageURL}#article`,
+  headline: 'Is 100 Mbps Good? The Honest Verdict for 2026',
+  description,
+  datePublished,
+  dateModified: datePublished,
+  author: { '@type': 'Organization', name: 'Mbps to Bytes Editorial Team', url: `${siteURL}/about-us/` },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageURL },
+  image: `${siteURL}/images/og.png`,
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const toc = [
+  ['#verdict', 'Quick Verdict'],
+  ['#stress-test', 'Stress-Test It Live'],
+  ['#what-it-is', 'What 100 Mbps Actually Is'],
+  ['#by-activity', 'Verdict by Activity'],
+  ['#by-household', 'Verdict by Household'],
+  ['#where-it-breaks', 'Where 100 Mbps Breaks'],
+  ['#upload-trap', 'The Upload Trap'],
+  ['#vs-faster', '100 vs 300 vs Gigabit'],
+  ['#faqs', 'FAQs'],
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/internet-speed/" class="hover:text-indigo-600 transition-colors">Internet Speed</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">Is 100 Mbps Good?</span>
+  </nav>
+
+  <!-- Title + byline -->
+  <div class="max-w-3xl">
+    <p class="text-indigo-600 text-xs font-semibold uppercase tracking-wide mb-3">Internet Speed · Plan Verdicts</p>
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">Is 100 Mbps Good? The Honest Verdict for 2026</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      100 Mbps is the most common internet plan speed in America and the exact floor of the FCC's broadband definition. Whether it's good <em>for you</em> comes down to one evening's worth of simultaneous use — so this page lets you test that directly, then shows precisely where the plan shines and where it breaks.
+    </p>
+
+    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-white border-l-4 border-indigo-500">
+      <p class="text-sm text-gray-700">By <a href="/about-us/" class="text-indigo-600 font-semibold hover:underline">Editorial Team</a></p>
+      <p class="text-sm text-gray-500 mt-1">📅 <strong class="text-gray-600">Published:</strong> July 24, 2026 &nbsp;|&nbsp; 🔄 <strong class="text-gray-600">Last reviewed:</strong> July 24, 2026</p>
+      <p class="text-sm text-gray-500 mt-1">
+        ✓ <strong class="text-gray-600">Fact-checked:</strong> benchmark figures follow the
+        <a href="https://www.fcc.gov/consumers/guides/broadband-speed-guide" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">FCC broadband guidance</a> (100/20 Mbps definition),
+        <a href="https://help.netflix.com/en/node/306" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Netflix</a> and
+        <a href="https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0060748" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Zoom</a> published requirements ·
+        <a href="/methodology/" class="text-indigo-600 hover:underline">methodology</a>
+      </p>
+    </div>
+
+    <details class="mt-4 premium-card overflow-hidden group">
+      <summary class="flex justify-between items-center gap-4 p-5 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+        <span>📝 Table of Contents</span>
+        <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </summary>
+      <ol class="px-6 pb-5 text-sm text-gray-600 space-y-1.5 list-decimal list-inside">
+        {toc.map(([href, label]) => (
+          <li><a href={href} class="text-indigo-600 hover:underline">{label}</a></li>
+        ))}
+      </ol>
+    </details>
+  </div>
+
+  <!-- Verdict -->
+  <article class="premium-card mt-10" id="verdict">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Quick Verdict</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">Yes — 100 Mbps is good for most households of 2–4 people.</strong> It carries four 4K streams' worth of bandwidth, gaming barely dents it, and it is literally the minimum speed the FCC allows to be called broadband. Its two honest weaknesses: <strong>large downloads take real time</strong> (75 GB game ≈ 1h 40m), and cable plans often pair it with a <strong>thin 10–20 Mbps upload</strong> that strains heavy video calling.
+        </p>
+      </div>
+    </div>
+  </article>
+
+  <!-- Interactive stress test -->
+  <section class="premium-card mt-8" id="stress-test">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">Stress-Test 100 Mbps Against Your Evening</h2>
+      <p class="text-gray-500 mb-6">Add what your household runs at the same time and watch the pipe fill. Green means comfortable; red means this plan isn't for you.</p>
+
+      <div class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-teal-50 via-white to-amber-50 border-2 border-gray-100">
+        <!-- Capacity bar -->
+        <div class="mb-6">
+          <div class="flex justify-between text-xs text-gray-400 mb-2 font-medium">
+            <span>0 Mbps</span>
+            <span id="st-label" class="font-semibold text-gray-600">49 of 100 Mbps used</span>
+            <span>100 Mbps</span>
+          </div>
+          <div class="h-6 rounded-full bg-white border border-gray-200 overflow-hidden shadow-inner">
+            <div id="st-bar" class="h-full rounded-full bg-gradient-to-r from-teal-400 to-teal-500 transition-all duration-500" style="width: 49%"></div>
+          </div>
+          <p id="st-verdict" class="text-sm font-semibold text-teal-600 mt-3">✓ Comfortable — plenty of headroom for bursts.</p>
+        </div>
+
+        <!-- Toggles -->
+        <div class="grid sm:grid-cols-2 gap-3">
+          <label class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-white border border-gray-100 cursor-pointer select-none">
+            <span class="text-sm text-gray-700 font-medium">4K streams <span class="text-gray-400">(25 Mbps each)</span></span>
+            <span class="flex items-center gap-2">
+              <button type="button" class="st-btn w-8 h-8 rounded-lg border border-gray-200 bg-white text-gray-400 hover:text-indigo-600 hover:border-indigo-300 font-bold" data-t="st-4k" data-d="-1">−</button>
+              <span id="st-4k" class="w-8 h-8 flex items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-sm" data-mbps="25">1</span>
+              <button type="button" class="st-btn w-8 h-8 rounded-lg border border-gray-200 bg-white text-gray-400 hover:text-indigo-600 hover:border-indigo-300 font-bold" data-t="st-4k" data-d="1">+</button>
+            </span>
+          </label>
+          <label class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-white border border-gray-100 cursor-pointer select-none">
+            <span class="text-sm text-gray-700 font-medium">HD streams <span class="text-gray-400">(5 Mbps each)</span></span>
+            <span class="flex items-center gap-2">
+              <button type="button" class="st-btn w-8 h-8 rounded-lg border border-gray-200 bg-white text-gray-400 hover:text-indigo-600 hover:border-indigo-300 font-bold" data-t="st-hd" data-d="-1">−</button>
+              <span id="st-hd" class="w-8 h-8 flex items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-sm" data-mbps="5">2</span>
+              <button type="button" class="st-btn w-8 h-8 rounded-lg border border-gray-200 bg-white text-gray-400 hover:text-indigo-600 hover:border-indigo-300 font-bold" data-t="st-hd" data-d="1">+</button>
+            </span>
+          </label>
+          <label class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-white border border-gray-100 cursor-pointer select-none">
+            <span class="text-sm text-gray-700 font-medium">Video calls <span class="text-gray-400">(4 Mbps each)</span></span>
+            <span class="flex items-center gap-2">
+              <button type="button" class="st-btn w-8 h-8 rounded-lg border border-gray-200 bg-white text-gray-400 hover:text-indigo-600 hover:border-indigo-300 font-bold" data-t="st-call" data-d="-1">−</button>
+              <span id="st-call" class="w-8 h-8 flex items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-sm" data-mbps="4">1</span>
+              <button type="button" class="st-btn w-8 h-8 rounded-lg border border-gray-200 bg-white text-gray-400 hover:text-indigo-600 hover:border-indigo-300 font-bold" data-t="st-call" data-d="1">+</button>
+            </span>
+          </label>
+          <label class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-white border border-gray-100 cursor-pointer select-none">
+            <span class="text-sm text-gray-700 font-medium">Gamers online <span class="text-gray-400">(5 Mbps each)</span></span>
+            <span class="flex items-center gap-2">
+              <button type="button" class="st-btn w-8 h-8 rounded-lg border border-gray-200 bg-white text-gray-400 hover:text-indigo-600 hover:border-indigo-300 font-bold" data-t="st-game" data-d="-1">−</button>
+              <span id="st-game" class="w-8 h-8 flex items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-sm" data-mbps="5">1</span>
+              <button type="button" class="st-btn w-8 h-8 rounded-lg border border-gray-200 bg-white text-gray-400 hover:text-indigo-600 hover:border-indigo-300 font-bold" data-t="st-game" data-d="1">+</button>
+            </span>
+          </label>
+          <label class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-white border border-gray-100 cursor-pointer select-none sm:col-span-2">
+            <span class="text-sm text-gray-700 font-medium">Someone starts a big game download <span class="text-gray-400">(grabs all spare bandwidth)</span></span>
+            <input id="st-dl" type="checkbox" class="w-5 h-5 rounded accent-indigo-500" />
+          </label>
+        </div>
+        <p class="text-gray-400 text-xs mt-4">Per-activity figures from Netflix and Zoom published requirements, plus ~5 Mbps background allowance built into the verdict. Want the same test against any plan size? Use the full <a href="/tools/bandwidth-calculator/" class="text-indigo-600 hover:underline font-medium">bandwidth calculator</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- What it is -->
+  <article class="premium-card mt-8" id="what-it-is">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">What 100 Mbps Actually Is</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Three translations make the number concrete. In download terms, 100 Mbps is <strong>12.5 MB/s</strong> — the figure your browser or Steam will show (the ÷8 comes from bits vs bytes, explained in our <a href="/learn/mbps-vs-mbps/" class="text-indigo-600 hover:underline font-medium">Mbps vs MBps guide</a>). In volume terms, it moves <strong>750 MB per minute, 45 GB per hour</strong>. And in regulatory terms, it is the exact download floor of the <strong>FCC's broadband definition (100 Mbps down / 20 Mbps up)</strong> — meaning a 100 Mbps plan is, by definition, the slowest connection America officially calls broadband.
+      </p>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100 text-center">
+          <div class="font-extrabold text-teal-600 text-2xl">12.5 MB/s</div>
+          <p class="text-gray-500 text-xs mt-1">max download speed — expect 11–12 wired</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100 text-center">
+          <div class="font-extrabold text-amber-600 text-2xl">45 GB/hour</div>
+          <p class="text-gray-500 text-xs mt-1">total data moved at full tilt</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 text-center">
+          <div class="font-extrabold text-indigo-600 text-2xl">The FCC floor</div>
+          <p class="text-gray-500 text-xs mt-1">minimum speed legally called "broadband"</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- By activity -->
+  <section class="premium-card mt-8" id="by-activity">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Verdict by Activity</h2>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
+        <table class="luxury-table">
+          <caption class="sr-only">How 100 Mbps handles each common activity</caption>
+          <thead><tr><th>Activity</th><th>Needs</th><th>Verdict on 100 Mbps</th></tr></thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">4K streaming</td><td class="text-gray-500">~25 Mbps/stream</td><td class="text-amber-600 font-bold">✓ Up to 4 at once — excellent</td></tr>
+            <tr><td class="text-teal-600 font-semibold">HD streaming</td><td class="text-gray-500">~5 Mbps/stream</td><td class="text-amber-600">✓ Effectively unlimited for a household</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Online gaming</td><td class="text-gray-500">3–6 Mbps + low ping</td><td class="text-amber-600">✓ Bandwidth is a non-issue; latency rules (fiber 5–12 ms, cable 18–24, DSL 27–55, per FCC data)</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Video calls / WFH</td><td class="text-gray-500">~4 down / 3 up each</td><td class="text-amber-600">✓ downstream · ⚠ upstream if plan has 10–20 Mbps up</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Game/app downloads</td><td class="text-gray-500">elastic</td><td class="text-amber-600">⚠ 75 GB ≈ 1h 40m — the plan's real weak spot</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Cloud backup / uploads</td><td class="text-gray-500">upload-bound</td><td class="text-amber-600">⚠ depends entirely on the upload tier, not the 100</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Smart home (10+ devices)</td><td class="text-gray-500">~0.5 Mbps each</td><td class="text-amber-600">✓ background noise — cameras are the exception</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- By household -->
+  <article class="premium-card mt-8" id="by-household">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Verdict by Household</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-1">1 person</h3>
+          <p class="text-teal-600 font-bold text-lg">Overkill (nicely)</p>
+          <p class="text-gray-500 text-xs mt-1">Everything at once, still headroom. 50 Mbps would also do.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-1">2 people</h3>
+          <p class="text-teal-600 font-bold text-lg">Comfortable</p>
+          <p class="text-gray-500 text-xs mt-1">Dual 4K + calls + gaming fits with room to spare.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">
+          <h3 class="font-semibold text-gray-900 mb-1">3–4 people</h3>
+          <p class="text-amber-600 font-bold text-lg">Good — the sweet spot</p>
+          <p class="text-gray-500 text-xs mt-1">Fits a realistic evening (~50–70 Mbps peak). Downloads are the only friction.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-orange-50 to-white border border-orange-100">
+          <h3 class="font-semibold text-gray-900 mb-1">5+ heavy users</h3>
+          <p class="text-orange-500 font-bold text-lg">Tight</p>
+          <p class="text-gray-500 text-xs mt-1">Multiple 4K + downloads collide. Step to 200–300 Mbps.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Where it breaks -->
+  <article class="premium-card mt-8" id="where-it-breaks">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Where 100 Mbps Breaks: The Download Wait</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Streaming never exposes a 100 Mbps plan — downloads do. At a real-world ~11.5 MB/s, the waits look like this:
+      </p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Download times on a 100 Mbps connection</caption>
+          <thead><tr><th>Download</th><th>Size</th><th>Time at 100 Mbps</th><th>At 300 Mbps</th></tr></thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">Music album</td><td class="text-gray-500">100 MB</td><td class="text-amber-600">~9 seconds</td><td class="text-gray-500">~3 s</td></tr>
+            <tr><td class="text-teal-600 font-semibold">HD movie file</td><td class="text-gray-500">4 GB</td><td class="text-amber-600">~6 minutes</td><td class="text-gray-500">~2 min</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Game update</td><td class="text-gray-500">30 GB</td><td class="text-amber-600 font-bold">~44 minutes</td><td class="text-gray-500">~15 min</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Full AAA game</td><td class="text-gray-500">75 GB</td><td class="text-amber-600 font-bold">~1h 49m</td><td class="text-gray-500">~37 min</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Phone backup restore</td><td class="text-gray-500">256 GB</td><td class="text-amber-600">~6h 11m</td><td class="text-gray-500">~2h 7m</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Times computed at ~11.5 MB/s sustained (100 Mbps minus typical overhead) — run any size yourself in the <a href="/tools/download-time-calculator/" class="text-indigo-600 hover:underline font-medium">download time calculator</a>. This is the honest upgrade case: more Mbps doesn't make streaming better, it makes <em>waiting shorter</em>. If your household downloads rarely, the 100 Mbps wait is an occasional shrug; if game-night pre-loads are a weekly ritual, it's a standing argument for 300+.
+      </p>
+    </div>
+  </article>
+
+  <!-- Upload trap -->
+  <article class="premium-card mt-8" id="upload-trap">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Upload Trap Nobody Mentions</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        "100 Mbps" describes only the download direction. On cable networks, that plan frequently ships with <strong>10–20 Mbps upload</strong> — and here's the detail worth knowing: the FCC's broadband definition requires <strong>20 Mbps up</strong>, so a 100/10 cable plan technically isn't broadband at all. The download number gets the marketing; the upload number decides whether your video calls stutter while a phone backs up photos in the background.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        Quick self-check: two simultaneous HD calls (~6 Mbps up) plus continuous cloud photo sync can saturate a 10 Mbps upload entirely. If that's your household, the upgrade that matters isn't 100 → 300 down — it's any plan (usually fiber) with 20+ Mbps up, or symmetrical speeds. Our <a href="/tools/bandwidth-calculator/" class="text-indigo-600 hover:underline font-medium">bandwidth calculator</a> computes your upload requirement separately for exactly this reason.
+      </p>
+    </div>
+  </article>
+
+  <!-- vs faster -->
+  <section class="premium-card mt-8" id="vs-faster">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">100 vs 300 vs Gigabit: What Upgrading Actually Buys</h2>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Comparison of 100, 300 and 1000 Mbps plans</caption>
+          <thead><tr><th></th><th>100 Mbps</th><th>300 Mbps</th><th>1 Gbps</th></tr></thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">Download speed</td><td class="text-gray-600">12.5 MB/s</td><td class="text-gray-600">37.5 MB/s</td><td class="text-gray-600">125 MB/s (≈940 real)</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Simultaneous 4K streams</td><td class="text-gray-600">4</td><td class="text-gray-600">12</td><td class="text-gray-600">37+</td></tr>
+            <tr><td class="text-teal-600 font-semibold">75 GB game</td><td class="text-amber-600 font-bold">~1h 40m</td><td class="text-gray-600">~33 min</td><td class="text-gray-600">~10 min</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Streaming/calls feel</td><td class="text-gray-600" colspan="3">identical — all three exceed every streaming requirement</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Who it fits</td><td class="text-gray-600">homes of 2–4</td><td class="text-gray-600">busy homes, regular downloads</td><td class="text-gray-600">download-heavy / 5+ users</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The pattern is blunt: past 100 Mbps, <strong>everyday experience stops improving and only download waits shrink</strong>. Gigabit's caveats have their own page — including why it tests at ~940 and what hardware silently caps it — in our <a href="/converters/gbps-to-mbps/" class="text-indigo-600 hover:underline font-medium">Gbps to Mbps guide</a>. And whatever tier you choose, translate it to real download speed with the <a href="/converters/mbps-to-mbs/" class="text-indigo-600 hover:underline font-medium">Mbps to MB/s converter</a> before comparing plans.
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQs -->
+  <section class="mt-12" id="faqs">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers about 100 Mbps</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'Bandwidth Calculator',
+        url: '/tools/bandwidth-calculator/',
+        description: 'Run the same stress test against any plan size — with upload requirements included.',
+        icon: '📶',
+      },
+      {
+        name: 'Mbps to MB/s Converter',
+        url: '/converters/mbps-to-mbs/',
+        description: 'Translate any plan tier into the download speed your apps will actually show.',
+        icon: '🚀',
+      },
+      {
+        name: 'Download Time Calculator',
+        url: '/tools/download-time-calculator/',
+        description: 'Exactly how long any file takes at 100 Mbps — or the tier you\'re eyeing.',
+        icon: '⏱️',
+      },
+    ]}
+  />
+
+  <!-- Stress test logic -->
+  <script is:inline>
+    const stCounters = ['st-4k','st-hd','st-call','st-game'].map((id) => document.getElementById(id));
+    const $stDl = document.getElementById("st-dl");
+    const $stBar = document.getElementById("st-bar");
+    const $stLabel = document.getElementById("st-label");
+    const $stVerdict = document.getElementById("st-verdict");
+    const BACKGROUND = 5; // smart devices / OS chatter allowance
+
+    const stRender = () => {
+      let used = BACKGROUND;
+      stCounters.forEach((c) => { used += Number(c.textContent) * Number(c.dataset.mbps); });
+      const dl = $stDl.checked;
+      const pct = Math.min(100, (used / 100) * 100);
+      $stBar.style.width = (dl ? 100 : pct) + "%";
+      $stLabel.textContent = dl ? "download consuming all spare bandwidth" : Math.round(used) + " of 100 Mbps used";
+
+      let cls, txt;
+      if (dl && used > 60) {
+        cls = "text-sm font-semibold text-red-500 mt-3";
+        txt = "✗ Congested — the download will starve streams and calls. This evening wants 300 Mbps.";
+        $stBar.className = "h-full rounded-full bg-gradient-to-r from-red-400 to-red-500 transition-all duration-500";
+      } else if (dl) {
+        cls = "text-sm font-semibold text-amber-600 mt-3";
+        txt = "⚠ Workable — the download soaks up spare capacity but active streams keep priority. Expect the download to slow, not your shows.";
+        $stBar.className = "h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500 transition-all duration-500";
+      } else if (used <= 60) {
+        cls = "text-sm font-semibold text-teal-600 mt-3";
+        txt = "✓ Comfortable — plenty of headroom for bursts.";
+        $stBar.className = "h-full rounded-full bg-gradient-to-r from-teal-400 to-teal-500 transition-all duration-500";
+      } else if (used <= 85) {
+        cls = "text-sm font-semibold text-amber-600 mt-3";
+        txt = "⚠ Busy but fine — one more 4K stream or a download would pinch.";
+        $stBar.className = "h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500 transition-all duration-500";
+      } else {
+        cls = "text-sm font-semibold text-red-500 mt-3";
+        txt = "✗ Over capacity — buffering territory. Your household has outgrown 100 Mbps.";
+        $stBar.className = "h-full rounded-full bg-gradient-to-r from-red-400 to-red-500 transition-all duration-500";
+      }
+      $stVerdict.className = cls;
+      $stVerdict.textContent = txt;
+    };
+
+    document.querySelectorAll(".st-btn").forEach((b) => {
+      b.addEventListener("click", (e) => {
+        e.preventDefault();
+        const c = document.getElementById(b.dataset.t);
+        c.textContent = String(Math.min(6, Math.max(0, Number(c.textContent) + Number(b.dataset.d))));
+        stRender();
+      });
+    });
+    $stDl.addEventListener("change", stRender);
+    stRender();
+  </script>
+</Layout>

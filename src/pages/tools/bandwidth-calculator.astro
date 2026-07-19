@@ -1,0 +1,430 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'Bandwidth Calculator – How Much Internet Speed Do You Need?';
+const description =
+  'Free bandwidth calculator: pick your household\'s activities and get the internet speed you really need — per-activity math and cited platform figures.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/tools/bandwidth-calculator/`;
+const datePublished = '2026-07-23';
+
+const faqs = [
+  {
+    question: 'How many Mbps does a family of 4 need?',
+    answer:
+      'A typical family of four — two HD streams, one 4K stream, a video call, and casual gaming running simultaneously — generates roughly 45–60 Mbps of peak demand. With 25% headroom for bursts and background traffic, a 100 Mbps plan covers it comfortably; 200–300 Mbps adds margin for heavy downloaders.',
+  },
+  {
+    question: 'Is 100 Mbps enough for 4 people?',
+    answer:
+      'Usually yes. 100 Mbps supports about four simultaneous 4K streams in raw bandwidth, so mixed household use (streaming + calls + browsing + gaming) fits with room to spare. The exceptions are frequent large downloads — games, video projects — where more speed directly cuts waiting time.',
+  },
+  {
+    question: 'How much bandwidth does 4K streaming need?',
+    answer:
+      'Netflix recommends about 25 Mbps sustained per 4K stream; YouTube 4K runs around 20 Mbps depending on codec. Two 4K TVs running at once therefore need ~50 Mbps of clean bandwidth before anything else in the house gets a share.',
+  },
+  {
+    question: 'Do smart home devices need much bandwidth?',
+    answer:
+      'Individually, almost none — thermostats, plugs, and speakers idle at a few Kbps. Budget ~0.5 Mbps per device for occasional updates and bursts. The exception is security cameras that continuously upload video: allow 2–4 Mbps of upload per camera.',
+  },
+  {
+    question: 'How much upload speed do I need?',
+    answer:
+      'Video calls are the main driver: about 3 Mbps of upload per simultaneous HD call (per Zoom\'s published requirements). Cloud backup and game streaming raise the bar further. A practical floor is 10 Mbps upload; households that live on video calls or upload content should target 20+ Mbps.',
+  },
+  {
+    question: 'Why is gaming lag not fixed by more Mbps?',
+    answer:
+      'Because online gaming uses very little bandwidth (3–6 Mbps) but is extremely sensitive to latency — the round-trip time of each packet. A 1 Gbps plan with 80 ms ping feels worse in a shooter than a 50 Mbps plan with 15 ms ping. If gaming feels laggy, measure ping first, bandwidth second.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Tools', item: `${siteURL}/tools/` },
+    { '@type': 'ListItem', position: 3, name: 'Bandwidth Calculator', item: pageURL },
+  ],
+};
+
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  '@id': `${pageURL}#webapplication`,
+  name: 'Bandwidth Calculator',
+  url: pageURL,
+  description,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  inLanguage: 'en',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const activities = [
+  { id: 'act-4k', label: '4K video streams', unit: 'streams', mbps: 25, up: 0, hint: 'Netflix recommends ~25 Mbps each' },
+  { id: 'act-hd', label: 'HD video streams', unit: 'streams', mbps: 5, up: 0, hint: '1080p streaming, ~5 Mbps each' },
+  { id: 'act-call', label: 'HD video calls', unit: 'people', mbps: 4, up: 3, hint: '~3.8 down / 3 up per participant (Zoom)' },
+  { id: 'act-game', label: 'Online gamers', unit: 'players', mbps: 5, up: 1, hint: '3–6 Mbps each — latency matters more' },
+  { id: 'act-music', label: 'Music streams', unit: 'streams', mbps: 0.5, up: 0, hint: 'Audio is tiny — 0.3–0.5 Mbps each' },
+  { id: 'act-smart', label: 'Smart home devices', unit: 'devices', mbps: 0.5, up: 0.1, hint: '~0.5 Mbps each for bursts and updates' },
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(webAppSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/tools/" class="hover:text-indigo-600 transition-colors">Tools</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">Bandwidth Calculator</span>
+  </nav>
+
+  <!-- Title + trust -->
+  <div class="max-w-3xl mb-8">
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">Bandwidth Calculator: How Much Internet Speed Do You Need?</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      Count what your household actually does at the same time, and this calculator turns it into a plan recommendation — with the per-activity math shown, not hidden behind a quiz.
+    </p>
+    <div class="mt-4 p-4 rounded-2xl bg-gradient-to-r from-indigo-50 to-white border-l-4 border-indigo-500">
+      <p class="text-sm text-gray-500">
+        ✓ <strong class="text-gray-600">Fact-checked:</strong> per-activity figures follow platform-published requirements —
+        <a href="https://help.netflix.com/en/node/306" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Netflix</a>,
+        <a href="https://support.google.com/youtube/answer/78358" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">YouTube</a>,
+        <a href="https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0060748" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Zoom</a>.
+        🔄 <strong class="text-gray-600">Last reviewed:</strong> July 2026 · <a href="/methodology/" class="text-indigo-600 hover:underline">methodology</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="gap-8 grid grid-cols-1 lg:grid-cols-3">
+    <!-- Calculator card -->
+    <section class="lg:col-span-2">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex flex-wrap justify-between items-start gap-4 mb-6">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 rounded-full mb-3">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                <span class="text-indigo-600 text-xs font-semibold uppercase tracking-wide">Live Calculator</span>
+              </div>
+              <h2 class="font-extrabold text-2xl text-gray-900 tracking-tight">Your Simultaneous Peak</h2>
+              <p class="text-gray-500 text-sm mt-2 max-w-lg">Set each activity to the number happening <em>at the same time</em> on a busy evening — not totals you own.</p>
+            </div>
+          </div>
+
+          <!-- Presets -->
+          <div class="flex flex-wrap items-center gap-2 mb-8" aria-label="Household presets">
+            <span class="text-gray-400 text-xs font-medium mr-1">Presets:</span>
+            <button class="preset-hh px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-p="1,0,1,0,1,4">Solo</button>
+            <button class="preset-hh px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-p="1,1,1,0,1,6">Couple</button>
+            <button class="preset-hh px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-p="1,2,1,1,1,8">Family</button>
+            <button class="preset-hh px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-p="2,2,2,2,2,15">Power household</button>
+          </div>
+
+          <!-- Activity steppers -->
+          <div class="space-y-4">
+            {
+              activities.map((a) => (
+                <div class="flex items-center justify-between gap-4 p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100">
+                  <div class="min-w-0">
+                    <p class="font-semibold text-gray-800 text-sm">{a.label}</p>
+                    <p class="text-gray-400 text-xs mt-0.5">{a.hint}</p>
+                  </div>
+                  <div class="flex items-center gap-2 flex-shrink-0">
+                    <button type="button" class="step-btn w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold" data-target={a.id} data-dir="-1" aria-label={`Fewer ${a.unit}`}>−</button>
+                    <div id={a.id} class="w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-sm shadow-lg shadow-indigo-200" data-mbps={a.mbps} data-up={a.up}>0</div>
+                    <button type="button" class="step-btn w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold" data-target={a.id} data-dir="1" aria-label={`More ${a.unit}`}>+</button>
+                  </div>
+                </div>
+              ))
+            }
+
+            <!-- Heavy downloads toggle -->
+            <div class="flex items-center justify-between gap-4 p-4 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100">
+              <div class="min-w-0">
+                <p class="font-semibold text-gray-800 text-sm">Frequent large downloads</p>
+                <p class="text-gray-400 text-xs mt-0.5">Games, video projects — speed here buys time, not capacity</p>
+              </div>
+              <label class="flex items-center gap-2 cursor-pointer select-none flex-shrink-0">
+                <input id="act-dl" type="checkbox" class="w-5 h-5 rounded accent-indigo-500" />
+                <span class="text-gray-500 text-sm font-medium">yes</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="gap-4 grid grid-cols-1 sm:grid-cols-2 mt-8">
+            <button id="btn-share" class="btn-premium btn-secondary flex justify-center items-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              Share result
+            </button>
+            <button id="btn-clear" class="btn-premium btn-ghost">Reset to zero</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="space-y-6">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-200">
+              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <span class="text-gray-900 font-bold text-lg">Recommendation</span>
+          </div>
+          <div id="result-main" class="result-display mb-3">—</div>
+          <div id="result-secondary" class="text-gray-500 text-sm mb-6">set your activities to begin</div>
+
+          <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-6"></div>
+
+          <div class="space-y-4">
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Peak demand:</span><span id="out-demand" class="text-teal-600 font-semibold">—</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">+25% headroom:</span><span id="out-headroom" class="text-amber-600 font-semibold">—</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Upload needed:</span><span id="out-up" class="text-gray-600 font-semibold">—</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">In download terms:</span><span id="out-mbs" class="text-gray-600 font-semibold">—</span></div>
+          </div>
+          <p id="out-note" class="text-gray-400 text-xs mt-6 leading-relaxed"></p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Quick answer -->
+  <article class="premium-card mt-12">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Short Answer, By Household</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500 mb-8">
+        <p class="text-lg text-gray-700">
+          One person streaming and browsing: <strong class="text-indigo-600">25–50 Mbps</strong>. A couple with 4K and calls: <strong class="text-indigo-600">50–100 Mbps</strong>. A family of four with mixed heavy use: <strong class="text-indigo-600">100–300 Mbps</strong>. Gigabit pays off only for frequent large downloads or very large households — for everyone else it buys headroom you'll rarely touch.
+        </p>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The reason speed quizzes feel vague is that they hide the arithmetic. Bandwidth need is just addition: each simultaneous activity consumes a known slice, the slices sum to your peak, and a 25% buffer absorbs bursts and background traffic. The calculator above shows every slice — and once you have a plan number, our <a href="/converters/mbps-to-mbs/" class="text-indigo-600 hover:underline font-medium">Mbps to MB/s converter</a> translates it into the download speed you'll actually see.
+      </p>
+    </div>
+  </article>
+
+  <!-- Per-activity table -->
+  <section class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">What Each Activity Really Uses</h2>
+      <p class="text-gray-500 mb-8">The figures behind the calculator — from platform documentation, not folklore.</p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
+        <table class="luxury-table">
+          <caption class="sr-only">Bandwidth requirements per activity with sources</caption>
+          <thead><tr><th>Activity</th><th>Download</th><th>Upload</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">4K streaming</td><td class="text-amber-600 font-bold">~25 Mbps</td><td class="text-gray-500">—</td><td class="text-gray-500">Netflix's published 4K recommendation</td></tr>
+            <tr><td class="text-teal-600 font-semibold">HD (1080p) streaming</td><td class="text-amber-600">~5 Mbps</td><td class="text-gray-500">—</td><td class="text-gray-500">Netflix HD figure; YouTube similar</td></tr>
+            <tr><td class="text-teal-600 font-semibold">HD video call</td><td class="text-amber-600">~3.8 Mbps</td><td class="text-gray-500">~3 Mbps</td><td class="text-gray-500">Zoom 1080p group call, per participant</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Online gaming</td><td class="text-amber-600">3–6 Mbps</td><td class="text-gray-500">~1 Mbps</td><td class="text-gray-500">Bandwidth-light; ping &lt;30 ms is what matters</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Music streaming</td><td class="text-amber-600">~0.3–0.5 Mbps</td><td class="text-gray-500">—</td><td class="text-gray-500">Even lossless audio stays under 2 Mbps</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Smart home device</td><td class="text-amber-600">~0.5 Mbps</td><td class="text-gray-500">~0.1 Mbps</td><td class="text-gray-500">Bursty; security cameras need 2–4 Mbps upload each</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Cloud game streaming</td><td class="text-amber-600">15–35 Mbps</td><td class="text-gray-500">—</td><td class="text-gray-500">Treat each session like a 4K stream</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Large downloads</td><td class="text-amber-600">all you have</td><td class="text-gray-500">—</td><td class="text-gray-500">Elastic — more speed = less waiting, not a fixed need</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-6 text-gray-400 text-sm">Streaming services adapt bitrate dynamically, so real usage fluctuates around these figures. Sources linked in the fact-check strip above; last verified July 2026.</p>
+    </div>
+  </section>
+
+  <!-- Headroom -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Why the 25% Headroom Rule</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        Summing your activities gives a clean number that real networks never quite deliver. Three taxes eat into it: <strong>protocol overhead</strong> (5–10% of any connection carries headers, not content), <strong>burst traffic</strong> (app updates, cloud sync, and phone backups fire without asking), and <strong>Wi-Fi loss</strong> (walls and distance routinely cost 20–30% versus a cable). Adding 25% on top of your computed peak absorbs the first two; testing over ethernet isolates the third.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        The corollary: if your plan already exceeds your peak-plus-headroom and things still stutter, more Mbps won't fix it — the bottleneck is latency, Wi-Fi, or a single overloaded device. Our guide to <a href="/learn/mbps-vs-mbps/" class="text-indigo-600 hover:underline font-medium">reading speed units correctly</a> and the <a href="/tools/packets-per-second-calculator/" class="text-indigo-600 hover:underline font-medium">PPS calculator</a> cover the failure modes bandwidth can't explain.
+      </p>
+    </div>
+  </article>
+
+  <!-- Plan tiers -->
+  <section class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">What Each Plan Tier Actually Handles</h2>
+      <p class="text-gray-500 mb-8">Matching computed demand to the tiers ISPs actually sell.</p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
+        <table class="luxury-table">
+          <caption class="sr-only">Internet plan tiers and the households they fit</caption>
+          <thead><tr><th>Plan tier</th><th>Real capacity</th><th>Comfortable for</th></tr></thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">25 Mbps</td><td class="text-gray-500">one 4K stream, total</td><td class="text-amber-600">Solo light use — streaming or browsing, not both heavily</td></tr>
+            <tr><td class="text-teal-600 font-semibold">50 Mbps</td><td class="text-gray-500">~6 MB/s downloads</td><td class="text-amber-600">Solo heavy use or a light couple</td></tr>
+            <tr><td class="text-teal-600 font-semibold">100 Mbps</td><td class="text-gray-500">four 4K streams' worth</td><td class="text-amber-600 font-bold">Most families — see our full <a href="/internet-speed/is-100-mbps-good/" class="text-indigo-600 hover:underline">100 Mbps verdict</a></td></tr>
+            <tr><td class="text-teal-600 font-semibold">200–300 Mbps</td><td class="text-gray-500">25–37 MB/s downloads</td><td class="text-amber-600">Larger households, regular big downloads</td></tr>
+            <tr><td class="text-teal-600 font-semibold">500 Mbps</td><td class="text-gray-500">62 MB/s downloads</td><td class="text-amber-600">Power users; a 75 GB game in ~20 min</td></tr>
+            <tr><td class="text-teal-600 font-semibold">1 Gbps</td><td class="text-gray-500">~940 Mbps wired reality</td><td class="text-amber-600">Download-heavy homes — see our <a href="/converters/gbps-to-mbps/" class="text-indigo-600 hover:underline">Gbps guide</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs -->
+  <section class="mt-12">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers about bandwidth needs</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'Mbps to MB/s Converter',
+        url: '/converters/mbps-to-mbs/',
+        description: 'Translate the recommended plan into the download speed your apps will show.',
+        icon: '🚀',
+      },
+      {
+        name: 'Download Time Calculator',
+        url: '/tools/download-time-calculator/',
+        description: 'See what your candidate plan means for a 75 GB game or a 20 GB movie.',
+        icon: '⏱️',
+      },
+      {
+        name: 'All Converters & Tools',
+        url: '/converters/',
+        description: 'Browse every data-rate converter and calculator on the site.',
+        icon: '🧰',
+      },
+    ]}
+  />
+
+  <!-- Calculator Logic -->
+  <script is:inline>
+    const counters = Array.from(document.querySelectorAll('[data-mbps]'));
+    const $dl = document.getElementById("act-dl");
+    const $resMain = document.getElementById("result-main");
+    const $resSecondary = document.getElementById("result-secondary");
+    const $outDemand = document.getElementById("out-demand");
+    const $outHeadroom = document.getElementById("out-headroom");
+    const $outUp = document.getElementById("out-up");
+    const $outMbs = document.getElementById("out-mbs");
+    const $outNote = document.getElementById("out-note");
+
+    const TIERS = [25, 50, 100, 200, 300, 500, 1000];
+
+    const render = () => {
+      let demand = 0, up = 0, any = false;
+      counters.forEach((c) => {
+        const n = Number(c.textContent);
+        if (n > 0) any = true;
+        demand += n * Number(c.dataset.mbps);
+        up += n * Number(c.dataset.up);
+      });
+      const heavyDl = $dl.checked;
+
+      if (!any && !heavyDl) {
+        $resMain.textContent = "—";
+        $resSecondary.textContent = "set your activities to begin";
+        [$outDemand, $outHeadroom, $outUp, $outMbs].forEach((o) => (o.textContent = "—"));
+        $outNote.textContent = "";
+        return;
+      }
+
+      const withHeadroom = demand * 1.25;
+      let tier = TIERS.find((t) => t >= withHeadroom) ?? 1000;
+      if (heavyDl) tier = Math.max(tier, TIERS[Math.min(TIERS.indexOf(tier) + 1, TIERS.length - 1)], 200);
+      const upNeed = Math.max(10, Math.ceil(up * 1.25));
+
+      $resMain.textContent = tier >= 1000 ? "1 Gbps plan" : tier + " Mbps plan";
+      $resSecondary.textContent = "recommended tier for your peak";
+      $outDemand.textContent = Math.round(demand) + " Mbps";
+      $outHeadroom.textContent = Math.ceil(withHeadroom) + " Mbps";
+      $outUp.textContent = upNeed + " Mbps";
+      $outMbs.textContent = (tier / 8).toLocaleString() + " MB/s";
+      $outNote.textContent = heavyDl
+        ? "Bumped one tier for heavy downloads — extra speed there buys time directly. Gamers in the mix? Prioritize low ping over more Mbps."
+        : "Assumes wired or strong Wi-Fi. If gaming is in the mix, latency (<30 ms ping) matters more than adding Mbps.";
+    };
+
+    document.querySelectorAll(".step-btn").forEach((b) => {
+      b.addEventListener("click", () => {
+        const c = document.getElementById(b.dataset.target);
+        const next = Math.min(9, Math.max(0, Number(c.textContent) + Number(b.dataset.dir)));
+        c.textContent = String(next);
+        render();
+      });
+    });
+
+    document.querySelectorAll(".preset-hh").forEach((p) => {
+      p.addEventListener("click", () => {
+        const vals = p.dataset.p.split(",");
+        counters.forEach((c, i) => (c.textContent = vals[i] ?? "0"));
+        $dl.checked = false;
+        render();
+      });
+    });
+
+    $dl.addEventListener("change", render);
+
+    document.getElementById("btn-share").addEventListener("click", async () => {
+      if ($resMain.textContent === "—") return;
+      const txt = `Bandwidth check: peak ${$outDemand.textContent}, recommended ${$resMain.textContent} (upload ${$outUp.textContent}). via mbpstobytes.com/tools/bandwidth-calculator/`;
+      try { await navigator.clipboard.writeText(txt); } catch (e) {}
+    });
+
+    document.getElementById("btn-clear").addEventListener("click", () => {
+      counters.forEach((c) => (c.textContent = "0"));
+      $dl.checked = false;
+      render();
+    });
+
+    // Default: family preset so the page loads with a meaningful example
+    counters.forEach((c, i) => (c.textContent = ["1","2","1","1","1","8"][i] ?? "0"));
+    render();
+  </script>
+</Layout>
