@@ -1,0 +1,557 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'MB to GB Converter – Megabytes to Gigabytes (SI & Binary)';
+const description =
+  'Convert MB to GB instantly: 1 GB = 1,000 MB decimal, 1 GiB = 1,024 MiB binary. Both standards shown side by side, with tables, RAM sizes and real file context.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/converters/mb-to-gb/`;
+
+const faqs = [
+  {
+    question: 'How many MB are in 1 GB?',
+    answer:
+      'It depends on the standard. In decimal (SI) units — used by storage manufacturers, phones, and data plans — 1 GB = 1,000 MB exactly. In binary (IEC) units — used for RAM and by Windows file listings — 1 GiB = 1,024 MiB. Both answers are correct in their own context, which is why this converter shows both side by side.',
+  },
+  {
+    question: 'Is 1 GB equal to 1,000 MB or 1,024 MB?',
+    answer:
+      'Officially, 1 GB = 1,000 MB — the gigabyte is a decimal (SI) unit. The 1,024 factor belongs to the binary unit properly called a gibibyte (1 GiB = 1,024 MiB). The confusion exists because Windows and some apps calculate in binary but print "GB", so a file Windows calls "1 GB" is really 1 GiB = 1,073,741,824 bytes.',
+  },
+  {
+    question: 'What is 8192 MB in GB?',
+    answer:
+      '8,192 MB = 8.192 GB in decimal units — but if those 8,192 MB describe RAM (a binary context), it is exactly 8 GiB, which is why memory modules show numbers like 8,192. Powers of two (2,048, 4,096, 8,192, 16,384) almost always signal a binary context.',
+  },
+  {
+    question: 'Why does my 128 GB phone show less available storage?',
+    answer:
+      'Two reasons stack up. The operating system and pre-installed apps consume 10–20 GB before you store anything. And if the file manager counts in binary while the box uses decimal, 128 GB displays as about 119 "GB" (really GiB). Nothing is missing — it is accounting, not shrinkage.',
+  },
+  {
+    question: 'Which is bigger, MB or GB?',
+    answer:
+      'GB is bigger — 1,000× bigger in decimal units. A megabyte holds about one minute of MP3 audio or a third of a smartphone photo; a gigabyte holds roughly 250 photos or an hour of standard-definition video.',
+  },
+  {
+    question: 'How many MB is 1.5 GB?',
+    answer:
+      '1.5 GB = 1,500 MB in decimal units (1.5 × 1,000). In binary terms, 1.5 GiB = 1,536 MiB (1.5 × 1,024). For mobile data allowances — always decimal — 1.5 GB means exactly 1,500 MB of transfer.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Converters', item: `${siteURL}/converters/` },
+    { '@type': 'ListItem', position: 3, name: 'MB to GB Converter', item: pageURL },
+  ],
+};
+
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  '@id': `${pageURL}#webapplication`,
+  name: 'MB to GB Converter',
+  url: pageURL,
+  description,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  inLanguage: 'en',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+// Power-of-two values people actually search (RAM sizes)
+const commonValues = [
+  { mb: '500', gb: '0.5', gib: '0.488', note: 'Half a gigabyte — a compressed SD movie', anchor: '500-mb' },
+  { mb: '1,000', gb: '1', gib: '0.977', note: 'One decimal gigabyte exactly', anchor: '1000-mb' },
+  { mb: '1,024', gb: '1.024', gib: '1', note: 'One binary gibibyte exactly — the RAM "1 GB"', anchor: '1024-mb' },
+  { mb: '2,048', gb: '2.048', gib: '2', note: '2 GiB — small RAM module / game patch class', anchor: '2048-mb' },
+  { mb: '4,096', gb: '4.096', gib: '4', note: '4 GiB — classic RAM size, FAT32 file-size limit', anchor: '4096-mb' },
+  { mb: '8,192', gb: '8.192', gib: '8', note: '8 GiB — the most common laptop RAM size', anchor: '8192-mb' },
+  { mb: '16,384', gb: '16.384', gib: '16', note: '16 GiB — gaming-PC RAM standard', anchor: '16384-mb' },
+  { mb: '50,000', gb: '50', gib: '48.8', note: 'A modern AAA game install', anchor: '50000-mb' },
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(webAppSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/converters/" class="hover:text-indigo-600 transition-colors">Converters</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">MB to GB Converter</span>
+  </nav>
+
+  <div class="gap-8 grid grid-cols-1 lg:grid-cols-3">
+    <!-- Calculator card -->
+    <section class="lg:col-span-2">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex flex-wrap justify-between items-start gap-6 mb-8">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 rounded-full mb-3">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                <span class="text-indigo-600 text-xs font-semibold uppercase tracking-wide">Live Calculator</span>
+              </div>
+              <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">MB to GB Converter</h1>
+              <p class="text-gray-500 text-base mt-3 max-w-lg leading-relaxed">
+                Megabytes to gigabytes, both directions — with decimal (GB) and binary (GiB) results shown together, so the 1,000-vs-1,024 question answers itself.
+              </p>
+            </div>
+            <div class="flex items-center gap-2 bg-gray-50 px-4 py-3 rounded-2xl border border-gray-100">
+              <span class="text-gray-500 text-sm font-medium">Decimals:</span>
+              <button id="dec-minus" class="w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold">−</button>
+              <div id="dec-value" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-sm shadow-lg shadow-indigo-200">3</div>
+              <button id="dec-plus" class="w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold">+</button>
+            </div>
+          </div>
+
+          <!-- Standard toggle -->
+          <div class="flex flex-wrap items-center gap-3 mb-6">
+            <span class="text-gray-500 text-sm font-medium">My numbers come from:</span>
+            <div class="inline-flex rounded-xl border border-gray-200 bg-gray-50 p-1" role="group" aria-label="Unit standard">
+              <button id="std-si" type="button" aria-pressed="true" class="px-4 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-600 shadow-sm transition-all duration-200">Storage / files (decimal)</button>
+              <button id="std-iec" type="button" aria-pressed="false" class="px-4 py-1.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200">RAM / Windows (binary)</button>
+            </div>
+            <span id="std-hint" class="text-gray-400 text-xs">1 GB = 1,000 MB — drives, phones, data plans</span>
+          </div>
+
+          <!-- Form -->
+          <div class="gap-8 grid md:grid-cols-2">
+            <div class="space-y-3">
+              <label for="mb" class="block text-gray-700 text-sm font-semibold">Megabytes (<span id="mb-label">MB</span>)</label>
+              <div class="relative">
+                <input id="mb" inputmode="decimal" placeholder="Enter megabytes" class="glow-input pr-14" value="8192" />
+                <div id="mb-badge" class="absolute right-5 top-1/2 -translate-y-1/2 text-teal-500 font-bold text-sm">MB</div>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">File sizes, app downloads, RAM modules, data usage.</p>
+            </div>
+            <div class="space-y-3">
+              <label for="gb" class="block text-gray-700 text-sm font-semibold">Gigabytes (<span id="gb-label">GB</span>)</label>
+              <div class="relative">
+                <input id="gb" inputmode="decimal" placeholder="Enter gigabytes" class="glow-input pr-14" value="8.192" />
+                <div id="gb-badge" class="absolute right-5 top-1/2 -translate-y-1/2 text-amber-500 font-bold text-sm">GB</div>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">Drive capacities, phone storage, monthly data caps.</p>
+            </div>
+          </div>
+
+          <!-- Preset chips -->
+          <div class="flex flex-wrap items-center gap-2 mt-6" aria-label="Common sizes">
+            <span class="text-gray-400 text-xs font-medium mr-1">Try a size:</span>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-mb="500">500 MB</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-mb="1024">1,024 MB</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-mb="4096">4,096 MB</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-mb="8192">8,192 MB</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-mb="50000">50,000 MB</button>
+          </div>
+
+          <!-- Actions -->
+          <div class="gap-4 grid grid-cols-1 sm:grid-cols-3 mt-8">
+            <button id="btn-share" class="btn-premium btn-secondary flex justify-center items-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              Share result
+            </button>
+            <button id="btn-reload" class="btn-premium btn-primary">Reload calculator</button>
+            <button id="btn-clear" class="btn-premium btn-ghost">Clear all</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="space-y-6">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-200">
+              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <span class="text-gray-900 font-bold text-lg">Result — both standards</span>
+          </div>
+          <div id="result-main" class="result-display mb-3">8.192 GB</div>
+          <div id="result-secondary" class="text-gray-500 text-sm mb-6">8,192 MB = 8.192 GB (decimal)</div>
+
+          <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-6"></div>
+
+          <div class="space-y-4">
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Decimal (GB, ÷1,000):</span><span id="out-gb" class="text-amber-600 font-semibold">8.192</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Binary (GiB, ÷1,024):</span><span id="out-gib" class="text-indigo-600 font-semibold">8</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Kilobytes (KB):</span><span id="out-kb" class="text-gray-600 font-semibold">8,192,000</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Bytes:</span><span id="out-bytes" class="text-gray-600 font-semibold">8,192,000,000</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Download at 100 Mbps:</span><span id="out-dl" class="text-gray-600 font-semibold">≈ 10m 55s</span></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Quick answer -->
+  <article class="premium-card mt-12">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">How Many MB in a GB?</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500 mb-8">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">1 GB = 1,000 MB</strong> in decimal (SI) units — the official definition, used by drives, phones, and data plans. The famous <strong>1,024</strong> belongs to the binary system: <strong class="text-indigo-600">1 GiB = 1,024 MiB</strong>, used for RAM and by Windows file listings. Both are correct in their own context — the mistake is mixing them.
+        </p>
+        <p class="text-gray-500 text-sm mt-2">GB = MB ÷ 1,000 (decimal) &nbsp;·&nbsp; GiB = MiB ÷ 1,024 (binary) &nbsp;·&nbsp; per NIST and IEC 80000-13</p>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        This is the storage world's version of the bits-vs-bytes trap: one everyday word ("gigabyte") covering two different quantities about 7.4% apart. Most converter sites either ignore the split or — worse — present "1 GB = 1,024 MB" as a universal fact. Our calculator shows <strong>both results simultaneously</strong>, labeled, so whichever context your number came from, the right answer is on screen. The exact factors we use are documented in our <a href="/methodology/" class="text-indigo-600 hover:underline font-medium">methodology</a>.
+      </p>
+    </div>
+  </article>
+
+  <!-- Common values -->
+  <section class="premium-card mt-8" id="common-sizes">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">The Sizes People Actually Search</h2>
+      <p class="text-gray-500 mb-8">Notice the pattern: powers of two (1,024 · 2,048 · 4,096 · 8,192) come from RAM and binary contexts; round thousands come from storage and files.</p>
+      <div class="grid sm:grid-cols-2 gap-4">
+        {
+          commonValues.map((v) => (
+            <div id={v.anchor} class="p-5 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:border-indigo-200 transition-colors">
+              <h3 class="font-bold text-gray-900 text-lg mb-2">{v.mb} MB</h3>
+              <ul class="text-sm text-gray-500 space-y-1">
+                <li><span class="text-gray-400">As storage (÷1,000):</span> <strong class="text-amber-600">{v.gb} GB</strong></li>
+                <li><span class="text-gray-400">As RAM/binary (÷1,024):</span> <strong class="text-indigo-600">{v.gib} GiB</strong></li>
+                <li class="pt-1">{v.note}</li>
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Conversion tables -->
+  <section class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <div class="flex md:flex-row flex-col md:justify-between md:items-center gap-4 mb-8">
+        <h2 class="font-bold text-2xl text-gray-900">MB to GB Conversion Table</h2>
+        <p class="text-gray-400 text-sm font-medium">Both standards, clearly labeled</p>
+      </div>
+      <div class="gap-8 grid md:grid-cols-2">
+        <div>
+          <h3 class="mb-4 font-semibold text-gray-700">MB to GB</h3>
+          <div class="rounded-2xl border border-gray-100 overflow-x-auto shadow-sm">
+            <table class="luxury-table">
+              <thead><tr><th>Megabytes</th><th>GB (decimal)</th><th>GiB (binary)</th></tr></thead>
+              <tbody>
+                <tr><td class="text-teal-600 font-semibold">100 MB</td><td class="text-amber-600">0.1</td><td class="text-gray-500">0.093</td></tr>
+                <tr><td class="text-teal-600 font-semibold">250 MB</td><td class="text-amber-600">0.25</td><td class="text-gray-500">0.233</td></tr>
+                <tr><td class="text-teal-600 font-semibold">500 MB</td><td class="text-amber-600">0.5</td><td class="text-gray-500">0.466</td></tr>
+                <tr><td class="text-teal-600 font-semibold">1,000 MB</td><td class="text-amber-600 font-bold">1</td><td class="text-gray-500">0.931</td></tr>
+                <tr><td class="text-teal-600 font-semibold">1,024 MB</td><td class="text-amber-600">1.024</td><td class="text-gray-500 font-bold">0.954*</td></tr>
+                <tr><td class="text-teal-600 font-semibold">2,000 MB</td><td class="text-amber-600">2</td><td class="text-gray-500">1.863</td></tr>
+                <tr><td class="text-teal-600 font-semibold">5,000 MB</td><td class="text-amber-600">5</td><td class="text-gray-500">4.657</td></tr>
+                <tr><td class="text-teal-600 font-semibold">10,000 MB</td><td class="text-amber-600 font-bold">10</td><td class="text-gray-500">9.313</td></tr>
+                <tr><td class="text-teal-600 font-semibold">100,000 MB</td><td class="text-amber-600">100</td><td class="text-gray-500">93.13</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h3 class="mb-4 font-semibold text-gray-700">GB to MB</h3>
+          <div class="rounded-2xl border border-gray-100 overflow-x-auto shadow-sm">
+            <table class="luxury-table">
+              <thead><tr><th>Gigabytes</th><th>MB (decimal)</th><th>Typical context</th></tr></thead>
+              <tbody>
+                <tr><td class="text-amber-600 font-semibold">1 GB</td><td class="text-teal-600 font-bold">1,000</td><td class="text-gray-500">Small mobile data plan</td></tr>
+                <tr><td class="text-amber-600 font-semibold">2 GB</td><td class="text-teal-600">2,000</td><td class="text-gray-500">HD movie (compressed)</td></tr>
+                <tr><td class="text-amber-600 font-semibold">5 GB</td><td class="text-teal-600">5,000</td><td class="text-gray-500">Typical game update</td></tr>
+                <tr><td class="text-amber-600 font-semibold">8 GB</td><td class="text-teal-600">8,000</td><td class="text-gray-500">Common RAM size (as 8 GiB = 8,192 MiB)</td></tr>
+                <tr><td class="text-amber-600 font-semibold">16 GB</td><td class="text-teal-600">16,000</td><td class="text-gray-500">Base phone storage tier</td></tr>
+                <tr><td class="text-amber-600 font-semibold">32 GB</td><td class="text-teal-600">32,000</td><td class="text-gray-500">USB stick class</td></tr>
+                <tr><td class="text-amber-600 font-semibold">64 GB</td><td class="text-teal-600">64,000</td><td class="text-gray-500">Entry phone storage</td></tr>
+                <tr><td class="text-amber-600 font-semibold">128 GB</td><td class="text-teal-600">128,000</td><td class="text-gray-500">Mainstream phone storage</td></tr>
+                <tr><td class="text-amber-600 font-semibold">500 GB</td><td class="text-teal-600">500,000</td><td class="text-gray-500">Standard laptop SSD</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <p class="mt-6 text-gray-400 text-sm">*1,024 MB equals 0.954 GiB when both sides are read as decimal-vs-binary — but if your "1,024 MB" is a RAM spec, it already <em>is</em> exactly 1 GiB. Context decides; the calculator's toggle handles both readings.</p>
+    </div>
+  </section>
+
+  <!-- When each standard applies -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">1,000 or 1,024? When Each Answer Is Right</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        The split isn't random — each system owns specific territory. Match your number's source to the right column and the ambiguity disappears:
+      </p>
+      <div class="grid sm:grid-cols-2 gap-6 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">
+          <h3 class="font-semibold text-gray-900 mb-3">Decimal — 1 GB = 1,000 MB</h3>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>Hard drives, SSDs, USB sticks (the number on the box)</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>Phone and tablet storage tiers (64/128/256 GB)</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>Mobile data plans and caps</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>macOS file sizes (since 10.6)</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>Network transfer totals</span></li>
+          </ul>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100">
+          <h3 class="font-semibold text-gray-900 mb-3">Binary — 1 GiB = 1,024 MiB</h3>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex gap-2"><span class="text-indigo-500">•</span><span>RAM — always (8 GB RAM is exactly 8 GiB)</span></li>
+            <li class="flex gap-2"><span class="text-indigo-500">•</span><span>Windows Explorer file and drive sizes (labeled "GB")</span></li>
+            <li class="flex gap-2"><span class="text-indigo-500">•</span><span>Game console storage readouts</span></li>
+            <li class="flex gap-2"><span class="text-indigo-500">•</span><span>Many Linux tools (ls -h, df -h default binary)</span></li>
+            <li class="flex gap-2"><span class="text-indigo-500">•</span><span>Anything showing 1,024 / 2,048 / 4,096 / 8,192</span></li>
+          </ul>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The collision of the two systems is why a "1 TB" drive shows ~931 GB in Windows and a "128 GB" phone reports ~119 — the hardware is honest, the labels disagree. The same lowercase-b/uppercase-B discipline from our <a href="/learn/mbps-vs-mbps/" class="text-indigo-600 hover:underline font-medium">Mbps vs MBps guide</a> applies here too: precision about units is the entire game.
+      </p>
+    </div>
+  </article>
+
+  <!-- Real-world scale -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">What a Megabyte and a Gigabyte Actually Hold</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Numbers stick better with objects attached. Typical sizes (they vary with quality and compression):
+      </p>
+      <div class="grid sm:grid-cols-2 gap-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-3">One megabyte (1 MB) ≈</h3>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span>A minute of MP3 audio at 128 Kbps</span></li>
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span>A 300-page plain-text book</span></li>
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span>A third of a smartphone photo</span></li>
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span>8 seconds of transfer on a 1 Mbps link</span></li>
+          </ul>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">
+          <h3 class="font-semibold text-gray-900 mb-3">One gigabyte (1 GB) ≈</h3>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>~250 smartphone photos (4 MB each)</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>~200 songs as MP3s, or an hour of SD video</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>~15 minutes of 4K streaming</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>80 seconds of download on a 100 Mbps plan — check any size with the <a href="/tools/download-time-calculator/" class="text-indigo-600 hover:underline font-medium">download time calculator</a></span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers about MB and GB</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'GB to TB Converter',
+        url: '/converters/gb-to-tb/',
+        description: 'One step up the ladder — gigabytes to terabytes, with the Windows-displayed sizes.',
+        icon: '🗄️',
+      },
+      {
+        name: 'KB to MB Converter',
+        url: '/converters/kb-to-mb/',
+        description: 'One step down the ladder — kilobytes to megabytes for uploads and attachments.',
+        icon: '📁',
+      },
+      {
+        name: 'Download Time Calculator',
+        url: '/tools/download-time-calculator/',
+        description: 'Know the size in GB? See exactly how long it takes to download at your speed.',
+        icon: '⏱️',
+      },
+      {
+        name: 'Mbps vs MBps Guide',
+        url: '/learn/mbps-vs-mbps/',
+        description: 'The other unit trap: why lowercase b and uppercase B are 8× apart.',
+        icon: '📖',
+      },
+      {
+        name: 'All Converters & Tools',
+        url: '/converters/',
+        description: 'Browse every data converter and calculator on the site.',
+        icon: '🧰',
+      },
+    ]}
+  />
+
+  <!-- Calculator Logic -->
+  <script is:inline>
+    const el = (id) => document.getElementById(id);
+    const $mb = el("mb");
+    const $gb = el("gb");
+    const $stdSi = el("std-si");
+    const $stdIec = el("std-iec");
+    const $stdHint = el("std-hint");
+    const $mbLabel = el("mb-label");
+    const $gbLabel = el("gb-label");
+    const $mbBadge = el("mb-badge");
+    const $gbBadge = el("gb-badge");
+    const $decMinus = el("dec-minus");
+    const $decPlus = el("dec-plus");
+    const $decValue = el("dec-value");
+    const $btnShare = el("btn-share");
+    const $btnReload = el("btn-reload");
+    const $btnClear = el("btn-clear");
+
+    const $resMain = el("result-main");
+    const $resSecondary = el("result-secondary");
+    const $outGb = el("out-gb");
+    const $outGib = el("out-gib");
+    const $outKb = el("out-kb");
+    const $outBytes = el("out-bytes");
+    const $outDl = el("out-dl");
+
+    let state = { lastEdited: "mb", standard: "si", decimals: 3 };
+
+    const num = (x) => Number(String(x).replace(/[^0-9+\-.e]/g, ""));
+    const fmt = (n) => (Number.isFinite(n) ? Number(n.toFixed(state.decimals)).toLocaleString() : "—");
+    const factor = () => (state.standard === "iec" ? 1024 : 1000);
+    const mbUnit = () => (state.standard === "iec" ? "MiB" : "MB");
+    const gbUnit = () => (state.standard === "iec" ? "GiB" : "GB");
+
+    const fmtTime = (sec) => {
+      if (!Number.isFinite(sec)) return "—";
+      if (sec >= 3600) { const h = Math.floor(sec/3600); const m = Math.round((sec%3600)/60); return `≈ ${h}h ${m}m`; }
+      if (sec >= 60) { const m = Math.floor(sec/60); const s = Math.round(sec%60); return `≈ ${m}m ${s}s`; }
+      return `≈ ${Math.round(sec)}s`;
+    };
+
+    const refreshUI = () => {
+      const si = state.standard === "si";
+      const on = "px-4 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-600 shadow-sm transition-all duration-200";
+      const off = "px-4 py-1.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200";
+      $stdSi.className = si ? on : off;
+      $stdIec.className = !si ? on : off;
+      $stdSi.setAttribute("aria-pressed", String(si));
+      $stdIec.setAttribute("aria-pressed", String(!si));
+      $stdHint.textContent = si ? "1 GB = 1,000 MB — drives, phones, data plans" : "1 GiB = 1,024 MiB — RAM, Windows file listings";
+      $mbLabel.textContent = mbUnit(); $mbBadge.textContent = mbUnit();
+      $gbLabel.textContent = gbUnit(); $gbBadge.textContent = gbUnit();
+    };
+
+    const render = () => {
+      let mbVal;
+      if (state.lastEdited === "mb") {
+        const m = num($mb.value);
+        mbVal = Number.isFinite(m) && $mb.value !== "" ? m : NaN;
+        $gb.value = Number.isFinite(mbVal) ? Number((mbVal / factor()).toFixed(Math.max(state.decimals, 6))).toString() : "";
+      } else {
+        const g = num($gb.value);
+        mbVal = Number.isFinite(g) && $gb.value !== "" ? g * factor() : NaN;
+        $mb.value = Number.isFinite(mbVal) ? Number(mbVal.toFixed(Math.max(state.decimals, 6))).toString() : "";
+      }
+
+      if (!Number.isFinite(mbVal)) {
+        $resMain.textContent = "—";
+        $resSecondary.textContent = "";
+        [$outGb, $outGib, $outKb, $outBytes, $outDl].forEach((o) => (o.textContent = "—"));
+        $decValue.textContent = state.decimals;
+        return;
+      }
+
+      // Interpret the MB value in the chosen standard to get raw bytes
+      const bytes = state.standard === "iec" ? mbVal * 1048576 : mbVal * 1000000;
+      const gbDec = bytes / 1e9;
+      const gib = bytes / 1073741824;
+      const kb = bytes / 1000;
+      const dlSec = (bytes * 8) / 100000000; // at 100 Mbps
+
+      const primary = state.lastEdited === "mb" ? fmt(mbVal / factor()) + " " + gbUnit() : fmt(mbVal) + " " + mbUnit();
+      $resMain.textContent = primary;
+      $resSecondary.textContent = fmt(mbVal) + " " + mbUnit() + " = " + fmt(mbVal / factor()) + " " + gbUnit() + (state.standard === "si" ? " (decimal)" : " (binary)");
+      $outGb.textContent = fmt(gbDec);
+      $outGib.textContent = fmt(gib);
+      $outKb.textContent = fmt(kb);
+      $outBytes.textContent = Math.round(bytes).toLocaleString();
+      $outDl.textContent = fmtTime(dlSec);
+      $decValue.textContent = state.decimals;
+    };
+
+    $mb.addEventListener("input", () => { state.lastEdited = "mb"; render(); });
+    $gb.addEventListener("input", () => { state.lastEdited = "gb"; render(); });
+    $stdSi.addEventListener("click", () => { state.standard = "si"; refreshUI(); render(); });
+    $stdIec.addEventListener("click", () => { state.standard = "iec"; refreshUI(); render(); });
+
+    document.querySelectorAll(".preset-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        $mb.value = chip.dataset.mb;
+        state.lastEdited = "mb";
+        render();
+      });
+    });
+
+    $decMinus.addEventListener("click", () => { state.decimals = Math.max(0, state.decimals - 1); render(); });
+    $decPlus.addEventListener("click", () => { state.decimals = Math.min(10, state.decimals + 1); render(); });
+
+    $btnShare.addEventListener("click", async () => {
+      if ($resMain.textContent === "—") return;
+      const txt = `MB↔GB: ${$mb.value} ${mbUnit()} = ${$gb.value} ${gbUnit()} (${state.standard === "si" ? "decimal" : "binary"}). via mbpstobytes.com/converters/mb-to-gb/`;
+      try { await navigator.clipboard.writeText(txt); } catch (e) {}
+    });
+
+    $btnReload.addEventListener("click", () => window.location.reload());
+    $btnClear.addEventListener("click", () => {
+      $mb.value = "";
+      $gb.value = "";
+      state.lastEdited = "mb";
+      render();
+    });
+
+    refreshUI();
+    render();
+  </script>
+</Layout>

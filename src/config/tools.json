@@ -37,6 +37,30 @@
       ]
     },
     {
+      "name": "Storage Converters",
+      "description": "Convert between data storage units — bytes, KB, MB, GB and TB, in both decimal and binary standards.",
+      "tools": [
+        {
+          "name": "KB to MB Converter",
+          "url": "/converters/kb-to-mb/",
+          "description": "1 MB = 1,000 KB — built for upload limits, attachments, and why a \"2 MB max\" form rejects a 2 MB file.",
+          "icon": "📁"
+        },
+        {
+          "name": "MB to GB Converter",
+          "url": "/converters/mb-to-gb/",
+          "description": "1 GB = 1,000 MB decimal or 1,024 binary — both standards shown side by side, no guessing.",
+          "icon": "💾"
+        },
+        {
+          "name": "GB to TB Converter",
+          "url": "/converters/gb-to-tb/",
+          "description": "1 TB = 1,000 GB — and what Windows will really show: a 1 TB drive displays as 931 GB.",
+          "icon": "🗄️"
+        }
+      ]
+    },
+    {
       "name": "Network Tools",
       "description": "Calculators for network engineering, capacity planning, and performance analysis.",
       "tools": [

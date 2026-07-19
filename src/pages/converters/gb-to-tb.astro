@@ -1,0 +1,538 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'GB to TB Converter – Gigabytes to Terabytes, Both Standards';
+const description =
+  'Convert GB to TB instantly: 1 TB = 1,000 GB decimal, 1,024 binary. See what Windows will really show for any drive — 1 TB displays as 931 GB, and here is why.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/converters/gb-to-tb/`;
+
+const faqs = [
+  {
+    question: 'How many GB are in 1 TB?',
+    answer:
+      'In decimal (SI) units — how every drive, phone, and cloud plan is labeled — 1 TB = 1,000 GB exactly. In binary units, 1 TiB = 1,024 GiB. The gap between the two systems is 9.95% at terabyte scale, which is why a "1 TB" drive appears as roughly 931 GB in Windows.',
+  },
+  {
+    question: 'Is 1 TB equal to 1,024 GB?',
+    answer:
+      'Officially no — 1 TB = 1,000 GB by the SI definition all manufacturers use. The 1,024 factor belongs to the binary tebibyte (1 TiB = 1,024 GiB). If you see "1,024 GB" treated as 1 TB, that source is using binary counting with decimal labels — common, but imprecise.',
+  },
+  {
+    question: 'Why does my 2 TB drive show only 1.81 TB?',
+    answer:
+      'The drive contains exactly 2,000,000,000,000 bytes as advertised. Windows divides that by 1,024⁴ and displays 1.81 — which is the size in TiB (tebibytes), mislabeled as "TB". Nothing is missing or defective; the manufacturer and the operating system are simply using different counting systems, 9.95% apart at this scale.',
+  },
+  {
+    question: 'How many photos or movies fit on 1 TB?',
+    answer:
+      'Roughly 250,000 smartphone photos at 4 MB each, or about 250 compressed HD movies at 4 GB, or around 13 modern AAA game installs at 75 GB. In practice, plan for about 5–10% less usable space after formatting and system overhead.',
+  },
+  {
+    question: 'What is 4 TB in GB?',
+    answer:
+      '4 TB = 4,000 GB in decimal units. In Windows, a 4 TB drive displays as approximately 3.63 TB (really 3,725 GiB) because of binary counting. That ~275 GB visual difference is the standard decimal-binary gap, not lost capacity.',
+  },
+  {
+    question: 'Is 1 TB enough storage?',
+    answer:
+      'For most people, comfortably: a typical household photo library, music collection, and documents fit in well under 500 GB. The exceptions are 4K video work (1 TB fills in ~35 hours of footage), large game libraries (13–20 modern titles), and complete PC backups — those workloads justify 2 TB or more.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Converters', item: `${siteURL}/converters/` },
+    { '@type': 'ListItem', position: 3, name: 'GB to TB Converter', item: pageURL },
+  ],
+};
+
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  '@id': `${pageURL}#webapplication`,
+  name: 'GB to TB Converter',
+  url: pageURL,
+  description,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  inLanguage: 'en',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+// Values validated by competitor keyword data (2000 gb, 1024 gb, 4tb searches)
+const commonValues = [
+  { gb: '500', tb: '0.5', shows: '465 GB', note: 'Standard laptop SSD class', anchor: '500-gb' },
+  { gb: '1,000', tb: '1', shows: '931 GB', note: 'The classic 1 TB drive', anchor: '1000-gb' },
+  { gb: '1,024', tb: '1.024', shows: '953 GB', note: 'Exactly 1 TiB if read as binary', anchor: '1024-gb' },
+  { gb: '2,000', tb: '2', shows: '1.81 TB', note: 'Mainstream external drive size', anchor: '2000-gb' },
+  { gb: '4,000', tb: '4', shows: '3.63 TB', note: 'NAS and backup drive class', anchor: '4000-gb' },
+  { gb: '8,000', tb: '8', shows: '7.27 TB', note: 'High-capacity desktop HDD', anchor: '8000-gb' },
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(webAppSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/converters/" class="hover:text-indigo-600 transition-colors">Converters</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">GB to TB Converter</span>
+  </nav>
+
+  <div class="gap-8 grid grid-cols-1 lg:grid-cols-3">
+    <!-- Calculator card -->
+    <section class="lg:col-span-2">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex flex-wrap justify-between items-start gap-6 mb-8">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 rounded-full mb-3">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                <span class="text-indigo-600 text-xs font-semibold uppercase tracking-wide">Live Calculator</span>
+              </div>
+              <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">GB to TB Converter</h1>
+              <p class="text-gray-500 text-base mt-3 max-w-lg leading-relaxed">
+                Gigabytes to terabytes, both directions — including the number nobody else shows you: what Windows will actually display for that drive.
+              </p>
+            </div>
+            <div class="flex items-center gap-2 bg-gray-50 px-4 py-3 rounded-2xl border border-gray-100">
+              <span class="text-gray-500 text-sm font-medium">Decimals:</span>
+              <button id="dec-minus" class="w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold">−</button>
+              <div id="dec-value" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-sm shadow-lg shadow-indigo-200">3</div>
+              <button id="dec-plus" class="w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold">+</button>
+            </div>
+          </div>
+
+          <!-- Standard toggle -->
+          <div class="flex flex-wrap items-center gap-3 mb-6">
+            <span class="text-gray-500 text-sm font-medium">My numbers come from:</span>
+            <div class="inline-flex rounded-xl border border-gray-200 bg-gray-50 p-1" role="group" aria-label="Unit standard">
+              <button id="std-si" type="button" aria-pressed="true" class="px-4 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-600 shadow-sm transition-all duration-200">Drive label (decimal)</button>
+              <button id="std-iec" type="button" aria-pressed="false" class="px-4 py-1.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200">Windows / OS (binary)</button>
+            </div>
+            <span id="std-hint" class="text-gray-400 text-xs">1 TB = 1,000 GB — what the box and the spec sheet mean</span>
+          </div>
+
+          <!-- Form -->
+          <div class="gap-8 grid md:grid-cols-2">
+            <div class="space-y-3">
+              <label for="gb" class="block text-gray-700 text-sm font-semibold">Gigabytes (<span id="gb-label">GB</span>)</label>
+              <div class="relative">
+                <input id="gb" inputmode="decimal" placeholder="Enter gigabytes" class="glow-input pr-14" value="2000" />
+                <div id="gb-badge" class="absolute right-5 top-1/2 -translate-y-1/2 text-teal-500 font-bold text-sm">GB</div>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">SSD sizes, phone storage, cloud plans, game installs.</p>
+            </div>
+            <div class="space-y-3">
+              <label for="tb" class="block text-gray-700 text-sm font-semibold">Terabytes (<span id="tb-label">TB</span>)</label>
+              <div class="relative">
+                <input id="tb" inputmode="decimal" placeholder="Enter terabytes" class="glow-input pr-14" value="2" />
+                <div id="tb-badge" class="absolute right-5 top-1/2 -translate-y-1/2 text-amber-500 font-bold text-sm">TB</div>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">External drives, NAS capacity, backup targets.</p>
+            </div>
+          </div>
+
+          <!-- Preset chips -->
+          <div class="flex flex-wrap items-center gap-2 mt-6" aria-label="Common drive sizes">
+            <span class="text-gray-400 text-xs font-medium mr-1">Try a drive:</span>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-gb="500">500 GB</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-gb="1000">1 TB</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-gb="2000">2 TB</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-gb="4000">4 TB</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-gb="8000">8 TB</button>
+          </div>
+
+          <!-- Actions -->
+          <div class="gap-4 grid grid-cols-1 sm:grid-cols-3 mt-8">
+            <button id="btn-share" class="btn-premium btn-secondary flex justify-center items-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              Share result
+            </button>
+            <button id="btn-reload" class="btn-premium btn-primary">Reload calculator</button>
+            <button id="btn-clear" class="btn-premium btn-ghost">Clear all</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="space-y-6">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-200">
+              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <span class="text-gray-900 font-bold text-lg">Result — both standards</span>
+          </div>
+          <div id="result-main" class="result-display mb-3">2 TB</div>
+          <div id="result-secondary" class="text-gray-500 text-sm mb-6">2,000 GB = 2 TB (decimal)</div>
+
+          <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-6"></div>
+
+          <div class="space-y-4">
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Decimal (TB, ÷1,000):</span><span id="out-tb" class="text-amber-600 font-semibold">2</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Binary (TiB, ÷1,024):</span><span id="out-tib" class="text-indigo-600 font-semibold">1.819</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Windows will show:</span><span id="out-win" class="text-red-500 font-semibold">≈ 1.81 TB</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Megabytes (MB):</span><span id="out-mb" class="text-gray-600 font-semibold">2,000,000</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Fills at 100 Mbps:</span><span id="out-fill" class="text-gray-600 font-semibold">≈ 44h 27m</span></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Quick answer -->
+  <article class="premium-card mt-12">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">How Many GB in a TB?</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500 mb-8">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">1 TB = 1,000 GB</strong> — the decimal (SI) definition used on every drive box, phone spec, and cloud plan. The binary system runs parallel: <strong class="text-indigo-600">1 TiB = 1,024 GiB</strong>, and at terabyte scale the two drift <strong>9.95% apart</strong> — the biggest gap yet on the unit ladder, and the entire reason your "1 TB" drive shows ~931 GB in Windows.
+        </p>
+        <p class="text-gray-500 text-sm mt-2">TB = GB ÷ 1,000 (decimal) &nbsp;·&nbsp; TiB = GiB ÷ 1,024 (binary) &nbsp;·&nbsp; per NIST and IEC 80000-13</p>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The decimal-binary gap grows with every step up the ladder — 2.4% at kilobytes, 4.9% at megabytes, 7.4% at gigabytes, and now nearly 10% at terabytes. That's why this conversion generates more "where did my space go?" confusion than any other pair: the bigger the drive you buy, the bigger the apparent shortfall. It's accounting, not missing hardware — and the calculator above shows you the Windows-displayed figure directly so there are no surprises at checkout. Factors documented in our <a href="/methodology/" class="text-indigo-600 hover:underline font-medium">methodology</a>.
+      </p>
+    </div>
+  </article>
+
+  <!-- Drive reality table -->
+  <section class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">What Your Drive Will Really Show</h2>
+      <p class="text-gray-500 mb-8">Every common drive size: the label, what Windows displays, and the "missing" space that was never missing.</p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
+        <table class="luxury-table">
+          <caption class="sr-only">Advertised drive capacities versus what operating systems display</caption>
+          <thead><tr><th>On the box</th><th>Exact bytes</th><th>Windows displays</th><th>Apparent "loss"</th></tr></thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">256 GB</td><td class="text-gray-500">256,000,000,000</td><td class="text-amber-600">≈ 238 GB</td><td class="text-red-400">~18 GB</td></tr>
+            <tr><td class="text-teal-600 font-semibold">500 GB</td><td class="text-gray-500">500,000,000,000</td><td class="text-amber-600">≈ 465 GB</td><td class="text-red-400">~35 GB</td></tr>
+            <tr><td class="text-teal-600 font-semibold">1 TB</td><td class="text-gray-500">1,000,000,000,000</td><td class="text-amber-600 font-bold">≈ 931 GB</td><td class="text-red-400">~69 GB</td></tr>
+            <tr><td class="text-teal-600 font-semibold">2 TB</td><td class="text-gray-500">2,000,000,000,000</td><td class="text-amber-600 font-bold">≈ 1.81 TB</td><td class="text-red-400">~186 GB</td></tr>
+            <tr><td class="text-teal-600 font-semibold">4 TB</td><td class="text-gray-500">4,000,000,000,000</td><td class="text-amber-600">≈ 3.63 TB</td><td class="text-red-400">~372 GB</td></tr>
+            <tr><td class="text-teal-600 font-semibold">8 TB</td><td class="text-gray-500">8,000,000,000,000</td><td class="text-amber-600">≈ 7.27 TB</td><td class="text-red-400">~745 GB</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-6 text-gray-400 text-sm">"Windows displays" = bytes ÷ 1,024⁴ (or ÷1,024³ for GB-scale), labeled TB/GB but really TiB/GiB. Formatting and file-system overhead subtract another 1–2% of usable space on top. The drive always contains every advertised byte.</p>
+    </div>
+  </section>
+
+  <!-- Common values -->
+  <section class="premium-card mt-8" id="common-sizes">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">Common GB Values, Converted</h2>
+      <p class="text-gray-500 mb-8">Each with its decimal conversion and the on-screen figure that surprises people.</p>
+      <div class="grid sm:grid-cols-2 gap-4">
+        {
+          commonValues.map((v) => (
+            <div id={v.anchor} class="p-5 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:border-indigo-200 transition-colors">
+              <h3 class="font-bold text-gray-900 text-lg mb-2">{v.gb} GB = {v.tb} TB</h3>
+              <ul class="text-sm text-gray-500 space-y-1">
+                <li><span class="text-gray-400">OS will display:</span> <strong class="text-indigo-600">{v.shows}</strong></li>
+                <li class="pt-1">{v.note}</li>
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Conversion tables -->
+  <section class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <div class="flex md:flex-row flex-col md:justify-between md:items-center gap-4 mb-8">
+        <h2 class="font-bold text-2xl text-gray-900">GB to TB Conversion Table</h2>
+        <p class="text-gray-400 text-sm font-medium">Formula: <span class="text-gray-600">TB = GB ÷ 1,000</span></p>
+      </div>
+      <div class="gap-8 grid md:grid-cols-2">
+        <div>
+          <h3 class="mb-4 font-semibold text-gray-700">GB to TB</h3>
+          <div class="rounded-2xl border border-gray-100 overflow-x-auto shadow-sm">
+            <table class="luxury-table">
+              <thead><tr><th>Gigabytes</th><th>TB (decimal)</th><th>TiB (binary)</th></tr></thead>
+              <tbody>
+                <tr><td class="text-teal-600 font-semibold">100 GB</td><td class="text-amber-600">0.1</td><td class="text-gray-500">0.091</td></tr>
+                <tr><td class="text-teal-600 font-semibold">250 GB</td><td class="text-amber-600">0.25</td><td class="text-gray-500">0.227</td></tr>
+                <tr><td class="text-teal-600 font-semibold">500 GB</td><td class="text-amber-600">0.5</td><td class="text-gray-500">0.455</td></tr>
+                <tr><td class="text-teal-600 font-semibold">1,000 GB</td><td class="text-amber-600 font-bold">1</td><td class="text-gray-500">0.909</td></tr>
+                <tr><td class="text-teal-600 font-semibold">1,024 GB</td><td class="text-amber-600">1.024</td><td class="text-gray-500">0.931</td></tr>
+                <tr><td class="text-teal-600 font-semibold">2,000 GB</td><td class="text-amber-600 font-bold">2</td><td class="text-gray-500">1.819</td></tr>
+                <tr><td class="text-teal-600 font-semibold">5,000 GB</td><td class="text-amber-600">5</td><td class="text-gray-500">4.547</td></tr>
+                <tr><td class="text-teal-600 font-semibold">10,000 GB</td><td class="text-amber-600">10</td><td class="text-gray-500">9.095</td></tr>
+                <tr><td class="text-teal-600 font-semibold">100,000 GB</td><td class="text-amber-600">100</td><td class="text-gray-500">90.95</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h3 class="mb-4 font-semibold text-gray-700">TB to GB</h3>
+          <div class="rounded-2xl border border-gray-100 overflow-x-auto shadow-sm">
+            <table class="luxury-table">
+              <thead><tr><th>Terabytes</th><th>GB (decimal)</th><th>Typical context</th></tr></thead>
+              <tbody>
+                <tr><td class="text-amber-600 font-semibold">0.5 TB</td><td class="text-teal-600">500</td><td class="text-gray-500">Laptop SSD</td></tr>
+                <tr><td class="text-amber-600 font-semibold">1 TB</td><td class="text-teal-600 font-bold">1,000</td><td class="text-gray-500">Standard external drive</td></tr>
+                <tr><td class="text-amber-600 font-semibold">2 TB</td><td class="text-teal-600">2,000</td><td class="text-gray-500">Cloud plan / portable HDD</td></tr>
+                <tr><td class="text-amber-600 font-semibold">4 TB</td><td class="text-teal-600">4,000</td><td class="text-gray-500">Backup / NAS drive</td></tr>
+                <tr><td class="text-amber-600 font-semibold">8 TB</td><td class="text-teal-600">8,000</td><td class="text-gray-500">High-capacity desktop HDD</td></tr>
+                <tr><td class="text-amber-600 font-semibold">12 TB</td><td class="text-teal-600">12,000</td><td class="text-gray-500">Enterprise / surveillance</td></tr>
+                <tr><td class="text-amber-600 font-semibold">20 TB</td><td class="text-teal-600">20,000</td><td class="text-gray-500">Current HDD flagship class</td></tr>
+                <tr><td class="text-amber-600 font-semibold">100 TB</td><td class="text-teal-600">100,000</td><td class="text-gray-500">Small server array</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What fits -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">What Actually Fits in a Terabyte?</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        A terabyte sounds abstract until you fill one. Using typical file sizes (photo ≈ 4 MB, MP3 ≈ 5 MB, compressed HD movie ≈ 4 GB, AAA game ≈ 75 GB):
+      </p>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100 text-center">
+          <div class="text-3xl mb-1">📷</div>
+          <div class="font-extrabold text-teal-600 text-2xl">~250,000</div>
+          <p class="text-gray-500 text-xs mt-1">smartphone photos</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 text-center">
+          <div class="text-3xl mb-1">🎵</div>
+          <div class="font-extrabold text-indigo-600 text-2xl">~200,000</div>
+          <p class="text-gray-500 text-xs mt-1">MP3 songs</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100 text-center">
+          <div class="text-3xl mb-1">🎬</div>
+          <div class="font-extrabold text-amber-600 text-2xl">~250</div>
+          <p class="text-gray-500 text-xs mt-1">HD movies</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100 text-center">
+          <div class="text-3xl mb-1">🎮</div>
+          <div class="font-extrabold text-purple-600 text-2xl">~13</div>
+          <p class="text-gray-500 text-xs mt-1">AAA game installs</p>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The game figure is the one that surprises: at 75–150 GB per modern title, a "huge" 1 TB drive holds a shockingly small library — which is why gamers moved to 2 TB as the practical floor. For backup planning, the sturdy rule is <strong>3-2-1</strong>: three copies of your data, on two different media, one off-site — meaning your backup drive should be at least as large as everything you're protecting, plus room to grow. Filling a 2 TB drive over the network takes real time too: about 44 hours at 100 Mbps — the <a href="/tools/download-time-calculator/" class="text-indigo-600 hover:underline font-medium">download time calculator</a> handles any size-speed pair.
+      </p>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers about GB and TB</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'MB to GB Converter',
+        url: '/converters/mb-to-gb/',
+        description: 'One step down the ladder — megabytes to gigabytes with both standards side by side.',
+        icon: '💾',
+      },
+      {
+        name: 'Download Time Calculator',
+        url: '/tools/download-time-calculator/',
+        description: 'How long to fill or transfer a drive this size at your connection speed?',
+        icon: '⏱️',
+      },
+      {
+        name: 'All Converters & Tools',
+        url: '/converters/',
+        description: 'Browse every data converter and calculator on the site.',
+        icon: '🧰',
+      },
+    ]}
+  />
+
+  <!-- Calculator Logic -->
+  <script is:inline>
+    const el = (id) => document.getElementById(id);
+    const $gb = el("gb");
+    const $tb = el("tb");
+    const $stdSi = el("std-si");
+    const $stdIec = el("std-iec");
+    const $stdHint = el("std-hint");
+    const $gbLabel = el("gb-label");
+    const $tbLabel = el("tb-label");
+    const $gbBadge = el("gb-badge");
+    const $tbBadge = el("tb-badge");
+    const $decMinus = el("dec-minus");
+    const $decPlus = el("dec-plus");
+    const $decValue = el("dec-value");
+    const $btnShare = el("btn-share");
+    const $btnReload = el("btn-reload");
+    const $btnClear = el("btn-clear");
+
+    const $resMain = el("result-main");
+    const $resSecondary = el("result-secondary");
+    const $outTb = el("out-tb");
+    const $outTib = el("out-tib");
+    const $outWin = el("out-win");
+    const $outMb = el("out-mb");
+    const $outFill = el("out-fill");
+
+    let state = { lastEdited: "gb", standard: "si", decimals: 3 };
+
+    const num = (x) => Number(String(x).replace(/[^0-9+\-.e]/g, ""));
+    const fmt = (n) => (Number.isFinite(n) ? Number(n.toFixed(state.decimals)).toLocaleString() : "—");
+    const factor = () => (state.standard === "iec" ? 1024 : 1000);
+    const gbUnit = () => (state.standard === "iec" ? "GiB" : "GB");
+    const tbUnit = () => (state.standard === "iec" ? "TiB" : "TB");
+
+    const refreshUI = () => {
+      const si = state.standard === "si";
+      const on = "px-4 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-600 shadow-sm transition-all duration-200";
+      const off = "px-4 py-1.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200";
+      $stdSi.className = si ? on : off;
+      $stdIec.className = !si ? on : off;
+      $stdSi.setAttribute("aria-pressed", String(si));
+      $stdIec.setAttribute("aria-pressed", String(!si));
+      $stdHint.textContent = si ? "1 TB = 1,000 GB — what the box and the spec sheet mean" : "1 TiB = 1,024 GiB — how Windows counts drive space";
+      $gbLabel.textContent = gbUnit(); $gbBadge.textContent = gbUnit();
+      $tbLabel.textContent = tbUnit(); $tbBadge.textContent = tbUnit();
+    };
+
+    const fmtDur = (sec) => {
+      if (!Number.isFinite(sec)) return "—";
+      if (sec >= 86400) { const d2 = Math.floor(sec/86400); const h = Math.round((sec%86400)/3600); return `≈ ${d2}d ${h}h`; }
+      if (sec >= 3600) { const h = Math.floor(sec/3600); const m = Math.round((sec%3600)/60); return `≈ ${h}h ${m}m`; }
+      return `≈ ${Math.round(sec/60)}m`;
+    };
+
+    const winShow = (bytes) => {
+      const tib = bytes / 1099511627776;
+      if (tib >= 1) return "≈ " + Number(tib.toFixed(2)).toLocaleString() + " TB";
+      const gib = bytes / 1073741824;
+      return "≈ " + Math.round(gib).toLocaleString() + " GB";
+    };
+
+    const render = () => {
+      let gbVal;
+      if (state.lastEdited === "gb") {
+        const g = num($gb.value);
+        gbVal = Number.isFinite(g) && $gb.value !== "" ? g : NaN;
+        $tb.value = Number.isFinite(gbVal) ? Number((gbVal / factor()).toFixed(Math.max(state.decimals, 6))).toString() : "";
+      } else {
+        const t = num($tb.value);
+        gbVal = Number.isFinite(t) && $tb.value !== "" ? t * factor() : NaN;
+        $gb.value = Number.isFinite(gbVal) ? Number(gbVal.toFixed(Math.max(state.decimals, 6))).toString() : "";
+      }
+
+      if (!Number.isFinite(gbVal)) {
+        $resMain.textContent = "—";
+        $resSecondary.textContent = "";
+        [$outTb, $outTib, $outWin, $outMb, $outFill].forEach((o) => (o.textContent = "—"));
+        $decValue.textContent = state.decimals;
+        return;
+      }
+
+      const bytes = state.standard === "iec" ? gbVal * 1073741824 : gbVal * 1e9;
+      const tbDec = bytes / 1e12;
+      const tib = bytes / 1099511627776;
+      const mb = bytes / 1e6;
+      const fillSec = (bytes * 8) / 100000000; // 100 Mbps
+
+      $resMain.textContent = state.lastEdited === "gb" ? fmt(gbVal / factor()) + " " + tbUnit() : fmt(gbVal) + " " + gbUnit();
+      $resSecondary.textContent = fmt(gbVal) + " " + gbUnit() + " = " + fmt(gbVal / factor()) + " " + tbUnit() + (state.standard === "si" ? " (decimal)" : " (binary)");
+      $outTb.textContent = fmt(tbDec);
+      $outTib.textContent = fmt(tib);
+      $outWin.textContent = winShow(bytes);
+      $outMb.textContent = Math.round(mb).toLocaleString();
+      $outFill.textContent = fmtDur(fillSec);
+      $decValue.textContent = state.decimals;
+    };
+
+    $gb.addEventListener("input", () => { state.lastEdited = "gb"; render(); });
+    $tb.addEventListener("input", () => { state.lastEdited = "tb"; render(); });
+    $stdSi.addEventListener("click", () => { state.standard = "si"; refreshUI(); render(); });
+    $stdIec.addEventListener("click", () => { state.standard = "iec"; refreshUI(); render(); });
+
+    document.querySelectorAll(".preset-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        $gb.value = chip.dataset.gb;
+        state.lastEdited = "gb";
+        render();
+      });
+    });
+
+    $decMinus.addEventListener("click", () => { state.decimals = Math.max(0, state.decimals - 1); render(); });
+    $decPlus.addEventListener("click", () => { state.decimals = Math.min(10, state.decimals + 1); render(); });
+
+    $btnShare.addEventListener("click", async () => {
+      if ($resMain.textContent === "—") return;
+      const txt = `GB↔TB: ${$gb.value} ${gbUnit()} = ${$tb.value} ${tbUnit()} (${state.standard === "si" ? "decimal" : "binary"}). via mbpstobytes.com/converters/gb-to-tb/`;
+      try { await navigator.clipboard.writeText(txt); } catch (e) {}
+    });
+
+    $btnReload.addEventListener("click", () => window.location.reload());
+    $btnClear.addEventListener("click", () => {
+      $gb.value = "";
+      $tb.value = "";
+      state.lastEdited = "gb";
+      render();
+    });
+
+    refreshUI();
+    render();
+  </script>
+</Layout>

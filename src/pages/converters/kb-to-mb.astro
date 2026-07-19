@@ -1,0 +1,541 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'KB to MB Converter – Kilobytes to Megabytes, Both Standards';
+const description =
+  'Convert KB to MB instantly: 1 MB = 1,000 KB decimal, 1,024 binary. Built for upload limits, attachments, and why a "2 MB max" form rejects your file.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/converters/kb-to-mb/`;
+
+const faqs = [
+  {
+    question: 'How many KB are in 1 MB?',
+    answer:
+      'In decimal (SI) units — the official definition used for files, storage, and data plans — 1 MB = 1,000 KB. In binary units, used by Windows file listings and memory, 1 MiB = 1,024 KiB. Both are correct in their own context; this converter shows both so you can match whichever system produced your number.',
+  },
+  {
+    question: 'Is 1 MB equal to 1,024 KB?',
+    answer:
+      'Only in binary contexts. Officially 1 MB = 1,000 KB; the 1,024 factor belongs to the binary mebibyte (1 MiB = 1,024 KiB). Windows historically counts in binary while printing "KB" and "MB", which is where the 1,024 figure entered everyday use.',
+  },
+  {
+    question: 'Why does a "2 MB max" upload form reject my 2 MB file?',
+    answer:
+      'Usually a units mismatch. If the form checks size in binary (2 MiB = 2,097,152 bytes) but your file is 2.1 million bytes, it passes; if the form checks decimal (2,000,000 bytes) and your "2 MB" file is really 2,048 KiB (2,097,152 bytes) as Windows displays it, it fails by about 5%. Compressing the file a little below the stated limit avoids the ambiguity entirely.',
+  },
+  {
+    question: 'What is 2,048 KB in MB?',
+    answer:
+      '2,048 KB = 2.048 MB in decimal units — or exactly 2 MiB if the number came from a binary context like a Windows file listing. Powers of two (1,024, 2,048, 4,096) almost always signal binary counting.',
+  },
+  {
+    question: 'How many KB is a typical photo?',
+    answer:
+      'A modern smartphone photo runs 2,000–6,000 KB (2–6 MB) at full resolution. A compressed web image is 100–500 KB, a scanned document page around 100–300 KB, and a profile-picture-sized JPEG can be under 50 KB. That range is exactly why upload forms quote limits in KB or MB.',
+  },
+  {
+    question: 'Which is bigger, KB or MB?',
+    answer:
+      'MB is bigger — 1,000× bigger in decimal units. A kilobyte holds roughly half a page of plain text; a megabyte holds about a minute of MP3 audio or a short document with images.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Converters', item: `${siteURL}/converters/` },
+    { '@type': 'ListItem', position: 3, name: 'KB to MB Converter', item: pageURL },
+  ],
+};
+
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  '@id': `${pageURL}#webapplication`,
+  name: 'KB to MB Converter',
+  url: pageURL,
+  description,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  inLanguage: 'en',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+// Values validated by competitor keyword data (100000 kb, 153600 kb, 500000 kb searches)
+const commonValues = [
+  { kb: '100', mb: '0.1', note: 'A compressed web image or two pages of a PDF', anchor: '100-kb' },
+  { kb: '500', mb: '0.5', note: 'A short photo-heavy document', anchor: '500-kb' },
+  { kb: '1,024', mb: '1.024', note: 'Exactly 1 MiB — the binary "one megabyte"', anchor: '1024-kb' },
+  { kb: '2,048', mb: '2.048', note: 'Exactly 2 MiB — a common form-upload ceiling', anchor: '2048-kb' },
+  { kb: '5,000', mb: '5', note: 'A full-resolution smartphone photo', anchor: '5000-kb' },
+  { kb: '25,000', mb: '25', note: 'The classic email attachment limit (Gmail/Outlook)', anchor: '25000-kb' },
+  { kb: '100,000', mb: '100', note: 'A short video clip or large presentation', anchor: '100000-kb' },
+  { kb: '500,000', mb: '500', note: 'Half a gigabyte — installer or dataset territory', anchor: '500000-kb' },
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(webAppSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/converters/" class="hover:text-indigo-600 transition-colors">Converters</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">KB to MB Converter</span>
+  </nav>
+
+  <div class="gap-8 grid grid-cols-1 lg:grid-cols-3">
+    <!-- Calculator card -->
+    <section class="lg:col-span-2">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex flex-wrap justify-between items-start gap-6 mb-8">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 rounded-full mb-3">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                <span class="text-indigo-600 text-xs font-semibold uppercase tracking-wide">Live Calculator</span>
+              </div>
+              <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">KB to MB Converter</h1>
+              <p class="text-gray-500 text-base mt-3 max-w-lg leading-relaxed">
+                Kilobytes to megabytes, both directions — sized for the real world of upload limits, attachments, and file properties dialogs.
+              </p>
+            </div>
+            <div class="flex items-center gap-2 bg-gray-50 px-4 py-3 rounded-2xl border border-gray-100">
+              <span class="text-gray-500 text-sm font-medium">Decimals:</span>
+              <button id="dec-minus" class="w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold">−</button>
+              <div id="dec-value" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-sm shadow-lg shadow-indigo-200">3</div>
+              <button id="dec-plus" class="w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold">+</button>
+            </div>
+          </div>
+
+          <!-- Standard toggle -->
+          <div class="flex flex-wrap items-center gap-3 mb-6">
+            <span class="text-gray-500 text-sm font-medium">My numbers come from:</span>
+            <div class="inline-flex rounded-xl border border-gray-200 bg-gray-50 p-1" role="group" aria-label="Unit standard">
+              <button id="std-si" type="button" aria-pressed="true" class="px-4 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-600 shadow-sm transition-all duration-200">Files / web (decimal)</button>
+              <button id="std-iec" type="button" aria-pressed="false" class="px-4 py-1.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200">Windows listing (binary)</button>
+            </div>
+            <span id="std-hint" class="text-gray-400 text-xs">1 MB = 1,000 KB — the official decimal definition</span>
+          </div>
+
+          <!-- Form -->
+          <div class="gap-8 grid md:grid-cols-2">
+            <div class="space-y-3">
+              <label for="kb" class="block text-gray-700 text-sm font-semibold">Kilobytes (<span id="kb-label">KB</span>)</label>
+              <div class="relative">
+                <input id="kb" inputmode="decimal" placeholder="Enter kilobytes" class="glow-input pr-14" value="2048" />
+                <div id="kb-badge" class="absolute right-5 top-1/2 -translate-y-1/2 text-teal-500 font-bold text-sm">KB</div>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">Documents, images, and the number in file properties.</p>
+            </div>
+            <div class="space-y-3">
+              <label for="mb" class="block text-gray-700 text-sm font-semibold">Megabytes (<span id="mb-label">MB</span>)</label>
+              <div class="relative">
+                <input id="mb" inputmode="decimal" placeholder="Enter megabytes" class="glow-input pr-14" value="2.048" />
+                <div id="mb-badge" class="absolute right-5 top-1/2 -translate-y-1/2 text-amber-500 font-bold text-sm">MB</div>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">Upload limits, attachment caps, app download sizes.</p>
+            </div>
+          </div>
+
+          <!-- Preset chips -->
+          <div class="flex flex-wrap items-center gap-2 mt-6" aria-label="Common sizes">
+            <span class="text-gray-400 text-xs font-medium mr-1">Try a size:</span>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-kb="500">500 KB</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-kb="1024">1,024 KB</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-kb="2048">2,048 KB</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-kb="25000">25,000 KB</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-kb="153600">153,600 KB</button>
+          </div>
+
+          <!-- Actions -->
+          <div class="gap-4 grid grid-cols-1 sm:grid-cols-3 mt-8">
+            <button id="btn-share" class="btn-premium btn-secondary flex justify-center items-center gap-2">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              Share result
+            </button>
+            <button id="btn-reload" class="btn-premium btn-primary">Reload calculator</button>
+            <button id="btn-clear" class="btn-premium btn-ghost">Clear all</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="space-y-6">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-200">
+              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <span class="text-gray-900 font-bold text-lg">Result — both standards</span>
+          </div>
+          <div id="result-main" class="result-display mb-3">2.048 MB</div>
+          <div id="result-secondary" class="text-gray-500 text-sm mb-6">2,048 KB = 2.048 MB (decimal)</div>
+
+          <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-6"></div>
+
+          <div class="space-y-4">
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Decimal (MB, ÷1,000):</span><span id="out-mb" class="text-amber-600 font-semibold">2.048</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Binary (MiB, ÷1,024):</span><span id="out-mib" class="text-indigo-600 font-semibold">2</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Bytes:</span><span id="out-bytes" class="text-gray-600 font-semibold">2,048,000</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Fits 25 MB email limit:</span><span id="out-email" class="text-gray-600 font-semibold">✓ yes</span></div>
+            <div class="flex justify-between items-center"><span class="text-gray-400 text-sm font-medium">Upload at 10 Mbps:</span><span id="out-ul" class="text-gray-600 font-semibold">≈ 2s</span></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Quick answer -->
+  <article class="premium-card mt-12">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">How Many KB in a MB?</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500 mb-8">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">1 MB = 1,000 KB</strong> by the official decimal (SI) definition — divide any KB figure by 1,000. The <strong>1,024</strong> answer belongs to binary units (<strong class="text-indigo-600">1 MiB = 1,024 KiB</strong>), which Windows uses in file listings while still printing "KB" and "MB". Same file, two labels, ~2.4% apart at this scale.
+        </p>
+        <p class="text-gray-500 text-sm mt-2">MB = KB ÷ 1,000 (decimal) &nbsp;·&nbsp; MiB = KiB ÷ 1,024 (binary) &nbsp;·&nbsp; per NIST and IEC 80000-13</p>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Unlike the gigabyte pair — where the two standards drift 7.4% apart and RAM sizes dominate the story — KB-to-MB conversion is mostly a <strong>small-file problem</strong>: attachment caps, form upload limits, and profile-photo requirements are all quoted in KB or MB, and the file you're holding is measured by an operating system that may count differently than the form does. That mismatch, not the arithmetic, is what this page untangles. Our exact factors are documented in the <a href="/methodology/" class="text-indigo-600 hover:underline font-medium">methodology</a>.
+      </p>
+    </div>
+  </article>
+
+  <!-- Upload limit reality -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Why a "2 MB Max" Form Can Reject Your 2 MB File</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        The single most frustrating KB/MB moment: the form says <em>maximum 2 MB</em>, your file says <em>2 MB</em>, and the upload fails anyway. Three different numbers can hide behind that one label:
+      </p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Three interpretations of a 2 MB limit</caption>
+          <thead><tr><th>What "2 MB" can mean</th><th>Exact bytes</th><th>In KB terms</th></tr></thead>
+          <tbody>
+            <tr><td class="text-teal-600 font-semibold">Decimal 2 MB (official)</td><td class="text-gray-600">2,000,000</td><td class="text-gray-500">2,000 KB</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Binary 2 MiB (many servers)</td><td class="text-gray-600">2,097,152</td><td class="text-gray-500">2,048 KiB</td></tr>
+            <tr><td class="text-teal-600 font-semibold">Your file per Windows ("2.00 MB")</td><td class="text-gray-600">up to 2,097,152</td><td class="text-gray-500">shown as 2,048 KB</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        If the server checks decimal bytes (2,000,000) and Windows told you the file is "2.00 MB" (which can be up to 2,097,152 bytes), you're ~5% over the limit while both screens say "2 MB". The reverse mismatch also happens. Neither you nor the form is lying — they're counting in different systems.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        <strong>The practical fix:</strong> aim 10% under any stated limit. For images, export at slightly lower quality or dimensions; for PDFs, use your PDF tool's "reduce file size" option. And when a form quotes its limit in KB (say, 500 KB), convert your file's MB size up-front — that's exactly what the calculator above is for.
+      </p>
+    </div>
+  </article>
+
+  <!-- Common values -->
+  <section class="premium-card mt-8" id="common-sizes">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">Common KB Values, Converted</h2>
+      <p class="text-gray-500 mb-8">The sizes that show up in real uploads, attachments, and file dialogs.</p>
+      <div class="grid sm:grid-cols-2 gap-4">
+        {
+          commonValues.map((v) => (
+            <div id={v.anchor} class="p-5 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:border-indigo-200 transition-colors">
+              <h3 class="font-bold text-gray-900 text-lg mb-2">{v.kb} KB = {v.mb} MB</h3>
+              <p class="text-sm text-gray-500">{v.note}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Conversion tables -->
+  <section class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <div class="flex md:flex-row flex-col md:justify-between md:items-center gap-4 mb-8">
+        <h2 class="font-bold text-2xl text-gray-900">KB to MB Conversion Table</h2>
+        <p class="text-gray-400 text-sm font-medium">Formula: <span class="text-gray-600">MB = KB ÷ 1,000</span></p>
+      </div>
+      <div class="gap-8 grid md:grid-cols-2">
+        <div>
+          <h3 class="mb-4 font-semibold text-gray-700">KB to MB</h3>
+          <div class="rounded-2xl border border-gray-100 overflow-x-auto shadow-sm">
+            <table class="luxury-table">
+              <thead><tr><th>Kilobytes</th><th>MB (decimal)</th><th>MiB (binary)</th></tr></thead>
+              <tbody>
+                <tr><td class="text-teal-600 font-semibold">100 KB</td><td class="text-amber-600">0.1</td><td class="text-gray-500">0.095</td></tr>
+                <tr><td class="text-teal-600 font-semibold">250 KB</td><td class="text-amber-600">0.25</td><td class="text-gray-500">0.238</td></tr>
+                <tr><td class="text-teal-600 font-semibold">500 KB</td><td class="text-amber-600">0.5</td><td class="text-gray-500">0.477</td></tr>
+                <tr><td class="text-teal-600 font-semibold">1,000 KB</td><td class="text-amber-600 font-bold">1</td><td class="text-gray-500">0.954</td></tr>
+                <tr><td class="text-teal-600 font-semibold">1,024 KB</td><td class="text-amber-600">1.024</td><td class="text-gray-500">0.977</td></tr>
+                <tr><td class="text-teal-600 font-semibold">2,048 KB</td><td class="text-amber-600">2.048</td><td class="text-gray-500">1.953</td></tr>
+                <tr><td class="text-teal-600 font-semibold">10,000 KB</td><td class="text-amber-600 font-bold">10</td><td class="text-gray-500">9.537</td></tr>
+                <tr><td class="text-teal-600 font-semibold">100,000 KB</td><td class="text-amber-600">100</td><td class="text-gray-500">95.37</td></tr>
+                <tr><td class="text-teal-600 font-semibold">153,600 KB</td><td class="text-amber-600">153.6</td><td class="text-gray-500">146.5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h3 class="mb-4 font-semibold text-gray-700">MB to KB</h3>
+          <div class="rounded-2xl border border-gray-100 overflow-x-auto shadow-sm">
+            <table class="luxury-table">
+              <thead><tr><th>Megabytes</th><th>KB (decimal)</th><th>Typical file</th></tr></thead>
+              <tbody>
+                <tr><td class="text-amber-600 font-semibold">0.05 MB</td><td class="text-teal-600">50</td><td class="text-gray-500">Word document (text only)</td></tr>
+                <tr><td class="text-amber-600 font-semibold">0.2 MB</td><td class="text-teal-600">200</td><td class="text-gray-500">Compressed web image</td></tr>
+                <tr><td class="text-amber-600 font-semibold">0.5 MB</td><td class="text-teal-600">500</td><td class="text-gray-500">Scanned document page</td></tr>
+                <tr><td class="text-amber-600 font-semibold">1 MB</td><td class="text-teal-600 font-bold">1,000</td><td class="text-gray-500">Minute of 128 Kbps MP3</td></tr>
+                <tr><td class="text-amber-600 font-semibold">2 MB</td><td class="text-teal-600">2,000</td><td class="text-gray-500">Typical upload-form limit</td></tr>
+                <tr><td class="text-amber-600 font-semibold">5 MB</td><td class="text-teal-600">5,000</td><td class="text-gray-500">Smartphone photo</td></tr>
+                <tr><td class="text-amber-600 font-semibold">10 MB</td><td class="text-teal-600">10,000</td><td class="text-gray-500">Multi-page PDF with images</td></tr>
+                <tr><td class="text-amber-600 font-semibold">25 MB</td><td class="text-teal-600 font-bold">25,000</td><td class="text-gray-500">Email attachment ceiling</td></tr>
+                <tr><td class="text-amber-600 font-semibold">100 MB</td><td class="text-teal-600">100,000</td><td class="text-gray-500">Short video clip</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- File size reference -->
+  <article class="premium-card mt-8">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">How Big Are Everyday Files, Really?</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Converting is easier when you know what "normal" looks like. Typical ranges (quality and compression move these around):
+      </p>
+      <div class="grid sm:grid-cols-3 gap-4 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-3">📄 Documents</h3>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span>Plain-text email: ~10 KB</span></li>
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span>Word doc, text only: 25–50 KB</span></li>
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span>PDF page, scanned: 100–300 KB</span></li>
+            <li class="flex gap-2"><span class="text-teal-500">•</span><span>Presentation deck: 2,000–20,000 KB</span></li>
+          </ul>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">
+          <h3 class="font-semibold text-gray-900 mb-3">🖼️ Images</h3>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>Profile-size JPEG: 30–80 KB</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>Web-optimized photo: 100–500 KB</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>Phone photo, full-res: 2,000–6,000 KB</span></li>
+            <li class="flex gap-2"><span class="text-amber-500">•</span><span>RAW photo: 25,000–60,000 KB</span></li>
+          </ul>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100">
+          <h3 class="font-semibold text-gray-900 mb-3">🎵 Audio & Video</h3>
+          <ul class="space-y-2 text-gray-600 text-sm">
+            <li class="flex gap-2"><span class="text-indigo-500">•</span><span>Voice memo, 1 min: ~500 KB</span></li>
+            <li class="flex gap-2"><span class="text-indigo-500">•</span><span>MP3 song: 4,000–8,000 KB</span></li>
+            <li class="flex gap-2"><span class="text-indigo-500">•</span><span>1 min of 1080p video: ~60,000 KB</span></li>
+            <li class="flex gap-2"><span class="text-indigo-500">•</span><span>1 min of 4K video: ~350,000 KB</span></li>
+          </ul>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Two rules of thumb fall out of this: <strong>anything text-based lives comfortably in KB</strong>, and <strong>anything photographic or moving lives in MB</strong>. When a form demands a KB-scale file and you're holding an MB-scale photo, the answer is compression — smaller dimensions, lower JPEG quality, or your PDF tool's optimize function — not renaming the file and hoping. To estimate how long any of these take to send, the <a href="/tools/download-time-calculator/" class="text-indigo-600 hover:underline font-medium">download time calculator</a> works for uploads too.
+      </p>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers about KB and MB</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'MB to GB Converter',
+        url: '/converters/mb-to-gb/',
+        description: 'The next step up the ladder — megabytes to gigabytes, both standards side by side.',
+        icon: '💾',
+      },
+      {
+        name: 'Download Time Calculator',
+        url: '/tools/download-time-calculator/',
+        description: 'How long will that file take to send or download at your speed?',
+        icon: '⏱️',
+      },
+      {
+        name: 'All Converters & Tools',
+        url: '/converters/',
+        description: 'Browse every data converter and calculator on the site.',
+        icon: '🧰',
+      },
+    ]}
+  />
+
+  <!-- Calculator Logic -->
+  <script is:inline>
+    const el = (id) => document.getElementById(id);
+    const $kb = el("kb");
+    const $mb = el("mb");
+    const $stdSi = el("std-si");
+    const $stdIec = el("std-iec");
+    const $stdHint = el("std-hint");
+    const $kbLabel = el("kb-label");
+    const $mbLabel = el("mb-label");
+    const $kbBadge = el("kb-badge");
+    const $mbBadge = el("mb-badge");
+    const $decMinus = el("dec-minus");
+    const $decPlus = el("dec-plus");
+    const $decValue = el("dec-value");
+    const $btnShare = el("btn-share");
+    const $btnReload = el("btn-reload");
+    const $btnClear = el("btn-clear");
+
+    const $resMain = el("result-main");
+    const $resSecondary = el("result-secondary");
+    const $outMb = el("out-mb");
+    const $outMib = el("out-mib");
+    const $outBytes = el("out-bytes");
+    const $outEmail = el("out-email");
+    const $outUl = el("out-ul");
+
+    let state = { lastEdited: "kb", standard: "si", decimals: 3 };
+
+    const num = (x) => Number(String(x).replace(/[^0-9+\-.e]/g, ""));
+    const fmt = (n) => (Number.isFinite(n) ? Number(n.toFixed(state.decimals)).toLocaleString() : "—");
+    const factor = () => (state.standard === "iec" ? 1024 : 1000);
+    const kbUnit = () => (state.standard === "iec" ? "KiB" : "KB");
+    const mbUnit = () => (state.standard === "iec" ? "MiB" : "MB");
+
+    const refreshUI = () => {
+      const si = state.standard === "si";
+      const on = "px-4 py-1.5 rounded-lg text-sm font-semibold bg-white text-indigo-600 shadow-sm transition-all duration-200";
+      const off = "px-4 py-1.5 rounded-lg text-sm font-semibold text-gray-500 hover:text-gray-700 transition-all duration-200";
+      $stdSi.className = si ? on : off;
+      $stdIec.className = !si ? on : off;
+      $stdSi.setAttribute("aria-pressed", String(si));
+      $stdIec.setAttribute("aria-pressed", String(!si));
+      $stdHint.textContent = si ? "1 MB = 1,000 KB — the official decimal definition" : "1 MiB = 1,024 KiB — how Windows counts file sizes";
+      $kbLabel.textContent = kbUnit(); $kbBadge.textContent = kbUnit();
+      $mbLabel.textContent = mbUnit(); $mbBadge.textContent = mbUnit();
+    };
+
+    const fmtTime = (sec) => {
+      if (!Number.isFinite(sec)) return "—";
+      if (sec >= 60) { const m = Math.floor(sec/60); const s = Math.round(sec%60); return `≈ ${m}m ${s}s`; }
+      if (sec >= 1) return `≈ ${Math.round(sec)}s`;
+      return "under 1s";
+    };
+
+    const render = () => {
+      let kbVal;
+      if (state.lastEdited === "kb") {
+        const k = num($kb.value);
+        kbVal = Number.isFinite(k) && $kb.value !== "" ? k : NaN;
+        $mb.value = Number.isFinite(kbVal) ? Number((kbVal / factor()).toFixed(Math.max(state.decimals, 6))).toString() : "";
+      } else {
+        const m = num($mb.value);
+        kbVal = Number.isFinite(m) && $mb.value !== "" ? m * factor() : NaN;
+        $kb.value = Number.isFinite(kbVal) ? Number(kbVal.toFixed(Math.max(state.decimals, 6))).toString() : "";
+      }
+
+      if (!Number.isFinite(kbVal)) {
+        $resMain.textContent = "—";
+        $resSecondary.textContent = "";
+        [$outMb, $outMib, $outBytes, $outEmail, $outUl].forEach((o) => (o.textContent = "—"));
+        $decValue.textContent = state.decimals;
+        return;
+      }
+
+      const bytes = state.standard === "iec" ? kbVal * 1024 : kbVal * 1000;
+      const mbDec = bytes / 1e6;
+      const mib = bytes / 1048576;
+      const ulSec = (bytes * 8) / 10000000; // at 10 Mbps upload
+
+      $resMain.textContent = state.lastEdited === "kb" ? fmt(kbVal / factor()) + " " + mbUnit() : fmt(kbVal) + " " + kbUnit();
+      $resSecondary.textContent = fmt(kbVal) + " " + kbUnit() + " = " + fmt(kbVal / factor()) + " " + mbUnit() + (state.standard === "si" ? " (decimal)" : " (binary)");
+      $outMb.textContent = fmt(mbDec);
+      $outMib.textContent = fmt(mib);
+      $outBytes.textContent = Math.round(bytes).toLocaleString();
+      $outEmail.textContent = bytes <= 25000000 ? "✓ yes" : "✗ too big";
+      $outUl.textContent = fmtTime(ulSec);
+      $decValue.textContent = state.decimals;
+    };
+
+    $kb.addEventListener("input", () => { state.lastEdited = "kb"; render(); });
+    $mb.addEventListener("input", () => { state.lastEdited = "mb"; render(); });
+    $stdSi.addEventListener("click", () => { state.standard = "si"; refreshUI(); render(); });
+    $stdIec.addEventListener("click", () => { state.standard = "iec"; refreshUI(); render(); });
+
+    document.querySelectorAll(".preset-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        $kb.value = chip.dataset.kb;
+        state.lastEdited = "kb";
+        render();
+      });
+    });
+
+    $decMinus.addEventListener("click", () => { state.decimals = Math.max(0, state.decimals - 1); render(); });
+    $decPlus.addEventListener("click", () => { state.decimals = Math.min(10, state.decimals + 1); render(); });
+
+    $btnShare.addEventListener("click", async () => {
+      if ($resMain.textContent === "—") return;
+      const txt = `KB↔MB: ${$kb.value} ${kbUnit()} = ${$mb.value} ${mbUnit()} (${state.standard === "si" ? "decimal" : "binary"}). via mbpstobytes.com/converters/kb-to-mb/`;
+      try { await navigator.clipboard.writeText(txt); } catch (e) {}
+    });
+
+    $btnReload.addEventListener("click", () => window.location.reload());
+    $btnClear.addEventListener("click", () => {
+      $kb.value = "";
+      $mb.value = "";
+      state.lastEdited = "kb";
+      render();
+    });
+
+    refreshUI();
+    render();
+  </script>
+</Layout>
