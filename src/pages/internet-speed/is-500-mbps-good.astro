@@ -1,0 +1,372 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'Is 500 Mbps Fast? The Last Tier Your Wi-Fi Can Actually Use';
+const description =
+  '500 Mbps is 62.5 MB/s — twenty 4K streams\' worth, and the last tier most home Wi-Fi can fully use. See who it fits, and when 300 or gigabit is smarter.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/internet-speed/is-500-mbps-good/`;
+const datePublished = '2026-07-29';
+
+const faqs = [
+  {
+    question: 'Is 500 Mbps good for gaming?',
+    answer:
+      'For playing, 500 Mbps is no better than 100 — gameplay uses 3–6 Mbps and is decided by latency, which no tier upgrade improves. For installing, it is quietly excellent: a 75 GB title lands in ~20 minutes and a 30 GB patch in ~8. A multi-gamer household that pre-loads releases is the profile that feels this tier weekly.',
+  },
+  {
+    question: 'How many MB/s is 500 Mbps?',
+    answer:
+      '500 Mbps = 62.5 MB/s of maximum download speed — 3.75 GB per minute, or 225 GB per hour. On a wired connection expect ~470 Mbps (about 59 MB/s) after normal protocol overhead; over Wi-Fi, real numbers depend heavily on your router generation and distance.',
+  },
+  {
+    question: 'How many devices can 500 Mbps handle?',
+    answer:
+      'Counted in simultaneous demand rather than devices: 500 Mbps carries twenty 4K streams\' worth of traffic (~25 Mbps each). A realistic heavy evening — three 4K TVs, two video calls, a gamer, and cloud sync — peaks near 100–150 Mbps, under a third of the pipe. Device count only matters when a weak router, not the plan, is the choke point.',
+  },
+  {
+    question: 'Is 500 Mbps worth it over 300 Mbps?',
+    answer:
+      'The two tiers feel identical for streaming, calls, browsing, and gaming. 500 cuts large-download waits by 40% (75 GB: ~20 minutes vs ~33) and adds capacity margin for very busy homes. If the monthly price gap is small, that is a fair buy; if it is $15+ and your downloads are occasional, 300 already covers the experience.',
+  },
+  {
+    question: 'Should I get 500 Mbps or gigabit?',
+    answer:
+      'Check your connection type first. If your household runs mostly on Wi-Fi, typical routers deliver 300–700 Mbps to devices — meaning gigabit\'s extra capacity often never reaches anything, and 500 is the honest ceiling of what you can use. Gigabit earns its price mainly on wired setups with frequent huge downloads, or on fiber where the real prize is symmetric upload.',
+  },
+  {
+    question: 'Why does my 500 Mbps plan test at 460 or lower?',
+    answer:
+      'Wired results of 460–480 Mbps are normal — protocol overhead consumes roughly 5–6% of any plan, so ~470 is a healthy wired result for 500. If you test well below that over Wi-Fi, the router is the variable: Wi-Fi 5 gear and multi-wall distances routinely halve the number. Always benchmark wired before calling the ISP.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Internet Speed', item: `${siteURL}/internet-speed/` },
+    { '@type': 'ListItem', position: 3, name: 'Is 500 Mbps Fast?', item: pageURL },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': `${pageURL}#article`,
+  headline: 'Is 500 Mbps Fast? The Last Tier Your Wi-Fi Can Actually Use',
+  description,
+  datePublished,
+  dateModified: datePublished,
+  author: { '@type': 'Organization', name: 'Mbps to Bytes Editorial Team', url: `${siteURL}/about-us/` },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageURL },
+  image: `${siteURL}/images/og.png`,
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const toc = [
+  ['#verdict', 'Quick Verdict'],
+  ['#real-units', '500 Mbps in Real Units'],
+  ['#wifi-ceiling', 'The Wi-Fi Ceiling Argument'],
+  ['#matchmaker', 'The Tier Matchmaker'],
+  ['#vs-neighbors', '300 vs 500 vs Gigabit'],
+  ['#who-fits', 'Who 500 Genuinely Fits'],
+  ['#who-doesnt', 'Who Should Pick a Different Tier'],
+  ['#faqs', 'FAQs'],
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/internet-speed/" class="hover:text-indigo-600 transition-colors">Internet Speed</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">Is 500 Mbps Fast?</span>
+  </nav>
+
+  <!-- Title + byline -->
+  <div class="max-w-3xl">
+    <p class="text-indigo-600 text-xs font-semibold uppercase tracking-wide mb-3">Internet Speed · Plan Verdicts</p>
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">Is 500 Mbps Fast? The Last Tier Your Wi-Fi Can Actually Use</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      500 Mbps is the in-between tier: shoppers land on it comparing both directions — "do I really need more than 300?" one way, "is gigabit overkill?" the other. This page answers it with the argument the ISP comparison tables never make: for a household that lives on Wi-Fi, <strong>500 Mbps is roughly the most speed your devices can physically receive</strong> — which makes it either the rational ceiling or an unnecessary step, depending entirely on how you connect. Both cases below, with the math shown.
+    </p>
+
+    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-white border-l-4 border-indigo-500">
+      <p class="text-sm text-gray-700">By <a href="/about-us/" class="text-indigo-600 font-semibold hover:underline">Editorial Team</a></p>
+      <p class="text-sm text-gray-500 mt-1">📅 <strong class="text-gray-600">Published:</strong> July 29, 2026 &nbsp;|&nbsp; 🔄 <strong class="text-gray-600">Last reviewed:</strong> July 29, 2026</p>
+      <p class="text-sm text-gray-500 mt-1">
+        ✓ <strong class="text-gray-600">Fact-checked:</strong> figures follow the
+        <a href="https://www.fcc.gov/consumers/guides/broadband-speed-guide" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">FCC broadband guidance</a> and
+        <a href="https://help.netflix.com/en/node/306" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Netflix</a> /
+        <a href="https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0060748" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Zoom</a> published requirements ·
+        <a href="/methodology/" class="text-indigo-600 hover:underline">methodology</a>
+      </p>
+    </div>
+
+    <details class="mt-4 premium-card overflow-hidden group">
+      <summary class="flex justify-between items-center gap-4 p-5 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+        <span>📝 Table of Contents</span>
+        <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </summary>
+      <ol class="px-6 pb-5 text-sm text-gray-600 space-y-1.5 list-decimal list-inside">
+        {toc.map(([href, label]) => (
+          <li><a href={href} class="text-indigo-600 hover:underline">{label}</a></li>
+        ))}
+      </ol>
+    </details>
+  </div>
+
+  <!-- Verdict -->
+  <article class="premium-card mt-10" id="verdict">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Quick Verdict</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">Yes — 500 Mbps is fast for any household, and for Wi-Fi-first homes it's effectively the top useful tier.</strong> It moves 62.5 MB/s, carries twenty 4K streams' worth of traffic, and lands a 75 GB game in ~20 minutes. The honest framing: it buys <strong>40% shorter downloads than 300</strong> and, unlike gigabit, its capacity can actually reach your devices over good Wi-Fi. Buy it as a busy household's comfortable ceiling — skip it if your evenings already fit inside 300.
+        </p>
+      </div>
+    </div>
+  </article>
+
+  <!-- Real units -->
+  <article class="premium-card mt-8" id="real-units">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">500 Mbps in Real Units</h2>
+      <div class="grid sm:grid-cols-3 gap-4 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 text-center">
+          <p class="text-2xl font-extrabold text-indigo-600">62.5 MB/s</p>
+          <p class="text-gray-500 text-sm mt-1">max download speed (~59 MB/s wired real-world)</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100 text-center">
+          <p class="text-2xl font-extrabold text-teal-600">3.75 GB</p>
+          <p class="text-gray-500 text-sm mt-1">per minute — 225 GB per hour</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100 text-center">
+          <p class="text-2xl font-extrabold text-purple-600">20 streams</p>
+          <p class="text-gray-500 text-sm mt-1">simultaneous 4K capacity at ~25 Mbps each</p>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Wait times at this tier: an HD movie (4 GB) in ~64 seconds, a 30 GB game patch in ~8 minutes, a 75 GB AAA install in 20, a 150 GB flagship in 40. A healthy wired speed test reads <strong>~470 Mbps</strong> — protocol overhead takes 5–6% of every plan, so that's the plan working perfectly, not underdelivering. Full conversions in the <a href="/converters/mbps-to-mbs/" class="text-indigo-600 hover:underline font-medium">Mbps to MB/s converter</a>; any custom file in the <a href="/tools/download-time-calculator/" class="text-indigo-600 hover:underline font-medium">download time calculator</a>.
+      </p>
+    </div>
+  </article>
+
+  <!-- Wi-Fi ceiling -->
+  <article class="premium-card mt-8" id="wifi-ceiling">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Wi-Fi Ceiling Argument</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        Here's the fact that reframes the whole 500-or-more decision: <strong>typical home Wi-Fi delivers 300–700 Mbps to a device under good conditions</strong> — a Wi-Fi 6 router in the same room sits mid-range of that; walls, distance, and older gear pull it down fast. That makes 500 Mbps the last plan tier whose full capacity a Wi-Fi household can realistically receive. Buy 1,000 Mbps into a Wi-Fi-only home and the extra 500 usually evaporates between the router and your devices.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        The corollary cuts both ways. If your setup is wired — desktop on ethernet, console cabled for installs — the ceiling lifts and gigabit's advantage becomes real (we quantify exactly how much of each tier survives your setup in the <a href="/internet-speed/is-gigabit-internet-worth-it/" class="text-indigo-600 hover:underline font-medium">gigabit reality check</a>). And if your router is Wi-Fi 5 vintage, even 500 won't fully arrive — at which point a router upgrade beats a plan upgrade on price and effect. Rule of thumb: <strong>match the tier to the weakest link you're unwilling to fix</strong>.
+      </p>
+    </div>
+  </article>
+
+  <!-- Tier matchmaker -->
+  <section class="premium-card mt-8" id="matchmaker">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">The Tier Matchmaker</h2>
+      <p class="text-gray-500 mb-6">Three questions, one honest recommendation across the whole ladder — no commissions involved.</p>
+
+      <div class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-purple-50 via-white to-teal-50 border-2 border-gray-100">
+        <p class="text-sm font-semibold text-gray-700 mb-2">1 · Your busiest evening looks like…</p>
+        <div class="flex flex-wrap gap-2 mb-5" aria-label="Household load">
+          <button class="mm-chip mm-q1 px-4 py-1.5 rounded-full border border-purple-200 bg-purple-50 text-purple-700 text-sm font-semibold hover:bg-purple-100 transition-colors" data-v="0">🧑 1–2 people, a stream + browsing</button>
+          <button class="mm-chip mm-q1 px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold" data-v="1">👨‍👩‍👧 Family: multiple streams, calls, a gamer</button>
+          <button class="mm-chip mm-q1 px-4 py-1.5 rounded-full border border-purple-200 bg-purple-50 text-purple-700 text-sm font-semibold hover:bg-purple-100 transition-colors" data-v="2">🏠 Packed: 5+ heavy users at once</button>
+        </div>
+        <p class="text-sm font-semibold text-gray-700 mb-2">2 · Large downloads (30+ GB) happen…</p>
+        <div class="flex flex-wrap gap-2 mb-5" aria-label="Download frequency">
+          <button class="mm-chip mm-q2 px-4 py-1.5 rounded-full border border-purple-200 bg-purple-50 text-purple-700 text-sm font-semibold hover:bg-purple-100 transition-colors" data-v="0">🌙 Rarely</button>
+          <button class="mm-chip mm-q2 px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold" data-v="1">📅 Most weeks</button>
+          <button class="mm-chip mm-q2 px-4 py-1.5 rounded-full border border-purple-200 bg-purple-50 text-purple-700 text-sm font-semibold hover:bg-purple-100 transition-colors" data-v="2">⚡ Constantly</button>
+        </div>
+        <p class="text-sm font-semibold text-gray-700 mb-2">3 · Your heaviest device connects by…</p>
+        <div class="flex flex-wrap gap-2 mb-6" aria-label="Connection type">
+          <button class="mm-chip mm-q3 px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold" data-v="0">📶 Wi-Fi</button>
+          <button class="mm-chip mm-q3 px-4 py-1.5 rounded-full border border-purple-200 bg-purple-50 text-purple-700 text-sm font-semibold hover:bg-purple-100 transition-colors" data-v="1">🔌 Ethernet</button>
+        </div>
+        <div id="mm-result" class="p-5 rounded-2xl bg-white border-2 border-indigo-100">
+          <p class="text-xs font-semibold uppercase tracking-wide text-indigo-500 mb-1">Our honest match</p>
+          <p id="mm-tier" class="text-2xl font-extrabold text-indigo-600">300 Mbps</p>
+          <p id="mm-why" class="text-gray-600 text-sm mt-2">A family evening peaks near 80–120 Mbps, and weekly downloads land in ~33 minutes at this tier. 500 only earns its price gap if download waits genuinely bother you.</p>
+        </div>
+        <p class="text-gray-400 text-xs mt-3">Logic: household peak demand (per FCC/platform requirements) + download frequency + whether extra capacity can physically reach your devices. Cross-check with the <a href="/tools/bandwidth-calculator/" class="text-indigo-600 hover:underline">bandwidth calculator</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- vs neighbors -->
+  <article class="premium-card mt-8" id="vs-neighbors">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">300 vs 500 vs Gigabit: The Only Table You Need</h2>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Comparison of 300 Mbps, 500 Mbps and gigabit internet plans</caption>
+          <thead><tr><th>&nbsp;</th><th>300 Mbps</th><th>500 Mbps</th><th>1,000 Mbps</th></tr></thead>
+          <tbody>
+            <tr><td class="font-semibold text-gray-800">Real download speed</td><td class="text-gray-600">37.5 MB/s</td><td class="text-indigo-600 font-semibold">62.5 MB/s</td><td class="text-gray-600">125 MB/s (wired only)</td></tr>
+            <tr><td class="font-semibold text-gray-800">75 GB game install</td><td class="text-gray-600">~33 min</td><td class="text-indigo-600 font-semibold">~20 min</td><td class="text-gray-600">~11 min wired</td></tr>
+            <tr><td class="font-semibold text-gray-800">150 GB flagship title</td><td class="text-gray-600">~67 min</td><td class="text-indigo-600 font-semibold">~40 min</td><td class="text-gray-600">~21 min wired</td></tr>
+            <tr><td class="font-semibold text-gray-800">Simultaneous 4K capacity</td><td class="text-gray-600">12 streams</td><td class="text-indigo-600 font-semibold">20 streams</td><td class="text-gray-600">40 streams</td></tr>
+            <tr><td class="font-semibold text-gray-800">Streaming/calls/gaming feel</td><td class="text-gray-600" colspan="3">Identical on all three — these activities can't tell the tiers apart</td></tr>
+            <tr><td class="font-semibold text-gray-800">Full capacity over Wi-Fi?</td><td class="text-teal-600 font-semibold">Yes, easily</td><td class="text-teal-600 font-semibold">Yes, with Wi-Fi 6</td><td class="text-rose-600 font-semibold">Usually not</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Read the last two rows together and the pricing logic writes itself: everyday experience is a three-way tie, so you're paying purely for download time and deliverable capacity. That's why the decision reduces to the matchmaker's three questions — demand, downloads, and connection. The neighbors have full write-ups: the <a href="/internet-speed/is-300-mbps-good/" class="text-indigo-600 hover:underline font-medium">300 Mbps verdict</a> below, the <a href="/internet-speed/is-gigabit-internet-worth-it/" class="text-indigo-600 hover:underline font-medium">gigabit verdict</a> above.
+      </p>
+    </div>
+  </article>
+
+  <!-- Who fits -->
+  <article class="premium-card mt-8" id="who-fits">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Who 500 Mbps Genuinely Fits</h2>
+      <div class="space-y-4">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-1">👨‍👩‍👧‍👦 The big busy household that also downloads</h3>
+          <p class="text-gray-500 text-sm">4–6 people, several 4K TVs, calls, and a gamer or two who install regularly. 300 covers the evenings; 500 covers the evenings <em>while</em> a 75 GB install finishes in 20 minutes without anyone noticing it's running.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100">
+          <h3 class="font-semibold text-gray-900 mb-1">💼 The WFH pair with heavy cloud traffic</h3>
+          <p class="text-gray-500 text-sm">Repeated multi-GB pulls from cloud storage all day at 62.5 MB/s stop being waits and become background events. (Check the plan's upload number too — on cable it's often the real constraint, and no download tier fixes it.)</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100">
+          <h3 class="font-semibold text-gray-900 mb-1">📶 The Wi-Fi-first home that wants the practical maximum</h3>
+          <p class="text-gray-500 text-sm">No ethernet runs, no appetite for them — just a good Wi-Fi 6 router and a desire to never think about speed again. 500 is the largest plan this setup can actually drink; paying for gigabit here mostly buys spillage.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Who doesn't -->
+  <article class="premium-card mt-8" id="who-doesnt">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Who Should Pick a Different Tier</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        Downward first: <strong>solo users, couples, and streaming-first families</strong> whose peak is a couple of 4K streams and a call sit comfortably inside 100–300 Mbps — the <a href="/internet-speed/is-100-mbps-good/" class="text-indigo-600 hover:underline font-medium">100 Mbps stress test</a> will likely surprise you with how much it absorbs, and <a href="/internet-speed/is-300-mbps-good/" class="text-indigo-600 hover:underline font-medium">300</a> already halves-and-more every download versus 100. Paying for 500 there is paying for silence that was already silent.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        Upward: <strong>wired households that move huge files constantly</strong> — daily dataset pulls, 4K footage, a release-day gamer with ethernet to the console — get real value from the step past 500, and fiber users wanting symmetric upload should read the <a href="/internet-speed/is-gigabit-internet-worth-it/" class="text-indigo-600 hover:underline font-medium">gigabit verdict</a> before deciding, because there the upload column, not the download number, is the actual product.
+      </p>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12" id="faqs">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers about 500 Mbps</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'Is 300 Mbps Good?',
+        url: '/internet-speed/is-300-mbps-good/',
+        description: 'The tier below — often the smarter buy for streaming-first households.',
+        icon: '⚖️',
+      },
+      {
+        name: 'Is Gigabit Worth It?',
+        url: '/internet-speed/is-gigabit-internet-worth-it/',
+        description: 'The tier above — and the reality check on how much of it your home can receive.',
+        icon: '🚦',
+      },
+      {
+        name: 'Bandwidth Calculator',
+        url: '/tools/bandwidth-calculator/',
+        description: 'Compute your household\'s true peak demand before paying for headroom.',
+        icon: '📶',
+      },
+    ]}
+  />
+
+  <!-- Matchmaker logic -->
+  <script is:inline>
+    const mmState = { q1: 1, q2: 1, q3: 0 };
+    const $mmTier = document.getElementById("mm-tier");
+    const $mmWhy = document.getElementById("mm-why");
+
+    const mmVerdict = () => {
+      const { q1, q2, q3 } = mmState;
+      let tier, why;
+      const score = q1 + q2;
+      if (score === 0) {
+        tier = "100 Mbps";
+        why = "Your peak demand sits well inside the FCC's broadband benchmark tier — a stream and browsing use a fraction of 100 Mbps, and rare downloads don't justify paying for speed that idles. See the full 100 Mbps stress test.";
+      } else if (score <= 2 && q2 < 2) {
+        tier = "300 Mbps";
+        why = "A family evening peaks near 80–120 Mbps, and weekly downloads land in ~33 minutes at this tier. 500 only earns its price gap if download waits genuinely bother you.";
+      } else if (q2 === 2 && q3 === 1) {
+        tier = "1,000 Mbps (wired)";
+        why = "Constant huge downloads plus ethernet is the one profile where gigabit's capacity actually gets used — a 150 GB title in ~21 minutes. On fiber, the symmetric upload is a second real win.";
+      } else {
+        tier = "500 Mbps";
+        why = "Heavy household demand or frequent big downloads — and over Wi-Fi, 500 is about the most capacity your devices can physically receive, so it's the honest top of your ladder. A 75 GB install lands in ~20 minutes.";
+      }
+      $mmTier.textContent = tier;
+      $mmWhy.textContent = why;
+    };
+
+    const mmActive = "px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold";
+    const mmIdle = "px-4 py-1.5 rounded-full border border-purple-200 bg-purple-50 text-purple-700 text-sm font-semibold hover:bg-purple-100 transition-colors";
+
+    ["q1", "q2", "q3"].forEach((q) => {
+      const chips = document.querySelectorAll(".mm-" + q);
+      chips.forEach((chip) => {
+        chip.addEventListener("click", () => {
+          chips.forEach((c) => (c.className = "mm-chip mm-" + q + " " + mmIdle));
+          chip.className = "mm-chip mm-" + q + " " + mmActive;
+          mmState[q] = Number(chip.dataset.v);
+          mmVerdict();
+        });
+      });
+    });
+  </script>
+</Layout>

@@ -1,0 +1,396 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'Is Gigabit Internet Worth It? The 940 Mbps Reality Check';
+const description =
+  'Gigabit sells as 1,000 Mbps, wires deliver ~940, and Wi-Fi often hands your phone 400. Run the reality check, then see who actually gets their money\'s worth.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/internet-speed/is-gigabit-internet-worth-it/`;
+const datePublished = '2026-07-27';
+
+const faqs = [
+  {
+    question: 'Is 1,000 Mbps fast?',
+    answer:
+      'Extremely. 1,000 Mbps (1 Gbps) is 125 MB/s of download capacity — 7.5 GB per minute, enough raw bandwidth for forty simultaneous 4K streams. It is the fastest tier most ISPs sell to homes. The real question is never whether gigabit is fast; it is whether anything in your household can use that much at once.',
+  },
+  {
+    question: 'Why does my gigabit plan only test at 500 Mbps or less?',
+    answer:
+      'Because the plan is only one link in the chain. Even wired, gigabit ethernet tops out around 940 Mbps after protocol overhead. Over Wi-Fi the funnel narrows fast: a Wi-Fi 6 router in the same room typically measures 500–700 Mbps, through a wall or two 300–400, and a Wi-Fi 5 router often caps the whole house near 300. Test on a cable first — if the wire shows ~900+, your plan is fine and your Wi-Fi is the bottleneck.',
+  },
+  {
+    question: 'Is gigabit internet worth it for gaming?',
+    answer:
+      'Not for gameplay — games use 3–6 Mbps and live or die on latency, which a bigger pipe does not improve. Where gigabit earns its keep for gamers is installs and patches: a 150 GB flagship title lands in ~21 minutes wired instead of ~67 minutes at 300 Mbps. If you install often and always wired, that is a real, weekly benefit; if you play the same title for months, it is not.',
+  },
+  {
+    question: 'Do I need gigabit internet for 4K streaming?',
+    answer:
+      'No. A 4K stream needs about 25 Mbps, so five simultaneous 4K TVs use ~125 Mbps — an eighth of a gigabit plan. Streaming quality is set by the service\'s bitrate, not your tier, so 4K looks identical on 300 Mbps and 1,000 Mbps. No streaming household needs gigabit for picture quality.',
+  },
+  {
+    question: 'Should I get 500 Mbps or 1,000 Mbps?',
+    answer:
+      'Everyday feel is identical — both tiers stream, call, and browse without effort. Gigabit halves large-download waits versus 500 (a 75 GB game: ~11 minutes vs ~20) and adds headroom you will rarely touch. Price the gap: if gigabit costs only a few dollars more and your gear can carry it, take it for the downloads; otherwise 500 is the rational stop.',
+  },
+  {
+    question: 'How many devices can gigabit internet handle?',
+    answer:
+      'Device count is the wrong measure — idle phones and smart plugs use almost nothing. What matters is simultaneous demand: gigabit carries roughly forty 4K streams\' worth of concurrent traffic (~125 MB/s), far beyond any household peak. If a home with 50 devices feels slow on gigabit, the router is drowning, not the plan.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Internet Speed', item: `${siteURL}/internet-speed/` },
+    { '@type': 'ListItem', position: 3, name: 'Is Gigabit Internet Worth It?', item: pageURL },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': `${pageURL}#article`,
+  headline: 'Is Gigabit Internet Worth It? The 940 Mbps Reality Check',
+  description,
+  datePublished,
+  dateModified: datePublished,
+  author: { '@type': 'Organization', name: 'Mbps to Bytes Editorial Team', url: `${siteURL}/about-us/` },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageURL },
+  image: `${siteURL}/images/og.png`,
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const toc = [
+  ['#verdict', 'Quick Verdict'],
+  ['#reality-gap', 'Where Your 1,000 Mbps Goes'],
+  ['#reality-check', 'The Gigabit Reality Check'],
+  ['#three-tests', 'The Three Tests That Justify It'],
+  ['#streaming-math', 'The Streaming Math ISPs Skip'],
+  ['#hardware', 'The Hardware That Silently Caps It'],
+  ['#cable-vs-fiber', 'Cable Gigabit vs Fiber Gigabit'],
+  ['#ladder', 'Where Gigabit Sits on the Ladder'],
+  ['#faqs', 'FAQs'],
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/internet-speed/" class="hover:text-indigo-600 transition-colors">Internet Speed</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">Is Gigabit Internet Worth It?</span>
+  </nav>
+
+  <!-- Title + byline -->
+  <div class="max-w-3xl">
+    <p class="text-indigo-600 text-xs font-semibold uppercase tracking-wide mb-3">Internet Speed · Plan Verdicts</p>
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">Is Gigabit Internet Worth It? The 940 Mbps Reality Check</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      Nearly every page ranking for this question is written by an ISP or a site paid when you upgrade — and none of them tell you the one number that decides it: <strong>how much of the 1,000 Mbps actually reaches your devices</strong>. This page starts there. You'll see where the gigabit goes (wire ceiling, Wi-Fi funnel, hardware caps), run your own setup through the reality check, and get the three honest tests that separate "worth every penny" from the most oversold tier in broadband.
+    </p>
+
+    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-white border-l-4 border-indigo-500">
+      <p class="text-sm text-gray-700">By <a href="/about-us/" class="text-indigo-600 font-semibold hover:underline">Editorial Team</a></p>
+      <p class="text-sm text-gray-500 mt-1">📅 <strong class="text-gray-600">Published:</strong> July 27, 2026 &nbsp;|&nbsp; 🔄 <strong class="text-gray-600">Last reviewed:</strong> July 27, 2026</p>
+      <p class="text-sm text-gray-500 mt-1">
+        ✓ <strong class="text-gray-600">Fact-checked:</strong> figures follow the
+        <a href="https://www.fcc.gov/consumers/guides/broadband-speed-guide" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">FCC broadband guidance</a> and
+        <a href="https://help.netflix.com/en/node/306" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Netflix</a> /
+        <a href="https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0060748" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Zoom</a> published requirements ·
+        <a href="/methodology/" class="text-indigo-600 hover:underline">methodology</a>
+      </p>
+    </div>
+
+    <details class="mt-4 premium-card overflow-hidden group">
+      <summary class="flex justify-between items-center gap-4 p-5 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+        <span>📝 Table of Contents</span>
+        <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </summary>
+      <ol class="px-6 pb-5 text-sm text-gray-600 space-y-1.5 list-decimal list-inside">
+        {toc.map(([href, label]) => (
+          <li><a href={href} class="text-indigo-600 hover:underline">{label}</a></li>
+        ))}
+      </ol>
+    </details>
+  </div>
+
+  <!-- Verdict -->
+  <article class="premium-card mt-10" id="verdict">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Quick Verdict</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">Gigabit is the fastest tier most ISPs sell — and the most oversold.</strong> On paper it's 1,000 Mbps (125 MB/s); on a wire it delivers ~940 Mbps; over typical Wi-Fi, your devices see 300–700. It's genuinely worth it in exactly three cases: <strong>you move huge files weekly</strong>, <strong>you need fiber-class upload</strong>, or <strong>the price gap to the tier below is trivial</strong>. Everyone else is paying for a number their house physically can't display.
+        </p>
+      </div>
+    </div>
+  </article>
+
+  <!-- Reality gap -->
+  <article class="premium-card mt-8" id="reality-gap">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">Where Your 1,000 Mbps Actually Goes</h2>
+      <p class="text-gray-500 mb-6">The funnel every gigabit household lives inside — measured, not marketed:</p>
+      <div class="space-y-4" role="img" aria-label="Funnel from 1,000 Mbps advertised down to typical device speeds">
+        <div>
+          <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-gray-700">💳 What you pay for</span><span class="text-gray-600 font-semibold">1,000 Mbps</span></div>
+          <div class="h-5 rounded-full bg-white border border-gray-200 overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-indigo-400 to-indigo-500" style="width: 100%"></div></div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-gray-700">🔌 Wired ceiling (protocol overhead)</span><span class="text-gray-600 font-semibold">~940 Mbps</span></div>
+          <div class="h-5 rounded-full bg-white border border-gray-200 overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-teal-400 to-teal-500" style="width: 94%"></div></div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-gray-700">📶 Wi-Fi 6, same room</span><span class="text-gray-600 font-semibold">~500–700 Mbps</span></div>
+          <div class="h-5 rounded-full bg-white border border-gray-200 overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-500" style="width: 60%"></div></div>
+        </div>
+        <div>
+          <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-gray-700">📱 Phone, two walls away</span><span class="text-gray-600 font-semibold">~300–400 Mbps</span></div>
+          <div class="h-5 rounded-full bg-white border border-gray-200 overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-rose-400 to-rose-500" style="width: 35%"></div></div>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed mt-6">
+        The first step down isn't a flaw — it's physics. Every connection spends part of its raw bit rate on TCP/IP framing and acknowledgements, which is why <strong>~940 Mbps wired is a perfect gigabit result</strong>, not a shortfall (the full math lives in our <a href="/converters/gbps-to-mbps/" class="text-indigo-600 hover:underline font-medium">Gbps to Mbps guide</a>). The steps after that are your equipment — and unlike physics, those you can fix. That's what the next tool estimates.
+      </p>
+    </div>
+  </article>
+
+  <!-- Interactive reality check -->
+  <section class="premium-card mt-8" id="reality-check">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">The Gigabit Reality Check</h2>
+      <p class="text-gray-500 mb-6">Pick how your main device actually connects, and see roughly what share of the 1,000 Mbps you're buying ever reaches it.</p>
+
+      <div class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-indigo-50 via-white to-rose-50 border-2 border-gray-100">
+        <div class="flex flex-wrap gap-2 mb-6" aria-label="Connection setups">
+          <button class="rc-chip px-4 py-1.5 rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 text-sm font-semibold hover:bg-indigo-100 transition-colors" data-mbps="940" data-name="Wired ethernet (Cat5e+)">🔌 Wired ethernet</button>
+          <button class="rc-chip px-4 py-1.5 rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 text-sm font-semibold hover:bg-indigo-100 transition-colors" data-mbps="850" data-name="Wi-Fi 6E/7, near router">📡 Wi-Fi 6E/7, near router</button>
+          <button class="rc-chip px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold" data-mbps="600" data-name="Wi-Fi 6, same room">📶 Wi-Fi 6, same room</button>
+          <button class="rc-chip px-4 py-1.5 rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 text-sm font-semibold hover:bg-indigo-100 transition-colors" data-mbps="350" data-name="Wi-Fi 6, through walls">🧱 Wi-Fi 6, through walls</button>
+          <button class="rc-chip px-4 py-1.5 rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 text-sm font-semibold hover:bg-indigo-100 transition-colors" data-mbps="300" data-name="Older Wi-Fi 5 router">🕰️ Wi-Fi 5 router</button>
+          <button class="rc-chip px-4 py-1.5 rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 text-sm font-semibold hover:bg-indigo-100 transition-colors" data-mbps="400" data-name="Phone on Wi-Fi">📱 Phone on Wi-Fi</button>
+        </div>
+
+        <div>
+          <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-gray-700">Paying for</span><span class="text-gray-600 font-semibold">1,000 Mbps</span></div>
+          <div class="h-5 rounded-full bg-white border border-gray-200 overflow-hidden mb-4"><div class="h-full rounded-full bg-gradient-to-r from-gray-300 to-gray-400" style="width: 100%"></div></div>
+          <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-indigo-700" id="rc-name">Wi-Fi 6, same room</span><span id="rc-val" class="text-indigo-600 font-semibold">~600 Mbps</span></div>
+          <div class="h-5 rounded-full bg-white border border-gray-200 overflow-hidden"><div id="rc-bar" class="h-full rounded-full bg-gradient-to-r from-indigo-400 to-indigo-500 transition-all duration-500" style="width: 60%"></div></div>
+        </div>
+        <p id="rc-note" class="text-gray-700 text-sm mt-5 p-4 rounded-2xl bg-white border border-gray-100">This setup typically delivers <strong>~600 Mbps — 60% of what you pay for</strong>. That's still 75 MB/s of real download speed, but it means a 500 Mbps plan would feel nearly identical on this device.</p>
+        <p class="text-gray-400 text-xs mt-3">Estimates reflect typical measured throughput ranges for each setup; your router generation, channel width, and interference shift the numbers. Ground truth: run a speed test wired, then at your usual spot.</p>
+      </div>
+      <p class="text-gray-600 leading-relaxed mt-6">
+        Two honest conclusions hide in this widget. If you're wired, gigabit delivers almost everything you pay for. If your household lives on Wi-Fi — most do — the tier upgrade is often outrun by a <strong>router upgrade at a fraction of the annual cost</strong>. Speed tests report Mbps while downloads show MB/s; keep the <a href="/learn/mbps-vs-mbps/" class="text-indigo-600 hover:underline font-medium">one-letter trap</a> in mind when comparing.
+      </p>
+    </div>
+  </section>
+
+  <!-- Three tests -->
+  <article class="premium-card mt-8" id="three-tests">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Three Tests That Justify Gigabit</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Pass any one of these and gigabit is rational. Pass none, and you're the customer the upsell was designed for.
+      </p>
+      <div class="space-y-4">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-1">1 · The big-file test: do you move 50+ GB weekly?</h3>
+          <p class="text-gray-500 text-sm">Game installs, 4K footage, dataset pulls, phone restores. Wired gigabit turns a 150 GB flagship title from ~67 minutes (300 Mbps) into <strong>~21 minutes</strong>, and a 75 GB install into ~11. If large downloads are a weekly event and you're on ethernet, this is the clearest honest win gigabit offers.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100">
+          <h3 class="font-semibold text-gray-900 mb-1">2 · The upload test: do you send as much as you receive?</h3>
+          <p class="text-gray-500 text-sm">Creators pushing video, WFH cloud backups, off-site photo libraries. Here's the twist ISPs bury: <strong>the benefit isn't gigabit, it's fiber</strong>. Fiber gigabit uploads at ~800–940 Mbps; cable "gigabit" often uploads at 35–50. If upload is your reason, shop by technology, not by the download number (details in the table below).</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100">
+          <h3 class="font-semibold text-gray-900 mb-1">3 · The price test: is the gap to the tier below trivial?</h3>
+          <p class="text-gray-500 text-sm">ISPs increasingly price gigabit $5–15/month above 300–500 Mbps tiers, sometimes with promo pricing that inverts them. Cheap headroom is fine to buy — just buy it knowing it's headroom. If the gap is $25+/month and you failed tests 1 and 2, that's $300+/year for downloads you rarely do.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Streaming math -->
+  <article class="premium-card mt-8" id="streaming-math">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Streaming Math ISPs Skip</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        The most common reason people buy gigabit — "we stream a lot" — is the one it helps least. A 4K stream needs ~25 Mbps. Run the worst case: <strong>five 4K TVs at once is ~125 Mbps</strong>, an eighth of the plan. Picture quality is set by the streaming service's bitrate, not your tier, so a movie on gigabit looks pixel-identical to the same movie on 300 Mbps. The other misfire is buying gigabit to "fix lag": lag is latency or Wi-Fi congestion, and a fatter pipe moves neither.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        The five-minute self-check before paying for the top tier: run our <a href="/tools/bandwidth-calculator/" class="text-indigo-600 hover:underline font-medium">bandwidth calculator</a> with your real evening — streams, calls, gamers, background sync. Most households land at 100–200 Mbps of true peak demand. If yours does, the honest verdicts for the <a href="/internet-speed/is-100-mbps-good/" class="text-indigo-600 hover:underline font-medium">100 Mbps</a> and <a href="/internet-speed/is-300-mbps-good/" class="text-indigo-600 hover:underline font-medium">300 Mbps</a> tiers cover your actual decision.
+      </p>
+    </div>
+  </article>
+
+  <!-- Hardware caps -->
+  <article class="premium-card mt-8" id="hardware">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Hardware That Silently Caps It</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Gigabit is the first tier where your own equipment routinely becomes the bottleneck. Any single link below caps the whole chain — and none of them announce it:
+      </p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Common home equipment that limits gigabit internet speeds and the fix for each</caption>
+          <thead><tr><th>Weak link</th><th>Silent cap</th><th>The fix</th></tr></thead>
+          <tbody>
+            <tr><td class="font-semibold text-gray-800">Wi-Fi 5 (802.11ac) router</td><td class="text-gray-600">~300–500 Mbps real throughput</td><td class="text-gray-600">Wi-Fi 6/6E router — often the single biggest jump</td></tr>
+            <tr><td class="font-semibold text-gray-800">"Fast Ethernet" ports (older routers/extenders)</td><td class="text-rose-600 font-semibold">100 Mbps, hard limit</td><td class="text-gray-600">Check specs say <em>gigabit</em> ethernet; retire the extender</td></tr>
+            <tr><td class="font-semibold text-gray-800">Old Cat5 (not 5e) cabling</td><td class="text-gray-600">100 Mbps reliable ceiling</td><td class="text-gray-600">Cat5e or Cat6 — 5e already carries full gigabit</td></tr>
+            <tr><td class="font-semibold text-gray-800">DOCSIS 3.0 cable modem</td><td class="text-gray-600">Below plan speed on gigabit cable tiers</td><td class="text-gray-600">DOCSIS 3.1 modem (most ISPs require it for gigabit)</td></tr>
+            <tr><td class="font-semibold text-gray-800">Powerline adapters</td><td class="text-gray-600">Commonly 100–300 Mbps in practice</td><td class="text-gray-600">Run ethernet or use a wired/mesh backhaul</td></tr>
+            <tr><td class="font-semibold text-gray-800">Aging laptop/phone Wi-Fi chips</td><td class="text-gray-600">Device-side ceiling regardless of router</td><td class="text-gray-600">Nothing — accept it, or wire the desktop</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The order matters: <strong>audit this table before buying the tier, not after</strong>. A household that fixes its router and cabling on a 300–500 Mbps plan frequently gains more felt speed than a household that buys gigabit into a Wi-Fi 5 bottleneck. How long any file takes at your <em>actual</em> measured speed — not the advertised one — is one query away in the <a href="/tools/download-time-calculator/" class="text-indigo-600 hover:underline font-medium">download time calculator</a>.
+      </p>
+    </div>
+  </article>
+
+  <!-- Cable vs fiber -->
+  <article class="premium-card mt-8" id="cable-vs-fiber">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Cable Gigabit vs Fiber Gigabit: Not the Same Product</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Two plans can both say "1,000 Mbps" and behave completely differently, because the download number hides the asymmetry:
+      </p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Comparison of cable gigabit and fiber gigabit internet</caption>
+          <thead><tr><th>&nbsp;</th><th>Cable gigabit (DOCSIS)</th><th>Fiber gigabit</th></tr></thead>
+          <tbody>
+            <tr><td class="font-semibold text-gray-800">Download</td><td class="text-gray-600">~940 Mbps wired, both deliver</td><td class="text-gray-600">~940 Mbps wired, both deliver</td></tr>
+            <tr><td class="font-semibold text-gray-800">Upload</td><td class="text-rose-600 font-semibold">Often 35–50 Mbps</td><td class="text-teal-600 font-semibold">~800–940 Mbps (typically symmetric)</td></tr>
+            <tr><td class="font-semibold text-gray-800">Peak-hour consistency</td><td class="text-gray-600">Shared neighborhood node — evening dips possible</td><td class="text-gray-600">Generally steadier under load</td></tr>
+            <tr><td class="font-semibold text-gray-800">Who it changes things for</td><td class="text-gray-600">Downloaders only</td><td class="text-gray-600">Creators, backups, WFH video, cloud-heavy homes</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        This is the single most useful reframe in the gigabit decision: <strong>if fiber is available at your address, the upload column is the real upgrade</strong> — worth more to many households than the download number on either plan. A cable gigabit plan with 35 Mbps upload technically clears the FCC's 100/20 broadband benchmark, but a single cloud photo backup can still occupy most of that upstream for hours.
+      </p>
+    </div>
+  </article>
+
+  <!-- Ladder -->
+  <article class="premium-card mt-8" id="ladder">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Where Gigabit Sits on the Ladder</h2>
+      <p class="text-gray-600 leading-relaxed">
+        Every rung up the speed ladder buys less felt improvement than the one before. The <a href="/internet-speed/is-100-mbps-good/" class="text-indigo-600 hover:underline font-medium">jump to 100 Mbps</a> is transformative; the <a href="/internet-speed/is-300-mbps-good/" class="text-indigo-600 hover:underline font-medium">jump to 300</a> is situational; the <a href="/internet-speed/is-500-mbps-good/" class="text-indigo-600 hover:underline font-medium">step to 500</a> is a busy household's honest Wi-Fi ceiling; the jump to 1,000 is narrow — it triples download speed over 300 (a 75 GB game: ~33 minutes → ~11 wired) and changes nothing else a household feels. That's not a criticism; it's a targeting guide. Gigabit is a specialist tier that happens to be marketed as a default. Buy it for the downloads, the fiber upload, or the trivial price gap — never for the streaming, the gaming ping, or the size of the number.
+      </p>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12" id="faqs">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers about gigabit internet</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'Is 300 Mbps Good?',
+        url: '/internet-speed/is-300-mbps-good/',
+        description: 'The tier most gigabit shoppers should actually price first.',
+        icon: '⚖️',
+      },
+      {
+        name: 'Gbps to Mbps Converter',
+        url: '/converters/gbps-to-mbps/',
+        description: '1 Gbps = 1,000 Mbps exactly — plus the full ~940 Mbps real-world math.',
+        icon: '🌐',
+      },
+      {
+        name: 'Download Time Calculator',
+        url: '/tools/download-time-calculator/',
+        description: 'Any file, any speed — see the wait at your measured Mbps, not the advertised one.',
+        icon: '⏱️',
+      },
+    ]}
+  />
+
+  <!-- Reality check logic -->
+  <script is:inline>
+    const rcChips = document.querySelectorAll(".rc-chip");
+    const $rcName = document.getElementById("rc-name");
+    const $rcVal = document.getElementById("rc-val");
+    const $rcBar = document.getElementById("rc-bar");
+    const $rcNote = document.getElementById("rc-note");
+
+    const rcRender = (mbps, name) => {
+      const pct = Math.round((mbps / 1000) * 100);
+      $rcName.textContent = name;
+      $rcVal.textContent = `~${mbps.toLocaleString()} Mbps`;
+      $rcBar.style.width = pct + "%";
+      const mbs = (mbps / 8).toFixed(mbps % 8 === 0 ? 0 : 1);
+      let tail;
+      if (mbps >= 900) {
+        tail = "That's the wired ceiling — protocol overhead accounts for the rest. This is the one setup where gigabit delivers nearly everything you pay for.";
+      } else if (mbps >= 700) {
+        tail = "Close to the plan's potential — modern Wi-Fi near the router is the best wireless case. Downloads will feel dramatically fast.";
+      } else if (mbps >= 500) {
+        tail = "That's still " + mbs + " MB/s of real download speed, but it means a 500 Mbps plan would feel nearly identical on this device.";
+      } else {
+        tail = "At this point the plan tier barely matters — a 300 or 500 Mbps plan would deliver the same experience here. Fix the connection before buying bandwidth.";
+      }
+      $rcNote.innerHTML = `This setup typically delivers <strong>~${mbps.toLocaleString()} Mbps — ${pct}% of what you pay for</strong>. ${tail}`;
+    };
+
+    rcChips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        rcChips.forEach((c) => (c.className = "rc-chip px-4 py-1.5 rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 text-sm font-semibold hover:bg-indigo-100 transition-colors"));
+        chip.className = "rc-chip px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold";
+        rcRender(Number(chip.dataset.mbps), chip.dataset.name);
+      });
+    });
+  </script>
+</Layout>
