@@ -85,25 +85,8 @@ const pageURL = `${siteURL}${Astro.url.pathname}`;
 
     {config.site.yandex_verification && <meta name="yandex-verification" content={config.site.yandex_verification} />}
 
-    <!-- Google AdSense — injected ~0.8s after window.load so the heavy library never blocks first paint or interactivity. Revert to a plain async script tag only if AdSense site review ever requires immediate presence. -->
-    {
-      config.site.adsense_client && (
-        <script
-          is:inline
-          set:html={`
-            window.addEventListener('load', function () {
-              setTimeout(function () {
-                var s = document.createElement('script');
-                s.async = true;
-                s.crossOrigin = 'anonymous';
-                s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${config.site.adsense_client}';
-                document.head.appendChild(s);
-              }, 800);
-            });
-          `}
-        />
-      )
-    }
+    <!-- Google AdSense — standard eager async tag, kept exactly as Google issues it while the account is UNDER REVIEW (deferral could hinder verification). TODO after approval: switch to post-window.load injection for mobile performance (pattern preserved in git history). -->
+    {config.site.adsense_client && <script async is:inline src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${config.site.adsense_client}`} crossorigin="anonymous" />}
 
     <!-- robots (single consolidated tag — applies to all crawlers) -->
     <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />

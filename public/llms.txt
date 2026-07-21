@@ -4,6 +4,8 @@
 
 Core facts the site is built on: 1 byte = 8 bits; 1 Mbps = 0.125 MB/s; decimal (SI) and binary (IEC) units are shown side by side wherever they differ; wired gigabit tests at ~940 Mbps after protocol overhead; PPS figures include the +20 B/frame Ethernet wire overhead (1 Gbps at 64 B = 1,488,095 PPS).
 
+Contact: mbpstobytes@gmail.com
+
 ## Converters
 
 - [Mbps to Bytes](https://www.mbpstobytes.com/): flagship converter — Mbps to B/s, KB/s and MB/s with SI/IEC support
