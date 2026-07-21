@@ -1,0 +1,422 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'How Much Data Does YouTube Use? Real Numbers by Quality';
+const description =
+  'YouTube uses ~0.3 GB/hour at 360p, ~2.3 GB at 1080p and 9–16 GB in 4K — derived from YouTube\'s own specs. Full tables, plus a phone-plan survival calculator.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/data-usage/youtube/`;
+const datePublished = '2026-08-04';
+
+const faqs = [
+  {
+    question: 'How much data does YouTube use per hour at 1080p?',
+    answer:
+      'About 2.3 GB per hour, derived from YouTube\'s own 5 Mbps recommendation for HD 1080p (5 × 0.45 = 2.25 GB). Real-world measurements range from roughly 1.5 to 4 GB per hour because codec (VP9 vs AV1), frame rate (30 vs 60fps) and the specific video all shift the bitrate. Budget at ~2.5 GB per 1080p hour and you\'ll rarely be surprised.',
+  },
+  {
+    question: 'How much data does YouTube 4K use?',
+    answer:
+      'Starting from YouTube\'s 20 Mbps recommendation, 4K works out to ~9 GB per hour — and real-world tests commonly measure 9–16 GB for 4K60 or HDR content, with some demanding videos reported higher. YouTube 4K frequently out-consumes Netflix 4K (up to ~7 GB/hour) because YouTube serves higher-bitrate ladders on much of its catalog.',
+  },
+  {
+    question: 'How much data do YouTube Shorts use?',
+    answer:
+      'YouTube publishes no figure for Shorts, so treat estimates as estimates: vertical HD video at typical Shorts quality runs roughly 0.7–1.5 GB per hour of continuous scrolling, and the feed pre-loads upcoming videos, which adds overhead beyond what you actually watch. A casual 30-minute Shorts session is plausibly 0.4–0.8 GB — TikTok-class consumption, not "just short clips."',
+  },
+  {
+    question: 'How do I stop YouTube from using so much mobile data?',
+    answer:
+      'Three controls, in order of impact: (1) App settings → Video quality preferences → set "Data saver" for mobile networks (caps around 480p, cutting 1080p usage ~4–5×); (2) turn off autoplay-on-home and muted playback in feeds so browsing doesn\'t stream video; (3) for music and podcasts, play via a downloaded or audio mode (Premium) instead of leaving video rolling. The per-video gear icon overrides quality for one video only.',
+  },
+  {
+    question: 'Does playing YouTube in the background use less data?',
+    answer:
+      'Only if the video stops. Background play (Premium) with the screen off still streams the video track at the selected quality unless you use an audio-only mode — so "listening" to a 1080p video can cost HD-video data. For music sessions, downloaded content or an audio-focused app is the data-efficient route; a music hour as 1080p video is ~2.3 GB versus roughly 0.05–0.15 GB as audio.',
+  },
+  {
+    question: 'How much data does uploading to YouTube use?',
+    answer:
+      'Uploading costs the size of your file: a 10-minute 1080p60 export at a typical 12 Mbps encode is ~0.9 GB; 4K exports run several GB per 10 minutes. Live streaming bills continuously — at YouTube\'s suggested ~6 Mbps for 1080p that\'s about 2.7 GB per hour of upload. On cable plans with 35–50 Mbps upload caps, a big 4K upload can occupy the connection for a long while.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Data Usage', item: `${siteURL}/data-usage/` },
+    { '@type': 'ListItem', position: 3, name: 'YouTube Data Usage', item: pageURL },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': `${pageURL}#article`,
+  headline: 'How Much Data Does YouTube Use? Real Numbers by Quality',
+  description,
+  datePublished,
+  dateModified: datePublished,
+  author: { '@type': 'Organization', name: 'Mbps to Bytes Editorial Team', url: `${siteURL}/about-us/` },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageURL },
+  image: `${siteURL}/images/og.png`,
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const toc = [
+  ['#quick-answer', 'The Quick Answer'],
+  ['#per-quality', 'The Per-Quality Table (With Sources)'],
+  ['#why-numbers-differ', 'Why Every Site Quotes Different Numbers'],
+  ['#phone-plan', 'The Phone-Plan Survival Calculator'],
+  ['#auto-trap', 'The Auto-Quality Trap & Every Setting'],
+  ['#shorts', 'Shorts: the Quiet Data Burner'],
+  ['#uploads', 'The Creator Side: Uploads & Live'],
+  ['#vs-netflix', 'YouTube vs Netflix, Per Hour'],
+  ['#faqs', 'FAQs'],
+];
+
+// Derived: GB/hr = YouTube's recommended Mbps × 0.45. Real-world ranges from independent tests.
+const qualityRows = [
+  ['360p', '0.7 Mbps', '~0.3 GB', '0.25–0.35 GB', '0.05 GB'],
+  ['480p (Data saver class)', '1.1 Mbps', '~0.5 GB', '0.4–0.7 GB', '0.08 GB'],
+  ['720p HD', '2.5 Mbps', '~1.1 GB', '0.9–1.6 GB', '0.19 GB'],
+  ['1080p Full HD', '5 Mbps', '~2.3 GB', '1.5–4 GB', '0.38 GB'],
+  ['1440p QHD', '~10 Mbps', '~4.5 GB', '3–6 GB', '0.75 GB'],
+  ['4K (2160p)', '20 Mbps', '~9 GB', '9–16 GB (60fps/HDR higher)', '1.5 GB'],
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/data-usage/" class="hover:text-indigo-600 transition-colors">Data Usage</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">YouTube</span>
+  </nav>
+
+  <!-- Title + byline -->
+  <div class="max-w-3xl">
+    <p class="text-indigo-600 text-xs font-semibold uppercase tracking-wide mb-3">Data Usage · Streaming</p>
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">How Much Data Does YouTube Use? Real Numbers by Quality</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      Search this question and you'll find a dozen sites quoting a dozen different numbers — 1080p is "2.5 GB," or "4.1 GB"; 4K is "10.6," or "23." None explain where the figures came from, because <strong>YouTube publishes no official data-per-hour table at all</strong>. This page fixes that: we derive every number transparently from YouTube's own published speed requirements, show the real-world measured ranges beside them, explain exactly why sources disagree, and give you a calculator for what your habit does to a phone plan.
+    </p>
+
+    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-white border-l-4 border-indigo-500">
+      <p class="text-sm text-gray-700">By <a href="/about-us/" class="text-indigo-600 font-semibold hover:underline">Editorial Team</a></p>
+      <p class="text-sm text-gray-500 mt-1">📅 <strong class="text-gray-600">Published:</strong> August 4, 2026 &nbsp;|&nbsp; 🔄 <strong class="text-gray-600">Last reviewed:</strong> August 4, 2026</p>
+      <p class="text-sm text-gray-500 mt-1">
+        ✓ <strong class="text-gray-600">Fact-checked:</strong> derived from YouTube's
+        <a href="https://support.google.com/youtube/answer/78358" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">published system requirements</a>, cross-checked against independent measurements; derivation method shown on-page ·
+        <a href="/methodology/" class="text-indigo-600 hover:underline">methodology</a>
+      </p>
+    </div>
+
+    <details class="mt-4 premium-card overflow-hidden group">
+      <summary class="flex justify-between items-center gap-4 p-5 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+        <span>📝 Table of Contents</span>
+        <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </summary>
+      <ol class="px-6 pb-5 text-sm text-gray-600 space-y-1.5 list-decimal list-inside">
+        {toc.map(([href, label]) => (
+          <li><a href={href} class="text-indigo-600 hover:underline">{label}</a></li>
+        ))}
+      </ol>
+    </details>
+  </div>
+
+  <!-- Quick answer -->
+  <article class="premium-card mt-10" id="quick-answer">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Quick Answer</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">YouTube uses roughly 0.3 GB per hour at 360p, ~1.1 GB at 720p, ~2.3 GB at 1080p, and 9–16 GB in 4K.</strong> The default "Auto" setting picks quality from your connection, not your data plan — so a phone on fast 5G happily streams 1080p at ~2.3 GB/hour unless you cap it. One number to remember: <strong>a default-quality YouTube hour costs about 2.3 GB</strong>; everything else scales from there.
+        </p>
+      </div>
+    </div>
+  </article>
+
+  <!-- Per-quality table -->
+  <article class="premium-card mt-8" id="per-quality">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Per-Quality Table — With Its Sources Showing</h2>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">YouTube data usage per hour by quality, derived from official speed requirements with real-world ranges</caption>
+          <thead><tr><th>Quality</th><th>YouTube's min speed</th><th>Derived per hour</th><th>Real-world range</th><th>10-min video</th></tr></thead>
+          <tbody>
+            {qualityRows.map(([q, spd, drv, rw, ten]) => (
+              <tr><td class="font-semibold text-gray-800">{q}</td><td class="text-gray-600">{spd}</td><td class="text-indigo-600 font-semibold">{drv}</td><td class="text-gray-600">{rw}</td><td class="text-gray-600">{ten}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        "Derived" = YouTube's own recommended sustained speed × 0.45 (a megabit-per-second held for an hour is 450 MB — the same conversion used across this site). The real-world column is wider than the derived number because actual bitrate depends on the video: codec, frame rate, and how much motion the encoder has to preserve. For budgeting, use the derived column for 720p and below, and <strong>the top of the range for 1080p60 and 4K</strong>.
+      </p>
+    </div>
+  </article>
+
+  <!-- Why numbers differ -->
+  <article class="premium-card mt-8" id="why-numbers-differ">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Why Every Site Quotes Different Numbers</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        Three real reasons, none of them "someone is lying." First, <strong>codec:</strong> YouTube serves the same video in different encodings — modern AV1 streams can use 30–50% less data than older codecs at the same resolution, and which one your device gets varies. Second, <strong>frame rate:</strong> 60fps roughly doubles the bits of 30fps at the same resolution, and YouTube has far more 60fps content than most platforms. Third, <strong>adaptive streaming:</strong> "watching in 1080p" actually means bouncing along a bitrate ladder that responds to your connection second by second.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        That's why this page anchors on the one thing that's stable — YouTube's published speed requirements — and treats everything else as a measured range. Compare Netflix, which publishes official GB-per-hour figures directly (<a href="/data-usage/netflix/" class="text-indigo-600 hover:underline font-medium">our Netflix breakdown</a>): two services, two documentation philosophies, one conversion connecting them.
+      </p>
+    </div>
+  </article>
+
+  <!-- Phone plan calculator -->
+  <section class="premium-card mt-8" id="phone-plan">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">The Phone-Plan Survival Calculator</h2>
+      <p class="text-gray-500 mb-6">YouTube is the classic mobile-data eater. Pick quality and daily watching; see how long common data plans survive.</p>
+
+      <div class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-amber-50 via-white to-indigo-50 border-2 border-gray-100">
+        <p class="text-sm font-semibold text-gray-700 mb-2">Quality</p>
+        <div class="flex flex-wrap gap-2 mb-5" aria-label="Quality setting">
+          <button class="yt-chip yt-q px-4 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm font-semibold hover:bg-amber-100 transition-colors" data-g="0.5">💾 Data saver (~480p)</button>
+          <button class="yt-chip yt-q px-4 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm font-semibold hover:bg-amber-100 transition-colors" data-g="1.1">📱 720p</button>
+          <button class="yt-chip yt-q px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold" data-g="2.3">💻 1080p (default-ish)</button>
+          <button class="yt-chip yt-q px-4 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm font-semibold hover:bg-amber-100 transition-colors" data-g="9">📺 4K</button>
+        </div>
+        <p class="text-sm font-semibold text-gray-700 mb-2">Watched per day</p>
+        <div class="flex flex-wrap gap-2 mb-6" aria-label="Hours per day">
+          <button class="yt-chip yt-h px-4 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm font-semibold hover:bg-amber-100 transition-colors" data-h="0.5">30 min</button>
+          <button class="yt-chip yt-h px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold" data-h="1">1 h</button>
+          <button class="yt-chip yt-h px-4 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm font-semibold hover:bg-amber-100 transition-colors" data-h="2">2 h</button>
+          <button class="yt-chip yt-h px-4 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm font-semibold hover:bg-amber-100 transition-colors" data-h="3">3 h</button>
+          <button class="yt-chip yt-h px-4 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm font-semibold hover:bg-amber-100 transition-colors" data-h="5">5 h</button>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-white border-2 border-indigo-100 mb-4">
+          <p class="text-xs font-semibold uppercase tracking-wide text-indigo-500 mb-1">Monthly total (30 days)</p>
+          <p id="yt-total" class="text-3xl font-extrabold text-indigo-600">69 GB</p>
+          <p id="yt-detail" class="text-gray-500 text-sm mt-1">1080p · 1 h/day · ~2.3 GB/hour</p>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-4" aria-label="How long common plans last">
+          <div class="p-4 rounded-2xl bg-white border border-gray-100 text-center">
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">5 GB plan</p>
+            <p id="yt-p5" class="text-xl font-extrabold text-rose-500">~2 days</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-white border border-gray-100 text-center">
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">15 GB plan</p>
+            <p id="yt-p15" class="text-xl font-extrabold text-amber-500">~6.5 days</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-white border border-gray-100 text-center">
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">50 GB plan</p>
+            <p id="yt-p50" class="text-xl font-extrabold text-teal-600">~22 days</p>
+          </div>
+        </div>
+        <p id="yt-note" class="text-gray-700 text-sm mt-5 p-4 rounded-2xl bg-white border border-gray-100">An hour of default-quality YouTube daily is <strong>~69 GB a month</strong> — more than most phone plans on its own. Data saver mode turns the same habit into ~15 GB.</p>
+        <p class="text-gray-400 text-xs mt-3">Derived figures (conservative for 4K60/HDR). 30-day month. Wi-Fi hours are free of your cellular cap — this models cellular-only watching.</p>
+      </div>
+      <p class="text-gray-600 leading-relaxed mt-6">
+        YouTube is one line of a plan's budget — for the whole picture (feeds, music, calls, and video together against 1–100 GB allowances), run your full mix through <a href="/data-usage/how-long-does-10gb-last/" class="text-indigo-600 hover:underline font-medium">the allowance allocator</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Auto trap + settings -->
+  <article class="premium-card mt-8" id="auto-trap">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Auto-Quality Trap — and Every Setting That Controls It</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        YouTube's default is <strong>Auto, which optimizes for your connection, not your allowance</strong> — the faster your 5G, the more data it spends. The controls, in order of leverage:
+      </p>
+      <div class="space-y-4 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-1">📱 App-wide: Video quality preferences</h3>
+          <p class="text-gray-500 text-sm">Settings → Video quality preferences → separate choices for <em>mobile networks</em> and <em>Wi-Fi</em>: Auto / Higher picture quality / <strong>Data saver</strong>. Data saver caps around 480p — turning a ~2.3 GB default hour into ~0.5 GB. This is the single highest-impact switch on this page.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100">
+          <h3 class="font-semibold text-gray-900 mb-1">🎞️ Per video: the gear icon</h3>
+          <p class="text-gray-500 text-sm">Overrides quality for the current video only — useful for forcing 4K on something worth it, or dropping a podcast to 144p. It doesn't change the app-wide default, which is why per-video discipline alone never fixes a data bill.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100">
+          <h3 class="font-semibold text-gray-900 mb-1">🔁 The quiet spenders: autoplay & feed previews</h3>
+          <p class="text-gray-500 text-sm">Autoplay-next keeps the meter running after your video ends, and muted playback in feeds streams video while you scroll. Both have toggles (Settings → Autoplay; Settings → General → Playback in feeds). Neither is huge per minute; both run unattended.</p>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The recurring theme across services: <strong>defaults optimize for picture, caps punish for volume</strong>. Set the app-wide mobile preference once and the per-video gear becomes a treat switch, not a defense mechanism.
+      </p>
+    </div>
+  </article>
+
+  <!-- Shorts -->
+  <article class="premium-card mt-8" id="shorts">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Shorts: the Quiet Data Burner</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        Shorts feel free — each clip is under a minute — but the feed is continuous vertical HD video with <strong>pre-loading of upcoming clips</strong> you may never watch. YouTube publishes nothing for Shorts specifically, so we'll label our estimate as one: continuous scrolling plausibly runs <strong>0.7–1.5 GB per hour</strong>, TikTok-class consumption. A "quick" 30-minute session: call it half a gigabyte.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        Two mitigations: the app-wide Data saver preference applies to Shorts too, and Wi-Fi obviously zeroes the cellular cost. The mental model that works: <strong>Shorts is a video stream you started the moment you opened the tab</strong> — the scroll doesn't pause the meter, it just changes the channel.
+      </p>
+    </div>
+  </article>
+
+  <!-- Uploads -->
+  <article class="premium-card mt-8" id="uploads">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Creator Side: Uploads and Live Streaming</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        The half nobody covers: YouTube also <em>consumes</em> data upward. An upload costs exactly your file's size — a 10-minute 1080p60 export at a typical ~12 Mbps encode is <strong>~0.9 GB</strong>; 4K exports run several gigabytes per 10 minutes, and re-uploading after a fix bills again. Live streaming spends continuously: at the ~6 Mbps YouTube suggests for 1080p, that's <strong>~2.7 GB per hour of upload</strong> (6 × 0.45 — the same conversion, pointed the other way).
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        Upload data rarely threatens a home cap, but it absolutely threatens <em>upload bandwidth</em> — on cable plans uploading at 35–50 Mbps, a 20 GB 4K master occupies most of the upstream for an hour-plus, degrading every video call in the house. That asymmetry (and why fiber fixes it) is covered in our <a href="/internet-speed/is-gigabit-internet-worth-it/" class="text-indigo-600 hover:underline font-medium">gigabit verdict</a>.
+      </p>
+    </div>
+  </article>
+
+  <!-- vs Netflix -->
+  <article class="premium-card mt-8" id="vs-netflix">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">YouTube vs Netflix, Per Hour</h2>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">YouTube and Netflix data usage per hour compared by quality</caption>
+          <thead><tr><th>Quality</th><th>YouTube (derived/measured)</th><th>Netflix (official)</th></tr></thead>
+          <tbody>
+            <tr><td class="font-semibold text-gray-800">SD-class</td><td class="text-gray-600">~0.3–0.5 GB</td><td class="text-gray-600">~0.7 GB</td></tr>
+            <tr><td class="font-semibold text-gray-800">HD 1080p</td><td class="text-indigo-600 font-semibold">~2.3 GB (1.5–4)</td><td class="text-gray-600">up to 3 GB</td></tr>
+            <tr><td class="font-semibold text-gray-800">4K</td><td class="text-rose-600 font-semibold">9–16 GB</td><td class="text-gray-600">up to 7 GB</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The pattern worth knowing: the services are comparable through HD, then diverge hard at 4K — <strong>a YouTube 4K hour can cost double a Netflix 4K hour</strong>, thanks to higher-bitrate ladders and abundant 60fps content. If your cap is tight and your TV defaults to 4K, YouTube is the app to cap first. Full Netflix numbers, settings and cap math: <a href="/data-usage/netflix/" class="text-indigo-600 hover:underline font-medium">how much data Netflix uses</a>.
+      </p>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12" id="faqs">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers on YouTube data usage</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'Netflix Data Usage',
+        url: '/data-usage/netflix/',
+        description: 'The sibling guide — official figures, cap calculator, hotspot survival table.',
+        icon: '🎬',
+      },
+      {
+        name: 'Bandwidth Calculator',
+        url: '/tools/bandwidth-calculator/',
+        description: 'Whether your connection can carry the streams — the speed side of this math.',
+        icon: '📶',
+      },
+      {
+        name: 'Mbps to MB/s Converter',
+        url: '/converters/mbps-to-mbs/',
+        description: 'The ×0.45 rule comes from here — bitrate to bytes, done properly.',
+        icon: '🚀',
+      },
+    ]}
+  />
+
+  <!-- Phone plan calculator logic -->
+  <script is:inline>
+    const ytState = { g: 2.3, h: 1 };
+    const $ytTotal = document.getElementById("yt-total");
+    const $ytDetail = document.getElementById("yt-detail");
+    const $ytNote = document.getElementById("yt-note");
+    const ytPlans = [[5, document.getElementById("yt-p5")], [15, document.getElementById("yt-p15")], [50, document.getElementById("yt-p50")]];
+    const ytQName = { "0.5": "Data saver", "1.1": "720p", "2.3": "1080p", "9": "4K" };
+
+    const ytFmtDays = (d) => {
+      if (d >= 30) return "30+ days";
+      if (d >= 10) return "~" + Math.round(d) + " days";
+      if (d >= 1) return "~" + (Math.round(d * 2) / 2) + " days";
+      return "<1 day";
+    };
+
+    const ytRender = () => {
+      const perDay = ytState.g * ytState.h;
+      const total = perDay * 30;
+      $ytTotal.textContent = (total >= 100 ? Math.round(total) : Math.round(total * 10) / 10) + " GB";
+      $ytDetail.textContent = `${ytQName[ytState.g]} · ${ytState.h} h/day · ~${ytState.g} GB/hour`;
+      ytPlans.forEach(([gb, el]) => {
+        const days = gb / perDay;
+        el.textContent = ytFmtDays(days);
+        el.className = "text-xl font-extrabold " + (days >= 30 ? "text-teal-600" : days >= 10 ? "text-amber-500" : "text-rose-500");
+      });
+      let tail;
+      if (total <= 15) tail = "light enough to fit most phone plans — Data saver habits are how unlimited-feeling months happen.";
+      else if (total <= 50) tail = "a mid-size phone plan's entire allowance — set the app's mobile preference to Data saver for the commute and save the quality for Wi-Fi.";
+      else tail = "more than most phone plans on its own. Data saver mode turns the same habit into ~" + Math.round(0.5 * ytState.h * 30) + " GB.";
+      $ytNote.innerHTML = `This habit costs <strong>~${Math.round(total)} GB a month on cellular</strong> — ${tail}`;
+    };
+
+    const ytActive = "px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold";
+    const ytIdle = "px-4 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm font-semibold hover:bg-amber-100 transition-colors";
+
+    document.querySelectorAll(".yt-q").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll(".yt-q").forEach((c) => (c.className = "yt-chip yt-q " + ytIdle));
+        chip.className = "yt-chip yt-q " + ytActive;
+        ytState.g = Number(chip.dataset.g);
+        ytRender();
+      });
+    });
+    document.querySelectorAll(".yt-h").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll(".yt-h").forEach((c) => (c.className = "yt-chip yt-h " + ytIdle));
+        chip.className = "yt-chip yt-h " + ytActive;
+        ytState.h = Number(chip.dataset.h);
+        ytRender();
+      });
+    });
+  </script>
+</Layout>

@@ -1,0 +1,397 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'GB vs GiB: Why Your Drive Looks Smaller Than the Box Says';
+const description =
+  'GB counts in 1,000s, GiB counts in 1,024s — a 7.4% gap at gigabyte scale. The history, the OS behavior table, and why a "1 TB" drive shows up as 931 GB.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/learn/gb-vs-gib/`;
+const datePublished = '2026-07-31';
+
+const faqs = [
+  {
+    question: 'Is a GiB bigger than a GB?',
+    answer:
+      'Yes. 1 GiB (gibibyte) = 1,073,741,824 bytes (1,024³), while 1 GB (gigabyte) = 1,000,000,000 bytes (1,000³). A gibibyte is about 7.4% larger than a gigabyte. That also means any capacity expressed in GiB uses a smaller number: 1,000 GB and 931.3 GiB are the same amount of data.',
+  },
+  {
+    question: 'Why does a 1 TB drive show only 931 GB in Windows?',
+    answer:
+      'No space is missing. The manufacturer counts decimally — 1 TB = 1,000,000,000,000 bytes, and every byte is present. Windows divides that same number by 1,024³ and displays 931.32, keeping the "GB" label even though the arithmetic is binary (the unit it computes is really GiB). Same bytes, two counting systems, two numbers.',
+  },
+  {
+    question: 'Why does Windows say GB when it means GiB?',
+    answer:
+      'Legacy. Binary-based reporting predates the 1998 IEC prefixes, and Microsoft kept both the binary arithmetic and the old GB label for continuity. macOS switched sides instead: since Mac OS X 10.6 (2009) it counts decimally, so the same 1 TB drive shows as 1 TB on a Mac and 931 GB on Windows — both describing identical bytes.',
+  },
+  {
+    question: 'How do I convert GB to GiB?',
+    answer:
+      'Multiply by 10⁹ and divide by 2³⁰ — equivalently, multiply by 0.9313. So 500 GB = 465.66 GiB and 1,000 GB = 931.32 GiB. Going the other way, multiply GiB by 1.0737: 100 GiB = 107.37 GB. Our GB to GiB converter runs both directions with the Windows-display readout built in.',
+  },
+  {
+    question: 'Is 1,024 MB equal to 1 GB?',
+    answer:
+      'Under the standards, no: 1 GB = 1,000 MB exactly, and 1,024 MiB = 1 GiB. The "1,024 MB = 1 GB" habit comes from the pre-1998 era when binary quantities borrowed metric names. It survives in casual use and old software, but NIST and IEC 80000-13 are unambiguous — metric prefixes are powers of 1,000, binary prefixes (Ki, Mi, Gi) are powers of 1,024.',
+  },
+  {
+    question: 'Is RAM measured in GB or GiB?',
+    answer:
+      'RAM is the one component that is always binary: memory hardware is addressed in powers of two, so "16 GB of RAM" is physically 16 GiB (17.18 GB decimal). Nobody sells 16.777-GiB modules. This is also why RAM never has a "missing space" complaint — the label and the arithmetic happen to agree.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Learn', item: `${siteURL}/learn/` },
+    { '@type': 'ListItem', position: 3, name: 'GB vs GiB', item: pageURL },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': `${pageURL}#article`,
+  headline: 'GB vs GiB: Why Your Drive Looks Smaller Than the Box Says',
+  description,
+  datePublished,
+  dateModified: datePublished,
+  author: { '@type': 'Organization', name: 'Mbps to Bytes Editorial Team', url: `${siteURL}/about-us/` },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageURL },
+  image: `${siteURL}/images/og.png`,
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const toc = [
+  ['#quick-answer', 'The 20-Second Answer'],
+  ['#two-systems', 'Two Counting Systems, One Byte'],
+  ['#missing-space', 'The "Missing Space" Illusion'],
+  ['#decoder', 'The Drive Label Decoder'],
+  ['#who-uses-which', 'Who Uses Which — the Full Table'],
+  ['#history', 'How We Got Two Units (1998)'],
+  ['#gap-grows', 'The Gap Grows With Scale'],
+  ['#faqs', 'FAQs'],
+];
+
+const osRows = [
+  ['Drive & SSD boxes, spec sheets', 'Decimal (GB)', 'A "1 TB" drive is 1,000,000,000,000 bytes — accurate and standards-compliant'],
+  ['Windows File Explorer', 'Binary math, "GB" label', 'Divides by 1,024³ but keeps the GB label — the source of most confusion'],
+  ['macOS (since 10.6, 2009)', 'Decimal (GB)', 'Agrees with the box: 1 TB drive shows as 1 TB'],
+  ['Linux tools', 'Mixed', 'ls -h and many utilities are binary; some report GiB labels correctly, some say GB'],
+  ['RAM / memory modules', 'Binary by nature', '"16 GB" RAM is physically 16 GiB — hardware is addressed in powers of two'],
+  ['Steam & many game installers', 'Binary math', 'Download sizes computed in 1,024s — pair with our download calculator’s GiB mode'],
+  ['Cloud storage plans (Google, iCloud…)', 'Decimal (GB/TB)', 'A 2 TB plan is 2×10¹² bytes, decimally counted'],
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/learn/" class="hover:text-indigo-600 transition-colors">Learn</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">GB vs GiB</span>
+  </nav>
+
+  <!-- Title + byline -->
+  <div class="max-w-3xl">
+    <p class="text-indigo-600 text-xs font-semibold uppercase tracking-wide mb-3">Learn · Units & Notation</p>
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">GB vs GiB: Why Your Drive Looks Smaller Than the Box Says</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      You bought a 1 TB drive, plugged it in, and Windows reported 931 GB. Nothing was stolen and nothing is hidden — you're watching two counting systems describe the same bytes. This guide settles the gigabyte/gibibyte split properly: the exact definitions, the walkthrough of where "931" comes from, a decoder for every common drive size, and the table of which software counts which way — so the numbers never surprise you again.
+    </p>
+
+    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-white border-l-4 border-indigo-500">
+      <p class="text-sm text-gray-700">By <a href="/about-us/" class="text-indigo-600 font-semibold hover:underline">Editorial Team</a></p>
+      <p class="text-sm text-gray-500 mt-1">📅 <strong class="text-gray-600">Published:</strong> July 31, 2026 &nbsp;|&nbsp; 🔄 <strong class="text-gray-600">Last reviewed:</strong> July 31, 2026</p>
+      <p class="text-sm text-gray-500 mt-1">
+        ✓ <strong class="text-gray-600">Fact-checked:</strong> definitions follow
+        <a href="https://physics.nist.gov/cuu/Units/binary.html" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">NIST binary-prefix guidance</a> and
+        IEC 80000-13 ·
+        <a href="/methodology/" class="text-indigo-600 hover:underline">methodology</a>
+      </p>
+    </div>
+
+    <details class="mt-4 premium-card overflow-hidden group">
+      <summary class="flex justify-between items-center gap-4 p-5 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+        <span>📝 Table of Contents</span>
+        <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </summary>
+      <ol class="px-6 pb-5 text-sm text-gray-600 space-y-1.5 list-decimal list-inside">
+        {toc.map(([href, label]) => (
+          <li><a href={href} class="text-indigo-600 hover:underline">{label}</a></li>
+        ))}
+      </ol>
+    </details>
+  </div>
+
+  <!-- Quick answer -->
+  <article class="premium-card mt-10" id="quick-answer">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The 20-Second Answer</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500 mb-6">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">GB counts in thousands; GiB counts in 1,024s.</strong> 1 GB = 1,000³ bytes = 1,000,000,000. 1 GiB = 1,024³ bytes = 1,073,741,824. The gibibyte is <strong>7.4% bigger</strong>, so the same data always looks like a <em>smaller number</em> in GiB. Drive makers count in GB (correctly); Windows counts in GiB but prints "GB" (confusingly). That labeling mismatch is the entire mystery.
+        </p>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100 text-center">
+          <p class="text-xs font-semibold uppercase tracking-wide text-teal-600 mb-1">Gigabyte (GB) — decimal</p>
+          <p class="text-2xl font-extrabold text-gray-900">1,000,000,000</p>
+          <p class="text-gray-500 text-sm mt-1">bytes = 1,000 × 1,000 × 1,000</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100 text-center">
+          <p class="text-xs font-semibold uppercase tracking-wide text-amber-600 mb-1">Gibibyte (GiB) — binary</p>
+          <p class="text-2xl font-extrabold text-gray-900">1,073,741,824</p>
+          <p class="text-gray-500 text-sm mt-1">bytes = 1,024 × 1,024 × 1,024</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Two systems -->
+  <article class="premium-card mt-8" id="two-systems">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Two Counting Systems, One Byte</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        The byte itself is never in dispute — <a href="/converters/bits-to-bytes/" class="text-indigo-600 hover:underline font-medium">a byte is 8 bits</a> everywhere. The split is purely about what "giga" multiplies. Humans standardized on powers of ten centuries ago (kilo = 1,000, mega = 1,000,000), and the international unit system applies that to bytes exactly as it does to grams and meters. Computers, though, address memory in powers of two, and 2¹⁰ = 1,024 sits temptingly close to 1,000 — so early computing borrowed the metric names for binary quantities and called 1,024 bytes a "kilobyte." Close enough, everyone shrugged, and a 2.4% rounding error was born.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        The problem is that the error <em>compounds at every prefix step</em>: 1,024² is 4.9% past a million, and 1,024³ is 7.4% past a billion. By gigabyte scale the "close enough" gap is large enough to see on every drive you buy — and the two meanings of "GB" had become genuinely ambiguous. That ambiguity, not any missing storage, is what the GiB unit was invented to fix.
+      </p>
+    </div>
+  </article>
+
+  <!-- Missing space -->
+  <article class="premium-card mt-8" id="missing-space">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The "Missing Space" Illusion, Step by Step</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Follow one drive from the box to the desktop and the mystery dissolves in three steps:
+      </p>
+      <div class="space-y-4 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-1">1 · The box promises 1 TB</h3>
+          <p class="text-gray-500 text-sm">Meaning exactly 1,000,000,000,000 bytes, counted decimally per the SI standard. The manufacturer delivers every one of them.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100">
+          <h3 class="font-semibold text-gray-900 mb-1">2 · Windows counts the same bytes in 1,024s</h3>
+          <p class="text-gray-500 text-sm">1,000,000,000,000 ÷ 1,024³ = <strong>931.32</strong>. That's a unit conversion, not a subtraction — like measuring the same road in miles instead of kilometers and getting a smaller number.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">
+          <h3 class="font-semibold text-gray-900 mb-1">3 · Windows labels the result "GB" anyway</h3>
+          <p class="text-gray-500 text-sm">The number 931.32 is in gibibytes, but File Explorer prints "931 GB." Print the honest label — 931.32 <em>GiB</em> — and nothing ever looked missing at all.</p>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        (A small second-order note: a freshly formatted drive shows slightly less still — the filesystem's own bookkeeping consumes some space. That part is real but minor; the headline 7–10% "loss" on every drive is pure unit labeling.)
+      </p>
+    </div>
+  </article>
+
+  <!-- Decoder widget -->
+  <section class="premium-card mt-8" id="decoder">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">The Drive Label Decoder</h2>
+      <p class="text-gray-500 mb-6">Pick the capacity on the box; see the same bytes in every dialect.</p>
+      <div class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-teal-50 via-white to-indigo-50 border-2 border-gray-100">
+        <div class="flex flex-wrap gap-2 mb-6" aria-label="Drive sizes">
+          <button class="dd-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-gb="256">📱 256 GB</button>
+          <button class="dd-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-gb="512">💻 512 GB</button>
+          <button class="dd-chip px-4 py-1.5 rounded-full border-2 border-indigo-300 bg-white text-indigo-600 text-sm font-semibold" data-gb="1000">💾 1 TB</button>
+          <button class="dd-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-gb="2000">🗄️ 2 TB</button>
+          <button class="dd-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-gb="4000">🗃️ 4 TB</button>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div class="p-4 rounded-2xl bg-white border border-gray-100 text-center">
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">📦 The box says</p>
+            <p id="dd-box" class="text-xl font-extrabold text-gray-900">1 TB</p>
+            <p class="text-gray-400 text-xs mt-1">decimal GB/TB</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-white border border-gray-100 text-center">
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">🪟 Windows shows</p>
+            <p id="dd-win" class="text-xl font-extrabold text-indigo-600">931.32 "GB"</p>
+            <p class="text-gray-400 text-xs mt-1">binary math, GB label — really GiB</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-white border border-gray-100 text-center">
+            <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">🍎 macOS shows</p>
+            <p id="dd-mac" class="text-xl font-extrabold text-teal-600">1 TB</p>
+            <p class="text-gray-400 text-xs mt-1">decimal, agrees with the box</p>
+          </div>
+        </div>
+        <p id="dd-note" class="text-gray-400 text-xs mt-4">Same 1,000,000,000,000 bytes in all three boxes. Difference between box and Windows: 0 bytes — 6.9% of label.</p>
+      </div>
+      <p class="text-gray-600 leading-relaxed mt-6">
+        Need an arbitrary size, or the reverse direction? The full <a href="/converters/gb-to-gib/" class="text-indigo-600 hover:underline font-medium">GB to GiB converter</a> handles any value both ways, with the Windows-display readout built in.
+      </p>
+    </div>
+  </section>
+
+  <!-- Who uses which -->
+  <article class="premium-card mt-8" id="who-uses-which">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Who Uses Which — the Full Table</h2>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Which software and hardware uses decimal gigabytes versus binary gibibytes</caption>
+          <thead><tr><th>Where you see the number</th><th>Counts in</th><th>What that means</th></tr></thead>
+          <tbody>
+            {osRows.map(([where, counts, means]) => (
+              <tr><td class="font-semibold text-gray-800">{where}</td><td class="text-indigo-600 font-semibold whitespace-nowrap">{counts}</td><td class="text-gray-600">{means}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The practical rule that falls out of the table: <strong>storage you buy is decimal, memory you install is binary, and Windows reports storage in binary with the wrong label</strong>. When a number matters — an upload limit, a backup target, a "will it fit" question — check which dialect produced it before comparing. The same trap exists one level down between <a href="/converters/mb-to-gb/" class="text-indigo-600 hover:underline font-medium">MB and GB</a>, and at drive scale in the <a href="/converters/gb-to-tb/" class="text-indigo-600 hover:underline font-medium">GB to TB converter</a>, which shows the Windows readout for every size.
+      </p>
+    </div>
+  </article>
+
+  <!-- History -->
+  <article class="premium-card mt-8" id="history">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">How We Got Two Units (the 1998 Fix)</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        For computing's first decades, "kilobyte" meant 1,024 bytes to programmers and 1,000 to everyone else, and the ambiguity was tolerable because the gap was 2.4% and lawsuits were cheap. As capacities hit gigabyte scale in the late 1990s the gap widened to 7.4%, drive buyers started noticing "missing" space, and standards bodies stepped in: in 1998 the <strong>IEC introduced dedicated binary prefixes</strong> — kibi (Ki), mebi (Mi), gibi (Gi), tebi (Ti) — so that binary quantities could finally have their own names. The scheme now lives in IEC 80000-13, and <a href="https://physics.nist.gov/cuu/Units/binary.html" rel="noopener" target="_blank" class="text-indigo-600 hover:underline font-medium">NIST's guidance</a> is blunt: metric prefixes are powers of ten, full stop; powers of 1,024 get the -bi names.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        Adoption has been lopsided ever since. Standards bodies, Linux kernel documentation, and technical writing moved to KiB/MiB/GiB; consumer software mostly didn't, and Windows' binary-math-with-GB-label remains the most visible holdout. That's why this page exists — and why our tools always state which system a number uses rather than assuming you'll guess. The same disambiguation habit matters even more for speeds, where <a href="/learn/mbps-vs-mbps/" class="text-indigo-600 hover:underline font-medium">Mbps vs MB/s</a> hides an 8× gap rather than a 7.4% one.
+      </p>
+    </div>
+  </article>
+
+  <!-- Gap grows -->
+  <article class="premium-card mt-8" id="gap-grows">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Gap Grows With Scale</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Each prefix step multiplies by 1,000 on one side and 1,024 on the other, so the disagreement compounds — small at kilobyte scale, a full eighth by petabyte scale:
+      </p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Percentage difference between decimal and binary units at each prefix level</caption>
+          <thead><tr><th>Pair</th><th>Decimal unit</th><th>Binary unit</th><th>Binary is bigger by</th></tr></thead>
+          <tbody>
+            <tr><td class="font-semibold text-gray-800">KB / KiB</td><td class="text-gray-600">1,000 B</td><td class="text-gray-600">1,024 B</td><td class="text-teal-600 font-semibold">2.4%</td></tr>
+            <tr><td class="font-semibold text-gray-800">MB / MiB</td><td class="text-gray-600">1,000² B</td><td class="text-gray-600">1,024² B</td><td class="text-teal-600 font-semibold">4.9%</td></tr>
+            <tr><td class="font-semibold text-gray-800">GB / GiB</td><td class="text-gray-600">1,000³ B</td><td class="text-gray-600">1,024³ B</td><td class="text-amber-600 font-bold">7.4%</td></tr>
+            <tr><td class="font-semibold text-gray-800">TB / TiB</td><td class="text-gray-600">1,000⁴ B</td><td class="text-gray-600">1,024⁴ B</td><td class="text-amber-600 font-semibold">10.0%</td></tr>
+            <tr><td class="font-semibold text-gray-800">PB / PiB</td><td class="text-gray-600">1,000⁵ B</td><td class="text-gray-600">1,024⁵ B</td><td class="text-rose-600 font-semibold">12.6%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        This is why the "missing space" complaint gets louder every hardware generation: a 1 TB drive "loses" 69 GB of label, an 8 TB drive "loses" over 700, and a petabyte array misplaces an eighth of itself — all without a single byte going anywhere. The bigger the drive you buy, the more this page's distinction is worth remembering.
+      </p>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12" id="faqs">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers on GB vs GiB</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'GB to GiB Converter',
+        url: '/converters/gb-to-gib/',
+        description: 'Any value, both directions — with the "what Windows shows" readout.',
+        icon: '🧮',
+      },
+      {
+        name: 'GB to TB Converter',
+        url: '/converters/gb-to-tb/',
+        description: 'Drive-scale conversions, including the Windows display for every size.',
+        icon: '🗄️',
+      },
+      {
+        name: 'Mbps vs MB/s Explained',
+        url: '/learn/mbps-vs-mbps/',
+        description: 'The other great unit trap — 8× apart, one letter apart.',
+        icon: '🔤',
+      },
+    ]}
+  />
+
+  <!-- Decoder logic -->
+  <script is:inline>
+    const ddChips = document.querySelectorAll(".dd-chip");
+    const $ddBox = document.getElementById("dd-box");
+    const $ddWin = document.getElementById("dd-win");
+    const $ddMac = document.getElementById("dd-mac");
+    const $ddNote = document.getElementById("dd-note");
+
+    const ddRender = (gb) => {
+      const bytes = gb * 1e9;
+      const gib = bytes / 1073741824;
+      const trunc = (x) => Math.floor(x * 100) / 100; // Windows truncates its display
+      const boxLabel = gb >= 1000 ? (gb / 1000) + " TB" : gb + " GB";
+      let winNum, boxNum;
+      let winLabel;
+      if (gib >= 1024) {
+        winNum = trunc(bytes / 1099511627776); boxNum = gb / 1000;
+        winLabel = winNum + ' "TB"';
+      } else {
+        winNum = trunc(gib); boxNum = gb;
+        winLabel = winNum + ' "GB"';
+      }
+      $ddBox.textContent = boxLabel;
+      $ddWin.textContent = winLabel;
+      $ddMac.textContent = boxLabel;
+      const gapPct = (((boxNum - winNum) / boxNum) * 100).toFixed(1);
+      $ddNote.textContent = `Same ${bytes.toLocaleString()} bytes in all three boxes. Difference between box and Windows: 0 bytes — ${gapPct}% of label.`;
+    };
+
+    ddChips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        ddChips.forEach((c) => (c.className = "dd-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors"));
+        chip.className = "dd-chip px-4 py-1.5 rounded-full border-2 border-indigo-300 bg-white text-indigo-600 text-sm font-semibold";
+        ddRender(Number(chip.dataset.gb));
+      });
+    });
+  </script>
+</Layout>

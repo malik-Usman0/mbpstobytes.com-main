@@ -1,0 +1,378 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'Internet Speed for Gaming: Why Ping Beats Bandwidth';
+const description =
+  'Games need only 3–6 Mbps — ping, jitter and packet loss decide how they feel. The thresholds that matter, a ping simulator, and when speed does count.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/internet-speed/for-gaming/`;
+const datePublished = '2026-08-08';
+
+const faqs = [
+  {
+    question: 'Is 100 Mbps good for gaming?',
+    answer:
+      'For playing — it\'s overkill: gameplay uses 3–6 Mbps, so 100 Mbps changes nothing about how a match feels. What 100 Mbps genuinely improves is everything around the game: a 75 GB install lands in ~1h 40m instead of most of a day on slow DSL, and the household can stream while you play without starving the game. Feel is decided by ping, not the plan tier.',
+  },
+  {
+    question: 'What is a good ping for gaming?',
+    answer:
+      'Under 20 ms is competitive-grade, 20–50 ms feels excellent for nearly everyone, 50–100 ms is playable with noticeable delay in fast games, and beyond 100 ms shooters and fighting games degrade badly. Two companions matter as much: jitter (ping variation) under ~20 ms, and packet loss at essentially 0% — a steady 60 ms beats a 20 ms connection that spikes.',
+  },
+  {
+    question: 'Does faster internet lower ping?',
+    answer:
+      'Mostly no — and this is the honest answer ISP marketing avoids. Ping is dominated by distance to the server, routing, and congestion in your own home, none of which a bigger bandwidth number fixes. The exception: if your current connection is saturated (someone uploading, backups running), extra headroom — or better, router QoS — stops the queue that was inflating your ping. Upgrading from a congested line helps; upgrading an idle one doesn\'t.',
+  },
+  {
+    question: 'How much data does online gaming use?',
+    answer:
+      'Playing is light: roughly 0.05–0.15 GB per hour for most titles — 100 hours of matches fits in 10 GB. The data monster is everything else: a modern install is 30–150 GB, patches routinely 5–50 GB, and streaming your gameplay to Twitch uploads ~2.7+ GB per hour. Budget for the downloads, not the matches.',
+  },
+  {
+    question: 'Is Wi-Fi bad for gaming?',
+    answer:
+      'Wi-Fi adds latency variance, not just latency: interference and retransmissions create jitter and micro-losses that feel like stutter even when average ping looks fine. Modern Wi-Fi 6/6E close to the router can be excellent; through walls, or on congested channels, it\'s the most common cause of "my internet is fast but games lag." The fix hierarchy: ethernet > Wi-Fi 6 same room > everything else.',
+  },
+  {
+    question: 'What speed do I need for cloud gaming (GeForce Now, Xbox Cloud)?',
+    answer:
+      'Cloud gaming is the one case where gameplay itself needs real bandwidth, because the game arrives as a video stream: per NVIDIA\'s published requirements, plan ~25 Mbps for 1080p and ~45 Mbps for 4K tiers (NVIDIA also specifies <80 ms latency to their data centers). Under ~15 Mbps sustained, cloud gaming degrades visibly. Ordinary online gaming needs none of this.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Internet Speed', item: `${siteURL}/internet-speed/` },
+    { '@type': 'ListItem', position: 3, name: 'Internet Speed for Gaming', item: pageURL },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': `${pageURL}#article`,
+  headline: 'Internet Speed for Gaming: Why Ping Beats Bandwidth',
+  description,
+  datePublished,
+  dateModified: datePublished,
+  author: { '@type': 'Organization', name: 'Mbps to Bytes Editorial Team', url: `${siteURL}/about-us/` },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageURL },
+  image: `${siteURL}/images/og.png`,
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const toc = [
+  ['#verdict', 'Quick Verdict'],
+  ['#two-meters', 'The Two Meters: Bandwidth vs Latency'],
+  ['#feel-your-ping', 'Feel Your Ping (Simulator)'],
+  ['#what-games-use', 'What Gaming Actually Consumes'],
+  ['#real-villains', 'The Real Lag Villains'],
+  ['#when-speed-matters', 'When Speed Does Matter'],
+  ['#connection-types', 'Verdict by Connection Type'],
+  ['#faqs', 'FAQs'],
+];
+
+const latencyRows = [
+  ['Ping (latency)', 'Round-trip time to the server', '<20 ms competitive · 20–50 ms excellent · 50–100 playable · 100+ rough', 'Distance, routing, congestion'],
+  ['Jitter', 'How much ping varies moment to moment', '<5 ms ideal · <20 ms fine · beyond that, stutter', 'Wi-Fi, congested links'],
+  ['Packet loss', 'Share of packets that never arrive', '0% target · >1% = rubber-banding, hit-reg complaints', 'Bad Wi-Fi, line faults, saturation'],
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/internet-speed/" class="hover:text-indigo-600 transition-colors">Internet Speed</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">For Gaming</span>
+  </nav>
+
+  <!-- Title + byline -->
+  <div class="max-w-3xl">
+    <p class="text-indigo-600 text-xs font-semibold uppercase tracking-wide mb-3">Internet Speed · Use Cases</p>
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">Internet Speed for Gaming: Why Ping Beats Bandwidth</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      The pages ranking for this question are written by ISPs, and it shows: "competitive gamers need 50–100+ Mbps." They don't. Gameplay traffic is 3–6 Mbps whether you're bronze or a pro — <strong>what separates smooth from unplayable is measured in milliseconds, not megabits</strong>. This page covers the numbers that actually decide game feel (ping, jitter, loss), lets you experience latency directly in a simulator, names the real lag villains hiding inside "fast" connections, and is honest about the places where bandwidth genuinely does matter.
+    </p>
+
+    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-white border-l-4 border-indigo-500">
+      <p class="text-sm text-gray-700">By <a href="/about-us/" class="text-indigo-600 font-semibold hover:underline">Editorial Team</a></p>
+      <p class="text-sm text-gray-500 mt-1">📅 <strong class="text-gray-600">Published:</strong> August 8, 2026 &nbsp;|&nbsp; 🔄 <strong class="text-gray-600">Last reviewed:</strong> August 8, 2026</p>
+      <p class="text-sm text-gray-500 mt-1">
+        ✓ <strong class="text-gray-600">Fact-checked:</strong> baseline figures per the
+        <a href="https://www.fcc.gov/consumers/guides/broadband-speed-guide" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">FCC broadband speed guide</a>; cloud-gaming figures per
+        <a href="https://www.nvidia.com/en-us/geforce-now/system-reqs/" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">NVIDIA's GeForce NOW requirements</a> ·
+        <a href="/methodology/" class="text-indigo-600 hover:underline">methodology</a>
+      </p>
+    </div>
+
+    <details class="mt-4 premium-card overflow-hidden group">
+      <summary class="flex justify-between items-center gap-4 p-5 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+        <span>📝 Table of Contents</span>
+        <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </summary>
+      <ol class="px-6 pb-5 text-sm text-gray-600 space-y-1.5 list-decimal list-inside">
+        {toc.map(([href, label]) => (
+          <li><a href={href} class="text-indigo-600 hover:underline">{label}</a></li>
+        ))}
+      </ol>
+    </details>
+  </div>
+
+  <!-- Verdict -->
+  <article class="premium-card mt-10" id="verdict">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Quick Verdict</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">Any healthy plan of ~25 Mbps and up has all the bandwidth gaming needs</strong> — matches consume 3–6 Mbps (the FCC's gaming baseline is 4). What decides how games <em>feel</em>: <strong>ping under 50 ms, jitter under 20, zero packet loss</strong> — numbers your plan tier barely touches. Buy speed for the 100 GB installs and the household's parallel streaming; buy <em>quality</em> (wired connection, good router, close servers) for the gameplay itself.
+        </p>
+      </div>
+    </div>
+  </article>
+
+  <!-- Two meters -->
+  <article class="premium-card mt-8" id="two-meters">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Two Meters: Bandwidth Moves Data, Latency Moves You</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        A game exchanges tiny, constant updates with its server — positions, inputs, hit confirmations. The pipes carrying them are nearly empty (kilobytes per second), so <strong>making the pipe wider changes nothing</strong>. What matters is how long each round trip takes and how consistently it takes it. Three stats capture that entirely:
+      </p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Ping, jitter and packet loss explained with good and bad thresholds</caption>
+          <thead><tr><th>Stat</th><th>What it is</th><th>Thresholds</th><th>Driven by</th></tr></thead>
+          <tbody>
+            {latencyRows.map(([s, w, t, d]) => (
+              <tr><td class="font-semibold text-gray-800">{s}</td><td class="text-gray-600">{w}</td><td class="text-gray-600">{t}</td><td class="text-gray-600">{d}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        One piece of physics sets the floor: signals in fiber travel at roughly two-thirds the speed of light, so every ~1,000 km to the server adds ~10 ms of round trip <em>minimum</em>. No plan, router, or setting beats geography — which is why picking the nearest server region is the cheapest ping upgrade that exists.
+      </p>
+    </div>
+  </article>
+
+  <!-- Ping simulator -->
+  <section class="premium-card mt-8" id="feel-your-ping">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">Feel Your Ping</h2>
+      <p class="text-gray-500 mb-6">Pick a latency, then click (or tap) anywhere in the pad — your hit registers after that delay. This is what milliseconds feel like.</p>
+
+      <div class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-indigo-50 via-white to-rose-50 border-2 border-gray-100">
+        <div class="flex flex-wrap gap-2 mb-5" aria-label="Simulated ping">
+          <button class="ps-chip px-4 py-1.5 rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 text-sm font-semibold hover:bg-indigo-100 transition-colors" data-ms="20">20 ms · fiber, near server</button>
+          <button class="ps-chip px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold" data-ms="50">50 ms · typical good</button>
+          <button class="ps-chip px-4 py-1.5 rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 text-sm font-semibold hover:bg-indigo-100 transition-colors" data-ms="100">100 ms · distant server</button>
+          <button class="ps-chip px-4 py-1.5 rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 text-sm font-semibold hover:bg-indigo-100 transition-colors" data-ms="200">200 ms · intercontinental</button>
+          <button class="ps-chip px-4 py-1.5 rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 text-sm font-semibold hover:bg-indigo-100 transition-colors" data-ms="600">600 ms · geo-satellite</button>
+        </div>
+
+        <div id="ps-pad" class="relative h-48 md:h-56 rounded-2xl bg-white border-2 border-dashed border-indigo-200 cursor-crosshair overflow-hidden select-none" role="application" aria-label="Click pad that responds after the selected delay">
+          <p id="ps-hint" class="absolute inset-0 flex items-center justify-center text-gray-300 font-semibold text-sm pointer-events-none">click anywhere — response arrives 50 ms later</p>
+        </div>
+
+        <p id="ps-note" class="text-gray-700 text-sm mt-5 p-4 rounded-2xl bg-white border border-gray-100">At <strong>50 ms</strong>, the delay is just perceptible if you look for it — this is where most well-connected play happens, and it feels fine.</p>
+        <p class="text-gray-400 text-xs mt-3">Simulation shows network round trip only; real games add input, processing, and display time on top. Games also hide ping with prediction — until it's wrong, which is what "rubber-banding" is.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- What games use -->
+  <article class="premium-card mt-8" id="what-games-use">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">What Gaming Actually Consumes</h2>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Bandwidth and data consumed by each part of gaming</caption>
+          <thead><tr><th>Activity</th><th>Bandwidth while active</th><th>Data volume</th><th>The takeaway</th></tr></thead>
+          <tbody>
+            <tr><td class="font-semibold text-gray-800">🎮 Playing a match</td><td class="text-teal-600 font-semibold">3–6 Mbps reserved</td><td class="text-gray-600">~0.05–0.15 GB/hour</td><td class="text-gray-600">Latency-bound; any plan carries it</td></tr>
+            <tr><td class="font-semibold text-gray-800">🎙️ Voice chat alongside</td><td class="text-gray-600">~0.1 Mbps</td><td class="text-gray-600">~0.05 GB/hour</td><td class="text-gray-600">Rounding error</td></tr>
+            <tr><td class="font-semibold text-gray-800">⬇️ Installs & patches</td><td class="text-rose-600 font-semibold">Every Mbps you have</td><td class="text-rose-600 font-semibold">30–150 GB per title</td><td class="text-gray-600">The real reason gamers buy speed</td></tr>
+            <tr><td class="font-semibold text-gray-800">📡 Streaming to Twitch</td><td class="text-gray-600">6–8 Mbps upload, sustained</td><td class="text-gray-600">~2.7+ GB/hour up</td><td class="text-gray-600">Upload tier suddenly matters</td></tr>
+            <tr><td class="font-semibold text-gray-800">☁️ Cloud gaming</td><td class="text-amber-600 font-semibold">~25 Mbps (1080p) · ~45 (4K)</td><td class="text-gray-600">11–20 GB/hour</td><td class="text-gray-600">The one case where play needs bandwidth</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Read the first and third rows together and the plan decision writes itself: <strong>gameplay would run fine on a 2005 connection; the downloads would not</strong>. A patch-day household feels tier upgrades entirely through wait times — a 75 GB install is ~33 minutes at 300 Mbps versus ~1h 40m at 100 (full ladder in the <a href="/tools/download-time-calculator/" class="text-indigo-600 hover:underline font-medium">download time calculator</a>). And the monthly-cap math of matches vs installs lives in our <a href="/data-usage/how-long-does-10gb-last/" class="text-indigo-600 hover:underline font-medium">data allowance guide</a>.
+      </p>
+    </div>
+  </article>
+
+  <!-- Real villains -->
+  <article class="premium-card mt-8" id="real-villains">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Real Lag Villains (None of Them Are Your Plan Tier)</h2>
+      <div class="space-y-4">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-rose-50 to-white border border-rose-100">
+          <h3 class="font-semibold text-gray-900 mb-1">🌊 Bufferbloat — the saturated-line spike</h3>
+          <p class="text-gray-500 text-sm">Someone starts a big upload or cloud backup, the router queues packets, and your ping goes 40 → 400 ms while the speed test still looks perfect. This is the most common "fast internet, laggy games" cause. Fix: router QoS / Smart Queue Management (SQM), or schedule the backups — not a bigger plan, which just refills the same queue faster.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100">
+          <h3 class="font-semibold text-gray-900 mb-1">📶 Wi-Fi — the jitter machine</h3>
+          <p class="text-gray-500 text-sm">Radio interference and retransmissions turn a flat 20 ms into a 20–80 ms sawtooth. Averages hide it; your aim doesn't. Ethernet to the console/PC is the single biggest feel upgrade most gamers can make — it flattens jitter to near zero for the cost of a cable.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100">
+          <h3 class="font-semibold text-gray-900 mb-1">🗺️ Distance & routing — the physics tax</h3>
+          <p class="text-gray-500 text-sm">~10 ms of round trip per 1,000 km, non-negotiable. Playing on a server one region over can double your ping before your house contributes a millisecond. Always pin your region; treat "auto" matchmaking regions with suspicion.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100">
+          <h3 class="font-semibold text-gray-900 mb-1">🕗 Peak-hour congestion — the shared-node squeeze</h3>
+          <p class="text-gray-500 text-sm">On cable, evenings can add latency as the neighborhood node fills. If your ping is great at 2 pm and rough at 9 pm on a wire, that's the network, not your gear — worth knowing before spending money on either.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- When speed matters -->
+  <article class="premium-card mt-8" id="when-speed-matters">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Where Bandwidth Does Matter — the Honest List</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        Four real cases. <strong>Patch days:</strong> installs scale linearly with speed — the only part of gaming that does. <strong>The busy household:</strong> your match needs its 3–6 Mbps <em>reliably</em>; on a 25 Mbps line, two 4K streams (~50 Mbps demanded) will starve it — this is a capacity problem, and the <a href="/tools/bandwidth-calculator/" class="text-indigo-600 hover:underline font-medium">bandwidth calculator</a> prices your evening properly. <strong>Streaming yourself:</strong> Twitch at 6–8 Mbps upload runs into cable's thin upload tiers fast. <strong>Cloud gaming:</strong> the game is literally a video stream — NVIDIA's own numbers say ~25 Mbps for 1080p, ~45 for 4K, plus under-80 ms latency to their data center.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        Notice what's not on the list: ordinary multiplayer. If a salesperson cites esports to sell you a gigabit tier, they're selling download times and calling it reflexes — the full teardown of that upsell is in our <a href="/internet-speed/is-gigabit-internet-worth-it/" class="text-indigo-600 hover:underline font-medium">gigabit verdict</a>.
+      </p>
+    </div>
+  </article>
+
+  <!-- Connection types -->
+  <article class="premium-card mt-8" id="connection-types">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Verdict by Connection Type</h2>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Gaming suitability of fiber, cable, DSL, 5G and satellite connections</caption>
+          <thead><tr><th>Connection</th><th>Typical ping</th><th>Gaming verdict</th></tr></thead>
+          <tbody>
+            <tr><td class="font-semibold text-gray-800">Fiber</td><td class="text-teal-600 font-semibold">5–20 ms</td><td class="text-gray-600">The gold standard — low, flat latency and symmetric upload for streaming</td></tr>
+            <tr><td class="font-semibold text-gray-800">Cable</td><td class="text-teal-600">15–40 ms</td><td class="text-gray-600">Very good; watch bufferbloat (thin uploads saturate easily) and evening congestion</td></tr>
+            <tr><td class="font-semibold text-gray-800">DSL</td><td class="text-gray-600">25–60 ms</td><td class="text-gray-600">Playable when close to the exchange; slow installs are the real pain</td></tr>
+            <tr><td class="font-semibold text-gray-800">5G / fixed wireless</td><td class="text-amber-600">20–60 ms, variable</td><td class="text-gray-600">Often fine, but jitter swings with signal and load — test yours at peak hours</td></tr>
+            <tr><td class="font-semibold text-gray-800">LEO satellite (Starlink-class)</td><td class="text-amber-600">25–60 ms</td><td class="text-gray-600">Genuinely playable — a physics breakthrough vs geostationary</td></tr>
+            <tr><td class="font-semibold text-gray-800">Geostationary satellite</td><td class="text-rose-600 font-semibold">~600 ms</td><td class="text-gray-600">Fine for turn-based; real-time play isn't realistic — orbit height is 36,000 km each way</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The table's quiet lesson: connection <em>technology</em> predicts gaming quality better than connection <em>speed</em>. A 100 Mbps fiber line out-games a 1,000 Mbps cable line with bufferbloat — which is why the tier-ladder pages on this site (<a href="/internet-speed/is-100-mbps-good/" class="text-indigo-600 hover:underline font-medium">100</a>, <a href="/internet-speed/is-300-mbps-good/" class="text-indigo-600 hover:underline font-medium">300</a>, <a href="/internet-speed/is-500-mbps-good/" class="text-indigo-600 hover:underline font-medium">500</a>) all say the same thing to gamers: fix the connection quality first, buy the tier for the downloads.
+      </p>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12" id="faqs">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers on internet speed for gaming</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'Download Time Calculator',
+        url: '/tools/download-time-calculator/',
+        description: 'The part of gaming your plan tier actually changes — install waits at any speed.',
+        icon: '⏱️',
+      },
+      {
+        name: 'Bandwidth Calculator',
+        url: '/tools/bandwidth-calculator/',
+        description: 'Make sure the household\'s streams leave your match its 6 Mbps.',
+        icon: '📶',
+      },
+      {
+        name: 'Is 100 Mbps Good?',
+        url: '/internet-speed/is-100-mbps-good/',
+        description: 'The tier verdict — stress-test a full gaming evening against it.',
+        icon: '⚖️',
+      },
+    ]}
+  />
+
+  <!-- Ping simulator logic -->
+  <script is:inline>
+    let psDelay = 50;
+    const $psPad = document.getElementById("ps-pad");
+    const $psHint = document.getElementById("ps-hint");
+    const $psNote = document.getElementById("ps-note");
+    const psChips = document.querySelectorAll(".ps-chip");
+    const psNotes = {
+      20: "At <strong>20 ms</strong>, response feels instant — this is fiber-near-a-server territory, and what competitive players chase.",
+      50: "At <strong>50 ms</strong>, the delay is just perceptible if you look for it — this is where most well-connected play happens, and it feels fine.",
+      100: "At <strong>100 ms</strong>, you can feel the gap between action and result — playable, but fast shooters and fighting games start punishing you for it.",
+      200: "At <strong>200 ms</strong>, every click visibly lags — intercontinental-server feel. Games mask some of it with prediction, until the corrections snap you backwards.",
+      600: "At <strong>600 ms</strong>, cause and effect disconnect — geostationary satellite physics (72,000 km round trip to orbit). Real-time play isn't realistic here.",
+    };
+
+    $psPad.addEventListener("pointerdown", (e) => {
+      const rect = $psPad.getBoundingClientRect();
+      const x = e.clientX - rect.left, y = e.clientY - rect.top;
+      $psHint.style.display = "none";
+      setTimeout(() => {
+        const ring = document.createElement("span");
+        ring.style.cssText = `position:absolute;left:${x - 14}px;top:${y - 14}px;width:28px;height:28px;border-radius:9999px;border:3px solid #6366f1;background:rgba(99,102,241,.15);pointer-events:none;`;
+        $psPad.appendChild(ring);
+        setTimeout(() => ring.remove(), 900);
+      }, psDelay);
+    });
+
+    psChips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        psChips.forEach((c) => (c.className = "ps-chip px-4 py-1.5 rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 text-sm font-semibold hover:bg-indigo-100 transition-colors"));
+        chip.className = "ps-chip px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold";
+        psDelay = Number(chip.dataset.ms);
+        $psNote.innerHTML = psNotes[psDelay];
+        $psHint.style.display = "flex";
+        $psHint.textContent = `click anywhere — response arrives ${psDelay} ms later`;
+      });
+    });
+  </script>
+</Layout>

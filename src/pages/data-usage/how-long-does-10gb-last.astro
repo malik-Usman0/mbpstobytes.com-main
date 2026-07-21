@@ -1,0 +1,433 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'How Long Does 10GB of Data Last? (And 1–100 GB Plans)';
+const description =
+  'How long 10GB lasts: ~4 hours of HD video, a week of typical mixed use, or a month of light browsing. Every plan size from 1–100 GB, with a live allocator.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/data-usage/how-long-does-10gb-last/`;
+const datePublished = '2026-08-06';
+
+const faqs = [
+  {
+    question: 'Is 10GB of data enough for a month?',
+    answer:
+      'For a light user — browsing, social media, music, maps, and video kept to Wi-Fi — comfortably yes: that profile runs ~0.3–0.5 GB a day, or 9–15 GB a month. Add one daily hour of HD video on cellular and the answer flips to no: video alone would burn ~75 GB. 10GB months are made or broken by one habit: where your video happens.',
+  },
+  {
+    question: 'How many hours of video is 10GB?',
+    answer:
+      'Depends entirely on quality: roughly 14 hours of SD (~0.7 GB/hour), about 4 hours of HD (~2.5 GB/hour), and only ~85 minutes of 4K (up to 7 GB/hour on Netflix, more on YouTube). The same episode can cost 10× more data at a higher setting — quality choice is the whole bill.',
+  },
+  {
+    question: 'How long does 1GB of data last?',
+    answer:
+      'About 6–7 hours of browsing and social feeds, ~10 hours of music streaming, ~1.4 hours of SD video, or roughly 25 minutes of HD video. As a monthly allowance 1 GB is an emergency ration — workable only with video and app updates locked to Wi-Fi.',
+  },
+  {
+    question: 'Is 50GB enough for a month?',
+    answer:
+      'For most people, yes with room to spare: it absorbs a typical mixed profile (~1.5 GB/day ≈ 45 GB/month) including some daily HD video. The two profiles that break 50 GB are hotspotting a laptop regularly and habitual HD/4K streaming on cellular — the second can spend 50 GB in under a week at 4K rates.',
+  },
+  {
+    question: 'Do WhatsApp and texting use much data?',
+    answer:
+      'Text messaging is effectively free — a message is a few KB, so even thousands amount to a few MB. What costs data inside messaging apps is media: photos (1–5 MB each), voice notes (~0.5 MB/minute), and above all video clips and video calls (WhatsApp video calls run roughly 0.3–0.5 GB/hour). A chatty month of pure text won\'t dent 1 GB.',
+  },
+  {
+    question: 'How fast can 10GB disappear?',
+    answer:
+      'The record-setters: ~85 minutes of 4K streaming (up to 7 GB/hour), one large game download (modern titles run 30–150 GB — a single install can eat many months of allowance), a phone hotspotting a laptop through a video-call afternoon, or automatic cloud photo backup after a trip. Before blaming "the phone," check those four — they account for most mystery data deaths.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Data Usage', item: `${siteURL}/data-usage/` },
+    { '@type': 'ListItem', position: 3, name: 'How Long Does 10GB Last?', item: pageURL },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': `${pageURL}#article`,
+  headline: 'How Long Does 10GB of Data Last? (And 1–100 GB Plans)',
+  description,
+  datePublished,
+  dateModified: datePublished,
+  author: { '@type': 'Organization', name: 'Mbps to Bytes Editorial Team', url: `${siteURL}/about-us/` },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageURL },
+  image: `${siteURL}/images/og.png`,
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const toc = [
+  ['#quick-answer', 'The Quick Answer'],
+  ['#per-hour', 'What One Hour Costs, Activity by Activity'],
+  ['#allocator', 'The Allowance Allocator'],
+  ['#plan-sizes', 'Every Plan Size: 1–100 GB'],
+  ['#video-multiplier', 'The Video Multiplier'],
+  ['#stretching', 'Making Any Allowance Last'],
+  ['#faqs', 'FAQs'],
+];
+
+// Per-hour canon (consistent with /data-usage/netflix/ and /data-usage/youtube/)
+const hourRows = [
+  ['📄 Web browsing & email', '~0.06 GB', '~170 hours', 'Text pages are light; image-heavy sites push higher'],
+  ['📸 Social media feeds', '~0.15 GB', '~67 hours', 'Autoplaying clips are the variable — feeds are video now'],
+  ['🎵 Music streaming', '~0.1 GB', '~100 hours', 'Standard quality; hi-fi tiers run 2–3× more'],
+  ['🗺️ Maps & navigation', '~0.01 GB', 'weeks', 'Pre-downloaded maps make it ~zero'],
+  ['🎮 Online gaming (playing)', '~0.05–0.15 GB', '~100 hours', 'Play traffic is tiny — the installs and patches are the data'],
+  ['📞 Video calls', '~1 GB', '~10 hours', 'HD group calls; audio-only is ~30× lighter'],
+  ['📺 Video, SD', '~0.7 GB', '~14 hours', 'The capped-plan workhorse setting'],
+  ['📺 Video, HD', '~2.5 GB', '~4 hours', 'Netflix up to 3, YouTube ~2.3 — call it 2.5'],
+  ['📺 Video, 4K', 'up to 7+ GB', '~85 minutes', 'Netflix ceiling; YouTube 4K measures higher still'],
+];
+
+// Plan size verdicts (rates: browsing 0.15 social-class, HD 2.5, SD 0.7, typical mixed day ≈ 1.5 GB)
+const planSizes = [
+  { id: '1gb', size: '1 GB', verdict: 'The emergency ration', body: 'Roughly 6–7 hours of browsing and feeds, 10 hours of music, or 25 minutes of HD video — total, not per day. Viable monthly only as a backup line with everything heavy locked to Wi-Fi.' },
+  { id: '5gb', size: '5 GB', verdict: 'The disciplined month', body: 'A light profile (~0.3 GB/day of browsing, social and music) fits with margin; a typical mixed profile (~1.5 GB/day) burns it in ~3 days. The deciding habit: any cellular video at all.' },
+  { id: '10gb', size: '10 GB', verdict: 'The famous middle — about a week of normal use', body: 'A typical mixed day (an hour of feeds, an hour of music, half an hour of HD video) costs ~1.5 GB, so 10 GB lasts ~7 days. Kept video-free, the same allowance stretches past a month at ~0.3 GB/day.' },
+  { id: '20gb', size: '20 GB', verdict: 'Two typical weeks — or a careful month', body: 'Twice the runway: ~13 days at the typical 1.5 GB/day mix. Becomes a true monthly plan by moving half the video hours to Wi-Fi, or dropping cellular video to SD (~0.7 GB/hour).' },
+  { id: '50gb', size: '50 GB', verdict: 'The first genuinely monthly tier', body: 'Absorbs the typical mix (~45 GB/month) including daily HD moments. Its two killers: regular laptop hotspotting and 4K habits — at up to 7 GB/hour, 4K can end a 50 GB month in a week.' },
+  { id: '100gb', size: '100 GB', verdict: 'Monthly comfort for one heavy user', body: 'Covers a daily HD hour (~75 GB/month) plus everything else. What it still can\'t absorb: routine 4K (potentially 200+ GB/month) or being the household\'s main internet via hotspot — that\'s home-plan territory.' },
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/data-usage/" class="hover:text-indigo-600 transition-colors">Data Usage</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">How Long Does 10GB Last?</span>
+  </nav>
+
+  <!-- Title + byline -->
+  <div class="max-w-3xl">
+    <p class="text-indigo-600 text-xs font-semibold uppercase tracking-wide mb-3">Data Usage · Plans & Allowances</p>
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">How Long Does 10GB of Data Last? (And 1–100 GB Plans)</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      "It depends on usage" is technically true and completely useless. This page gives the dependable version: what a single hour of each activity actually costs (using the same sourced figures as our <a href="/data-usage/netflix/" class="text-indigo-600 hover:underline font-medium">Netflix</a> and <a href="/data-usage/youtube/" class="text-indigo-600 hover:underline font-medium">YouTube</a> breakdowns), an allocator that turns <em>your</em> daily mix into days-remaining for any plan size, and a straight verdict for every common allowance from 1 GB to 100 GB.
+    </p>
+
+    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-white border-l-4 border-indigo-500">
+      <p class="text-sm text-gray-700">By <a href="/about-us/" class="text-indigo-600 font-semibold hover:underline">Editorial Team</a></p>
+      <p class="text-sm text-gray-500 mt-1">📅 <strong class="text-gray-600">Published:</strong> August 6, 2026 &nbsp;|&nbsp; 🔄 <strong class="text-gray-600">Last reviewed:</strong> August 6, 2026</p>
+      <p class="text-sm text-gray-500 mt-1">
+        ✓ <strong class="text-gray-600">Fact-checked:</strong> per-activity figures follow the sourced numbers in our
+        <a href="/data-usage/netflix/" class="text-indigo-600 hover:underline">Netflix</a> and
+        <a href="/data-usage/youtube/" class="text-indigo-600 hover:underline">YouTube</a> guides (official platform documentation), video-call figures per
+        <a href="https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0060748" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Zoom's published requirements</a> ·
+        <a href="/methodology/" class="text-indigo-600 hover:underline">methodology</a>
+      </p>
+    </div>
+
+    <details class="mt-4 premium-card overflow-hidden group">
+      <summary class="flex justify-between items-center gap-4 p-5 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+        <span>📝 Table of Contents</span>
+        <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </summary>
+      <ol class="px-6 pb-5 text-sm text-gray-600 space-y-1.5 list-decimal list-inside">
+        {toc.map(([href, label]) => (
+          <li><a href={href} class="text-indigo-600 hover:underline">{label}</a></li>
+        ))}
+      </ol>
+    </details>
+  </div>
+
+  <!-- Quick answer -->
+  <article class="premium-card mt-10" id="quick-answer">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Quick Answer</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500 mb-6">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">10 GB is about 4 hours of HD video, a week of typical mixed use, or a month-plus of browsing, social and music.</strong> The spread is that wide because one activity dominates all others: <strong>video at high quality</strong>. Keep video on Wi-Fi and 10 GB is a comfortable month; stream HD on cellular daily and it's gone by Thursday.
+        </p>
+      </div>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
+        <table class="luxury-table">
+          <caption class="sr-only">How long 10GB lasts by usage profile</caption>
+          <thead><tr><th>Profile</th><th>Daily cost</th><th>10 GB lasts</th></tr></thead>
+          <tbody>
+            <tr><td class="font-semibold text-gray-800">Light — browsing, social, music; video on Wi-Fi only</td><td class="text-gray-600">~0.3 GB</td><td class="text-teal-600 font-bold">~33 days</td></tr>
+            <tr><td class="font-semibold text-gray-800">Typical — the above + ~30 min of HD video</td><td class="text-gray-600">~1.5 GB</td><td class="text-amber-600 font-semibold">~7 days</td></tr>
+            <tr><td class="font-semibold text-gray-800">Heavy — 1–2 HD hours + calls on cellular</td><td class="text-gray-600">~4 GB</td><td class="text-rose-600 font-semibold">~2.5 days</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </article>
+
+  <!-- Per hour -->
+  <article class="premium-card mt-8" id="per-hour">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">What One Hour Costs, Activity by Activity</h2>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Data cost per hour by activity and how long 10GB lasts for each</caption>
+          <thead><tr><th>Activity</th><th>Per hour</th><th>10 GB alone buys</th><th>The catch</th></tr></thead>
+          <tbody>
+            {hourRows.map(([a, hr, buys, note]) => (
+              <tr><td class="font-semibold text-gray-800">{a}</td><td class="text-indigo-600 font-semibold whitespace-nowrap">{hr}</td><td class="text-gray-600 whitespace-nowrap">{buys}</td><td class="text-gray-600">{note}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        One distinction keeps people from misreading tables like this: <strong>speed requirements are not data usage</strong>. Gaming "needs 3–6 Mbps" — that's reserved capacity for responsiveness (<a href="/internet-speed/for-gaming/" class="text-indigo-600 hover:underline font-medium">ping decides the rest</a>); the actual traffic averages a modest 0.05–0.15 GB/hour. The bandwidth an activity <em>needs</em> is the <a href="/tools/bandwidth-calculator/" class="text-indigo-600 hover:underline font-medium">bandwidth calculator</a>'s question; what it <em>bills</em> is this page's.
+      </p>
+    </div>
+  </article>
+
+  <!-- Allocator -->
+  <section class="premium-card mt-8" id="allocator">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">The Allowance Allocator</h2>
+      <p class="text-gray-500 mb-6">Set your plan size and your real daily mix — see the days it lasts, live.</p>
+
+      <div class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-teal-50 via-white to-rose-50 border-2 border-gray-100">
+        <p class="text-sm font-semibold text-gray-700 mb-2">Your allowance</p>
+        <div class="flex flex-wrap gap-2 mb-6" aria-label="Plan size">
+          <button class="al-chip al-p px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-p="1">1 GB</button>
+          <button class="al-chip al-p px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-p="5">5 GB</button>
+          <button class="al-chip al-p px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold" data-p="10">10 GB</button>
+          <button class="al-chip al-p px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-p="20">20 GB</button>
+          <button class="al-chip al-p px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-p="50">50 GB</button>
+          <button class="al-chip al-p px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-p="100">100 GB</button>
+        </div>
+
+        <div class="space-y-3 mb-6">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-sm font-semibold text-gray-700 w-44">📸 Feeds & browsing</span>
+            <div class="flex gap-1.5" role="group" aria-label="Feeds and browsing daily hours">
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="social" data-v="0">0</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="social" data-v="0.5">30m</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-xs font-semibold" data-act="social" data-v="1">1h</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="social" data-v="2">2h</button>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-sm font-semibold text-gray-700 w-44">🎵 Music</span>
+            <div class="flex gap-1.5" role="group" aria-label="Music daily hours">
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="music" data-v="0">0</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="music" data-v="0.5">30m</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-xs font-semibold" data-act="music" data-v="1">1h</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="music" data-v="2">2h</button>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-sm font-semibold text-gray-700 w-44">📺 Video, SD</span>
+            <div class="flex gap-1.5" role="group" aria-label="SD video daily hours">
+              <button class="al-chip al-a px-3 py-1 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-xs font-semibold" data-act="sd" data-v="0">0</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="sd" data-v="0.5">30m</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="sd" data-v="1">1h</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="sd" data-v="2">2h</button>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-sm font-semibold text-gray-700 w-44">🎬 Video, HD</span>
+            <div class="flex gap-1.5" role="group" aria-label="HD video daily hours">
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="hd" data-v="0">0</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-xs font-semibold" data-act="hd" data-v="0.5">30m</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="hd" data-v="1">1h</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="hd" data-v="2">2h</button>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-sm font-semibold text-gray-700 w-44">📞 Video calls</span>
+            <div class="flex gap-1.5" role="group" aria-label="Video call daily hours">
+              <button class="al-chip al-a px-3 py-1 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-xs font-semibold" data-act="call" data-v="0">0</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="call" data-v="0.5">30m</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="call" data-v="1">1h</button>
+              <button class="al-chip al-a px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors" data-act="call" data-v="2">2h</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-white border-2 border-indigo-100 mb-4">
+          <div class="flex flex-wrap items-baseline justify-between gap-2">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wide text-indigo-500 mb-1">Your daily mix costs</p>
+              <p id="al-daily" class="text-2xl font-extrabold text-indigo-600">1.5 GB/day</p>
+            </div>
+            <div class="text-right">
+              <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">Your plan lasts</p>
+              <p id="al-days" class="text-2xl font-extrabold text-gray-900">~6.5 days</p>
+            </div>
+          </div>
+          <div class="h-5 rounded-full bg-gray-50 border border-gray-200 overflow-hidden mt-4"><div id="al-bar" class="h-full rounded-full bg-gradient-to-r from-rose-400 to-rose-500 transition-all duration-500" style="width: 22%"></div></div>
+          <p class="text-gray-400 text-xs mt-2">Bar = share of a 30-day month your allowance covers at this pace.</p>
+        </div>
+        <p id="al-note" class="text-gray-700 text-sm p-4 rounded-2xl bg-white border border-gray-100">At <strong>1.5 GB/day, 10 GB lasts about 6.5 days</strong> — the classic week-ish result. Moving the HD half-hour to Wi-Fi stretches the same plan past a full month.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Plan sizes -->
+  <article class="premium-card mt-8" id="plan-sizes">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Every Plan Size, Judged: 1 GB to 100 GB</h2>
+      <div class="space-y-4">
+        {planSizes.map((p) => (
+          <div id={p.id} class="p-5 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:border-indigo-200 transition-colors">
+            <h3 class="font-semibold text-gray-900"><span class="text-indigo-600 font-extrabold">{p.size}</span> — {p.verdict}</h3>
+            <p class="text-gray-500 text-sm mt-1">{p.body}</p>
+          </div>
+        ))}
+      </div>
+      <p class="text-gray-600 leading-relaxed mt-6">
+        The ladder's shape is worth noticing: <strong>allowances don't buy time linearly, they buy video permission</strong>. Every tier below 50 GB is really a rule about where your video happens; 50 GB and up is where the rule relaxes. If you're choosing a plan, decide your video habit first and the GB number falls out on its own.
+      </p>
+    </div>
+  </article>
+
+  <!-- Video multiplier -->
+  <article class="premium-card mt-8" id="video-multiplier">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Video Multiplier: One Setting, 10× the Bill</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        Every non-video activity on this page lives between 0.01 and 1 GB per hour — a 100× range that still barely matters, because video spans <strong>0.7 to 7+ GB per hour on a single slider</strong>. The same episode costs 0.7 GB in SD, ~2.5 GB in HD, and up to 7 GB (or more on YouTube) in 4K. No other choice on your phone moves your data bill by 10× with one tap.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        That's why both major platforms ship data-saver modes, and why the two settings walkthroughs on this site — <a href="/data-usage/netflix/" class="text-indigo-600 hover:underline font-medium">Netflix's quality controls</a> (Save Data ≈ 6 hours per GB) and <a href="/data-usage/youtube/" class="text-indigo-600 hover:underline font-medium">YouTube's Data saver preference</a> (~0.5 GB/hour) — are the highest-leverage five minutes a capped-plan owner can spend.
+      </p>
+    </div>
+  </article>
+
+  <!-- Stretching -->
+  <article class="premium-card mt-8" id="stretching">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Making Any Allowance Last</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        In descending order of impact: <strong>download on Wi-Fi, play on cellular</strong> (a season downloaded at home costs your plan nothing on the commute); <strong>set app-level data savers once</strong> rather than relying on per-video discipline; <strong>audit the silent spenders</strong> — cloud photo backup after events, app auto-updates, and podcast auto-downloads all belong on Wi-Fi-only settings; and <strong>treat hotspotting as a different sport</strong> — a laptop assumes an uncapped connection, updates itself freely, and can spend a phone plan in an afternoon.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        And one reframe for plan shopping: carriers price the 10→20 GB step small and the 50→unlimited step large. If the allocator above says your honest mix needs 40+ GB, compare the unlimited tier's price before buying discipline you may not keep. For the home-internet version of this math — caps measured in TB, not GB — start with <a href="/data-usage/netflix/" class="text-indigo-600 hover:underline font-medium">the Netflix cap calculator</a>.
+      </p>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12" id="faqs">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers on data allowances</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'Netflix Data Usage',
+        url: '/data-usage/netflix/',
+        description: 'The biggest line item on most allowances — official figures and settings.',
+        icon: '🎬',
+      },
+      {
+        name: 'YouTube Data Usage',
+        url: '/data-usage/youtube/',
+        description: 'Derived numbers by quality, the Shorts estimate, and the phone-plan calculator.',
+        icon: '📱',
+      },
+      {
+        name: 'Bandwidth Calculator',
+        url: '/tools/bandwidth-calculator/',
+        description: 'Speed needed vs data billed — the other half of the planning math.',
+        icon: '📶',
+      },
+    ]}
+  />
+
+  <!-- Allocator logic -->
+  <script is:inline>
+    const alRates = { social: 0.15, music: 0.1, sd: 0.7, hd: 2.5, call: 1 };
+    const alState = { plan: 10, social: 1, music: 1, sd: 0, hd: 0.5, call: 0 };
+    const $alDaily = document.getElementById("al-daily");
+    const $alDays = document.getElementById("al-days");
+    const $alBar = document.getElementById("al-bar");
+    const $alNote = document.getElementById("al-note");
+
+    const alRender = () => {
+      const daily = Object.keys(alRates).reduce((s, k) => s + alRates[k] * alState[k], 0);
+      const days = daily > 0 ? alState.plan / daily : Infinity;
+      $alDaily.textContent = (daily >= 10 ? Math.round(daily) : (Math.round(daily * 10) / 10)) + " GB/day";
+      $alDays.textContent = daily === 0 ? "forever" : days >= 30 ? "30+ days" : days >= 10 ? "~" + Math.round(days) + " days" : days >= 1 ? "~" + (Math.round(days * 2) / 2) + " days" : "<1 day";
+      const pct = daily === 0 ? 100 : Math.min(100, (days / 30) * 100);
+      $alBar.style.width = pct + "%";
+      $alBar.className = "h-full rounded-full transition-all duration-500 bg-gradient-to-r " + (pct >= 95 ? "from-teal-400 to-teal-500" : pct >= 40 ? "from-amber-400 to-amber-500" : "from-rose-400 to-rose-500");
+      let tail;
+      if (daily === 0) tail = "no cellular habits selected — this plan only spends when you do.";
+      else if (days >= 30) tail = "this mix fits the whole month with room to spare.";
+      else if (days >= 14) tail = "half a month or better — one Wi-Fi habit swap likely makes it monthly.";
+      else if (days >= 5) tail = "the classic capped-plan squeeze — the HD video line is almost always the fix.";
+      else tail = "days, not weeks — at this pace consider an unlimited plan or move video to Wi-Fi.";
+      const dTxt = daily >= 10 ? Math.round(daily) : Math.round(daily * 10) / 10;
+      $alNote.innerHTML = `At <strong>${dTxt} GB/day, ${alState.plan} GB lasts ${$alDays.textContent.replace("~", "about ")}</strong> — ${tail}`;
+    };
+
+    const alActive2 = "px-3 py-1 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-xs font-semibold";
+    const alIdle2 = "px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-xs font-semibold hover:bg-teal-100 transition-colors";
+    const alActiveP = "px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold";
+    const alIdleP = "px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors";
+
+    document.querySelectorAll(".al-p").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll(".al-p").forEach((c) => (c.className = "al-chip al-p " + alIdleP));
+        chip.className = "al-chip al-p " + alActiveP;
+        alState.plan = Number(chip.dataset.p);
+        alRender();
+      });
+    });
+    document.querySelectorAll(".al-a").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const act = chip.dataset.act;
+        document.querySelectorAll(`.al-a[data-act="${act}"]`).forEach((c) => (c.className = "al-chip al-a " + alIdle2));
+        chip.className = "al-chip al-a " + alActive2;
+        alState[act] = Number(chip.dataset.v);
+        alRender();
+      });
+    });
+  </script>
+</Layout>

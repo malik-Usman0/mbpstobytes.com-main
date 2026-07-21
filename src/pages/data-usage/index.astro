@@ -1,0 +1,100 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+
+const title = 'Data Usage Guides – How Much Data Apps Really Use';
+const description =
+  'How much data Netflix, YouTube and other apps really use — per hour, per month and against your cap. Measured numbers, the math shown, no ISP spin.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/data-usage/`;
+
+const articles = [
+  {
+    title: 'How Long Does 10GB of Data Last? (And 1–100 GB Plans)',
+    url: '/data-usage/how-long-does-10gb-last/',
+    category: 'Plans & Allowances',
+    description: '~4 hours of HD video, a week of typical mixed use, or a month of light browsing — with a live allocator that turns your real daily mix into days-remaining, and a straight verdict for every plan from 1 to 100 GB.',
+  },
+  {
+    title: 'How Much Data Does YouTube Use? Real Numbers by Quality',
+    url: '/data-usage/youtube/',
+    category: 'Streaming',
+    description: 'YouTube publishes no data table — so we derive one openly from its own speed specs: ~0.3 GB/hour at 360p to 9–16 GB in 4K. With the Shorts estimate, the creator/upload side, and a phone-plan survival calculator.',
+  },
+  {
+    title: 'How Much Data Does Netflix Use? Real Per-Hour Numbers',
+    url: '/data-usage/netflix/',
+    category: 'Streaming',
+    description: 'From 0.3 GB per hour on Low to 7 GB in 4K — the official ceilings, what independent tests actually measure, per-episode and per-month tables, and a live calculator for your data cap.',
+  },
+];
+
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${pageURL}#collectionpage`,
+  name: title,
+  url: pageURL,
+  description,
+  hasPart: articles.map((a) => ({
+    '@type': 'TechArticle',
+    headline: a.title,
+    url: `${siteURL}${a.url}`,
+    description: a.description,
+  })),
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Data Usage', item: pageURL },
+  ],
+};
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">Data Usage</span>
+  </nav>
+
+  <div class="text-center max-w-3xl mx-auto mb-10">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 rounded-full mb-4">
+      <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+      <span class="text-indigo-600 text-xs font-semibold uppercase tracking-wide">Data Usage</span>
+    </div>
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">How Much Data Does It Actually Use?</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      Data caps never really went away — home plans commonly cap around 1.2 TB, hotspot and travel plans at 10–50 GB, and every app answers "how much will this use?" with a shrug. These guides answer it properly: the official per-hour figures from each service's own documentation, what independent measurements actually find (often above the official "up to" ceilings), and the one conversion that makes any of it checkable — <strong>GB per hour ≈ bitrate in Mbps × 0.45</strong>. Every guide ships with per-episode, per-hour and per-month tables plus a live calculator that turns your real habits into a monthly GB figure against your cap. Speed and capacity are different questions: for "is my connection fast enough," see the <a href="/internet-speed/" class="text-indigo-600 hover:underline font-medium">internet speed verdicts</a>; for "how much speed do my activities need right now," the <a href="/tools/bandwidth-calculator/" class="text-indigo-600 hover:underline font-medium">bandwidth calculator</a>; and for "how long will this file take," the <a href="/tools/download-time-calculator/" class="text-indigo-600 hover:underline font-medium">download time calculator</a>. This section answers the third question your ISP bills you for: volume.
+    </p>
+  </div>
+
+  <div class="max-w-3xl mx-auto space-y-6">
+    {
+      articles.map((a) => (
+        <a href={a.url} class="premium-card block p-8 group hover:shadow-lg transition-all duration-300">
+          <p class="text-indigo-600 text-xs font-semibold uppercase tracking-wide mb-2">{a.category}</p>
+          <h2 class="font-bold text-2xl text-gray-900 group-hover:text-indigo-600 transition-colors duration-300">{a.title}</h2>
+          <p class="text-gray-500 mt-3 leading-relaxed">{a.description}</p>
+          <p class="text-indigo-600 text-sm font-semibold mt-4">Read the guide →</p>
+        </a>
+      ))
+    }
+  </div>
+
+  <div class="max-w-3xl mx-auto mt-10 p-6 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100">
+    <h2 class="font-semibold text-gray-900 mb-2">Coming next in this section</h2>
+    <p class="text-gray-500 text-sm leading-relaxed">
+      Spotify and music streaming · Zoom calls · online gaming (play traffic vs patch days) · Twitch. Each guide holds the same standard: official figures cited, independent measurements compared, math shown, and a calculator for your own numbers.
+    </p>
+  </div>
+</Layout>

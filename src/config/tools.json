@@ -33,6 +33,12 @@
           "url": "/converters/kbps-to-mbps/",
           "description": "1,000 Kbps = 1 Mbps — with the audio-bitrate ladder: what 128, 320 and 1,411 Kbps really mean.",
           "icon": "🎵"
+        },
+        {
+          "name": "Bits to Bytes Converter",
+          "url": "/converters/bits-to-bytes/",
+          "description": "8 bits = 1 byte — the foundation under every speed trap, with an interactive byte builder.",
+          "icon": "🔢"
         }
       ]
     },
@@ -57,6 +63,12 @@
           "url": "/converters/gb-to-tb/",
           "description": "1 TB = 1,000 GB — and what Windows will really show: a 1 TB drive displays as 931 GB.",
           "icon": "🗄️"
+        },
+        {
+          "name": "GB to GiB Converter",
+          "url": "/converters/gb-to-gib/",
+          "description": "1 GB = 0.9313 GiB — the decimal/binary conversion behind every \"smaller drive\" mystery, both directions.",
+          "icon": "🧮"
         }
       ]
     },

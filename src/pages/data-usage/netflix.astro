@@ -1,0 +1,426 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'How Much Data Does Netflix Use? Real Per-Hour Numbers';
+const description =
+  'Netflix uses 0.3–7 GB per hour by quality: about 0.7 GB in SD, up to 3 in HD and 7 in 4K. Per-episode and monthly tables, plus a live cap calculator.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/data-usage/netflix/`;
+const datePublished = '2026-08-02';
+
+const faqs = [
+  {
+    question: 'How much data does Netflix use per hour in 4K?',
+    answer:
+      'Netflix\'s official figure is up to 7 GB per hour for 4K (Ultra HD). Treat that as a planning ceiling, not a typical: independent measurements have recorded anywhere from about 6.5 GB to 11 GB per hour on some titles, because bitrate varies with the content itself. If a 4K hour matters to your cap, budget at 7 GB or above.',
+  },
+  {
+    question: 'How much data does one Netflix movie use?',
+    answer:
+      'A two-hour movie uses roughly 0.6 GB on the Low setting, 1.4 GB in SD (Medium), up to 6 GB in HD, and up to 14 GB in 4K. A standard 45-minute episode is about a third of a movie: ~0.5 GB SD, ~2.3 GB HD, ~5.3 GB 4K.',
+  },
+  {
+    question: 'Is 100 GB a month enough for Netflix?',
+    answer:
+      'Depends entirely on quality. 100 GB is about 140 hours of SD (nearly 5 hours a day), ~33 hours of HD (roughly an hour a day), or only ~14 hours of 4K (under 30 minutes a day). On a 100 GB plan, setting Netflix to SD or the mobile app\'s Save Data mode is the difference between comfortable and capped.',
+  },
+  {
+    question: 'Does watching downloaded Netflix content use data?',
+    answer:
+      'Playback of a downloaded title uses no internet data. The download itself uses roughly the same data as streaming the title once at the chosen download quality — so the trick is to download on Wi-Fi, then watch on cellular for free. Smart Downloads (which fetches next episodes) can be restricted to Wi-Fi in the app settings.',
+  },
+  {
+    question: 'How do I make Netflix use less data?',
+    answer:
+      'Two separate controls. Per profile (all devices): Account → Profile → Playback settings → choose Low or Medium instead of High/Auto. In the mobile app (cellular only): App Settings → Cellular Data Usage → choose Save Data (~6 hours per GB) or leave Automatic (~4 hours per GB) instead of Maximum Data. Lowering quality is the entire lever — there is no "compression" setting beyond it.',
+  },
+  {
+    question: 'Does Netflix use data when I\'m just browsing?',
+    answer:
+      'Yes, a little — artwork and interface use a modest amount, and autoplaying trailer previews stream like short videos, which adds up during long browsing sessions. You can turn off autoplay previews per profile (Account → Profile → Playback settings → untick autoplay previews). Browsing data is minor next to actual streaming, though: minutes of previews ≈ a few hundred MB at most.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Data Usage', item: `${siteURL}/data-usage/` },
+    { '@type': 'ListItem', position: 3, name: 'Netflix Data Usage', item: pageURL },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': `${pageURL}#article`,
+  headline: 'How Much Data Does Netflix Use? Real Per-Hour Numbers',
+  description,
+  datePublished,
+  dateModified: datePublished,
+  author: { '@type': 'Organization', name: 'Mbps to Bytes Editorial Team', url: `${siteURL}/about-us/` },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageURL },
+  image: `${siteURL}/images/og.png`,
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const toc = [
+  ['#quick-answer', 'The Quick Answer'],
+  ['#per-hour', 'Per Hour, Episode, Movie & Season'],
+  ['#up-to-trap', 'The "Up To" Trap'],
+  ['#budget', 'Your Monthly Netflix Data Budget'],
+  ['#math', 'Check the Math Yourself'],
+  ['#settings', 'Every Setting That Controls It'],
+  ['#downloads', 'Downloads: the Cellular Cheat Code'],
+  ['#hotspot', 'Netflix on a Hotspot or Travel Plan'],
+  ['#faqs', 'FAQs'],
+];
+
+// GB per hour: Low 0.3 · SD 0.7 · HD up to 3 · 4K up to 7 (Netflix official)
+const usageRows = [
+  ['Low (mobile-class)', '0.3 GB', '0.23 GB', '0.6 GB', '1.8 GB'],
+  ['Medium / SD (480p)', '0.7 GB', '0.53 GB', '1.4 GB', '4.2 GB'],
+  ['High / HD (1080p)', 'up to 3 GB', '2.25 GB', '6 GB', '18 GB'],
+  ['4K Ultra HD (Premium plan)', 'up to 7 GB', '5.25 GB', '14 GB', '42 GB'],
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/data-usage/" class="hover:text-indigo-600 transition-colors">Data Usage</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">Netflix</span>
+  </nav>
+
+  <!-- Title + byline -->
+  <div class="max-w-3xl">
+    <p class="text-indigo-600 text-xs font-semibold uppercase tracking-wide mb-3">Data Usage · Streaming</p>
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">How Much Data Does Netflix Use? Real Per-Hour Numbers</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      Every article on this question reprints the same four official numbers and stops. This page goes further: what those "up to" figures actually mean (independent tests sometimes measure <em>above</em> them), the per-episode and per-season tables the official docs don't provide, a calculator that turns your household's watching habits into a monthly GB figure against your cap, and the one-line math that lets you verify every number here yourself.
+    </p>
+
+    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-white border-l-4 border-indigo-500">
+      <p class="text-sm text-gray-700">By <a href="/about-us/" class="text-indigo-600 font-semibold hover:underline">Editorial Team</a></p>
+      <p class="text-sm text-gray-500 mt-1">📅 <strong class="text-gray-600">Published:</strong> August 2, 2026 &nbsp;|&nbsp; 🔄 <strong class="text-gray-600">Last reviewed:</strong> August 2, 2026</p>
+      <p class="text-sm text-gray-500 mt-1">
+        ✓ <strong class="text-gray-600">Fact-checked:</strong> figures follow Netflix's own
+        <a href="https://help.netflix.com/en/node/87" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">data usage documentation</a> and
+        <a href="https://help.netflix.com/en/node/306" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">speed recommendations</a>, cross-checked against independent measurements ·
+        <a href="/methodology/" class="text-indigo-600 hover:underline">methodology</a>
+      </p>
+    </div>
+
+    <details class="mt-4 premium-card overflow-hidden group">
+      <summary class="flex justify-between items-center gap-4 p-5 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+        <span>📝 Table of Contents</span>
+        <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </summary>
+      <ol class="px-6 pb-5 text-sm text-gray-600 space-y-1.5 list-decimal list-inside">
+        {toc.map(([href, label]) => (
+          <li><a href={href} class="text-indigo-600 hover:underline">{label}</a></li>
+        ))}
+      </ol>
+    </details>
+  </div>
+
+  <!-- Quick answer -->
+  <article class="premium-card mt-10" id="quick-answer">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Quick Answer</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">Netflix uses between 0.3 and 7 GB per hour, set almost entirely by picture quality.</strong> The official per-hour figures: <strong>~0.3 GB on Low, ~0.7 GB in SD, up to 3 GB in HD, up to 7 GB in 4K</strong>. Screen size doesn't matter; quality setting and plan tier do. At typical evening doses that's anywhere from "rounding error" (SD) to <strong>~420 GB a month</strong> (two 4K hours daily) — a third of a common 1.2 TB home cap.
+        </p>
+      </div>
+    </div>
+  </article>
+
+  <!-- Per hour table -->
+  <article class="premium-card mt-8" id="per-hour">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Per Hour, Per Episode, Per Movie, Per Season</h2>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Netflix data usage by quality level per hour, episode, movie and season</caption>
+          <thead><tr><th>Quality</th><th>Per hour</th><th>45-min episode</th><th>2-hour movie</th><th>8-episode season</th></tr></thead>
+          <tbody>
+            {usageRows.map(([q, hr, ep, mv, se]) => (
+              <tr><td class="font-semibold text-gray-800">{q}</td><td class="text-indigo-600 font-semibold">{hr}</td><td class="text-gray-600">{ep}</td><td class="text-gray-600">{mv}</td><td class="text-gray-600">{se}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Episode/movie/season columns are computed from the hourly ceilings (45 min = 0.75 h; season = 8 × 45 min = 6 h), which the official documentation doesn't break out — they're the numbers you actually budget with. Note the jump: <strong>HD is four times SD, and 4K is more than double HD</strong>. Quality choice isn't a nudge on your data bill; it's the whole bill.
+      </p>
+    </div>
+  </article>
+
+  <!-- Up-to trap -->
+  <article class="premium-card mt-8" id="up-to-trap">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The "Up To" Trap: Ceilings Aren't Typicals — and Sometimes Aren't Ceilings</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        Netflix streams with variable bitrate: a quiet animated scene needs far fewer bits than rain-soaked handheld action, so two "4K hours" can bill very differently. The official "up to 3 / up to 7" figures are planning ceilings for typical content — but <a href="https://www.androidauthority.com/how-much-data-does-netflix-use-976146/" rel="noopener" target="_blank" class="text-indigo-600 hover:underline font-medium">independent measurements</a> have recorded 4K titles ranging from roughly <strong>6.5 GB to 11 GB per hour</strong>, above the quoted ceiling on demanding content.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        The practical rule this page uses: <strong>budget at the official ceiling, and add ~20% margin if you're near a hard cap with 4K habits</strong>. Under-budgeting a data cap costs overage fees or a throttled month; over-budgeting costs nothing. (This is the same honesty rule we apply to speed claims — advertised numbers are ceilings there too.)
+      </p>
+    </div>
+  </article>
+
+  <!-- Budget calculator -->
+  <section class="premium-card mt-8" id="budget">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">Your Monthly Netflix Data Budget</h2>
+      <p class="text-gray-500 mb-6">Pick quality and daily watching; see the month's total against a 1.2 TB home cap and a 50 GB hotspot plan.</p>
+
+      <div class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-rose-50 via-white to-indigo-50 border-2 border-gray-100">
+        <p class="text-sm font-semibold text-gray-700 mb-2">Quality</p>
+        <div class="flex flex-wrap gap-2 mb-5" aria-label="Quality setting">
+          <button class="nb-chip nb-q px-4 py-1.5 rounded-full border border-rose-200 bg-rose-50 text-rose-700 text-sm font-semibold hover:bg-rose-100 transition-colors" data-g="0.3">📱 Low</button>
+          <button class="nb-chip nb-q px-4 py-1.5 rounded-full border border-rose-200 bg-rose-50 text-rose-700 text-sm font-semibold hover:bg-rose-100 transition-colors" data-g="0.7">📺 SD</button>
+          <button class="nb-chip nb-q px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold" data-g="3">🎬 HD</button>
+          <button class="nb-chip nb-q px-4 py-1.5 rounded-full border border-rose-200 bg-rose-50 text-rose-700 text-sm font-semibold hover:bg-rose-100 transition-colors" data-g="7">✨ 4K</button>
+        </div>
+        <p class="text-sm font-semibold text-gray-700 mb-2">Hours watched per day (household total)</p>
+        <div class="flex flex-wrap gap-2 mb-6" aria-label="Hours per day">
+          <button class="nb-chip nb-h px-4 py-1.5 rounded-full border border-rose-200 bg-rose-50 text-rose-700 text-sm font-semibold hover:bg-rose-100 transition-colors" data-h="0.75">One episode</button>
+          <button class="nb-chip nb-h px-4 py-1.5 rounded-full border border-rose-200 bg-rose-50 text-rose-700 text-sm font-semibold hover:bg-rose-100 transition-colors" data-h="1">1 h</button>
+          <button class="nb-chip nb-h px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold" data-h="2">2 h</button>
+          <button class="nb-chip nb-h px-4 py-1.5 rounded-full border border-rose-200 bg-rose-50 text-rose-700 text-sm font-semibold hover:bg-rose-100 transition-colors" data-h="4">4 h</button>
+          <button class="nb-chip nb-h px-4 py-1.5 rounded-full border border-rose-200 bg-rose-50 text-rose-700 text-sm font-semibold hover:bg-rose-100 transition-colors" data-h="6">6 h</button>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-white border-2 border-indigo-100 mb-4">
+          <p class="text-xs font-semibold uppercase tracking-wide text-indigo-500 mb-1">Monthly total (30 days)</p>
+          <p id="nb-total" class="text-3xl font-extrabold text-indigo-600">180 GB</p>
+          <p id="nb-detail" class="text-gray-500 text-sm mt-1">HD · 2 h/day · up to 3 GB/hour</p>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-gray-700">🏠 vs 1.2 TB home cap</span><span id="nb-cap-pct" class="text-gray-600 font-semibold">15%</span></div>
+            <div class="h-5 rounded-full bg-white border border-gray-200 overflow-hidden"><div id="nb-cap-bar" class="h-full rounded-full bg-gradient-to-r from-teal-400 to-teal-500 transition-all duration-500" style="width: 15%"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-gray-700">📡 vs 50 GB hotspot plan</span><span id="nb-hs-pct" class="text-gray-600 font-semibold">360%</span></div>
+            <div class="h-5 rounded-full bg-white border border-gray-200 overflow-hidden"><div id="nb-hs-bar" class="h-full rounded-full bg-gradient-to-r from-rose-400 to-rose-500 transition-all duration-500" style="width: 100%"></div></div>
+          </div>
+        </div>
+        <p id="nb-note" class="text-gray-700 text-sm mt-5 p-4 rounded-2xl bg-white border border-gray-100">At this pace Netflix alone uses <strong>180 GB — 15% of a 1.2 TB cap</strong>: comfortable at home, but it would blow through a 50 GB hotspot plan in under 9 days.</p>
+        <p class="text-gray-400 text-xs mt-3">Uses official per-hour ceilings (conservative for HD/4K). 30-day month. Caps vary — check your plan's actual allowance.</p>
+      </div>
+      <p class="text-gray-600 leading-relaxed mt-6">
+        Two levers matter more than everything else combined: <strong>quality setting</strong> (SD→4K is a 10× multiplier) and <strong>who else is watching</strong> (each simultaneous stream bills separately — two profiles in 4K is 14 GB/hour). Capacity is the other half of streaming planning; whether your connection can carry those simultaneous streams in real time is the <a href="/tools/bandwidth-calculator/" class="text-indigo-600 hover:underline font-medium">bandwidth calculator</a>'s job.
+      </p>
+    </div>
+  </section>
+
+  <!-- Math -->
+  <article class="premium-card mt-8" id="math">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Check the Math Yourself</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        None of these figures require trust — they're checkable with one conversion: <strong>GB per hour = bitrate (Mbps) × 0.45</strong>, because a megabit-per-second sustained for 3,600 seconds is 450 MB.
+      </p>
+      <div class="p-6 rounded-2xl bg-gradient-to-br from-teal-50 via-white to-indigo-50 border-2 border-gray-100 mb-6 text-center">
+        <p class="text-gray-700 font-mono text-sm md:text-base">Netflix 4K needs ~15 Mbps → 15.6 Mbps × 0.45 ≈ 7 GB/hour ✓</p>
+        <p class="text-gray-400 text-xs my-2">the official speed recommendation and the official data figure describe the same stream</p>
+        <p class="text-indigo-600 font-mono font-bold text-sm md:text-base">HD: ~6.7 Mbps × 0.45 ≈ 3 GB/hour ✓ &nbsp;·&nbsp; SD: ~1.6 Mbps × 0.45 ≈ 0.7 GB/hour ✓</p>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        This is also your tool for any service this site hasn't covered yet: find its recommended speed, multiply by 0.45, and you have its GB-per-hour. (We've run the full exercise for <a href="/data-usage/youtube/" class="text-indigo-600 hover:underline font-medium">YouTube</a> — which publishes no data figures at all, and out-consumes Netflix at 4K.) The bitrate↔bytes relationship underneath is the same one behind every page here — see the <a href="/converters/mbps-to-mbs/" class="text-indigo-600 hover:underline font-medium">Mbps to MB/s converter</a> for the fundamental conversion.
+      </p>
+    </div>
+  </article>
+
+  <!-- Settings -->
+  <article class="premium-card mt-8" id="settings">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Every Setting That Controls Netflix Data</h2>
+      <div class="space-y-4 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-1">🌐 Per profile, all devices (the big one)</h3>
+          <p class="text-gray-500 text-sm">On the website: Account → select the profile → <strong>Playback settings</strong> → Low / Medium / High / Auto. This governs TVs and browsers. "Auto" climbs as high as your plan and connection allow — set Medium here and a 4K TV streams in SD, cutting usage ~10×.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100">
+          <h3 class="font-semibold text-gray-900 mb-1">📱 Mobile app, cellular only</h3>
+          <p class="text-gray-500 text-sm">App → Settings → <strong>Cellular Data Usage</strong>: Automatic (~4 hours per GB), <strong>Save Data (~6 hours per GB)</strong>, Maximum Data (full quality — unlimited plans only), or Wi-Fi Only. This setting affects cellular streaming only; Wi-Fi follows the profile playback setting above.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100">
+          <h3 class="font-semibold text-gray-900 mb-1">💳 Plan tier (the hidden ceiling)</h3>
+          <p class="text-gray-500 text-sm">4K requires the Premium plan; lower tiers cap at HD or below regardless of settings. If your plan can't stream 4K, the 7 GB/hour scenario simply can't happen to you — useful to know before blaming the TV for a big data month.</p>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        One myth to retire: autoplaying previews and the browse interface do use data (previews are short video streams), but next to actual watching they're minor. If you want them gone anyway, the same Playback settings page has the autoplay toggles.
+      </p>
+    </div>
+  </article>
+
+  <!-- Downloads -->
+  <article class="premium-card mt-8" id="downloads">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Downloads: the Cellular Cheat Code</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        Downloading a title costs roughly the same data as streaming it once at the chosen download quality — but you choose <em>when and on which network</em> that cost lands. Download a season on home Wi-Fi (where it's a rounding error against a 1.2 TB cap) and the commute viewing costs your cellular plan <strong>zero</strong>. Playback of downloaded content uses no data at all.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        Two settings decide whether this works for or against you: download quality (Standard vs Higher — Higher roughly doubles the size) and <strong>Smart Downloads</strong>, which auto-fetches next episodes; keep it on Wi-Fi-only unless your cellular plan is truly unlimited. How long a download takes at your speed is the <a href="/tools/download-time-calculator/" class="text-indigo-600 hover:underline font-medium">download time calculator</a>'s department — a ~2.3 GB HD episode lands in about 3 minutes at 100 Mbps.
+      </p>
+    </div>
+  </article>
+
+  <!-- Hotspot -->
+  <article class="premium-card mt-8" id="hotspot">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Netflix on a Hotspot or Travel Plan: the Survival Table</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        Hotspots, travel eSIMs and fixed-wireless plans measure in tens of GB, where Netflix's quality multiplier becomes brutal. What a 50 GB allowance actually buys:
+      </p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Hours of Netflix per 50 GB data allowance by quality</caption>
+          <thead><tr><th>Setting</th><th>50 GB lasts</th><th>Per evening (2 h/day)</th></tr></thead>
+          <tbody>
+            <tr><td class="font-semibold text-gray-800">Save Data (app, ~1 GB / 6 h)</td><td class="text-teal-600 font-bold">~300 hours</td><td class="text-gray-600">The whole month, easily</td></tr>
+            <tr><td class="font-semibold text-gray-800">Low (~0.3 GB / h)</td><td class="text-teal-600 font-semibold">~165 hours</td><td class="text-gray-600">The whole month</td></tr>
+            <tr><td class="font-semibold text-gray-800">SD (~0.7 GB / h)</td><td class="text-gray-600">~71 hours</td><td class="text-gray-600">~35 days — just fits</td></tr>
+            <tr><td class="font-semibold text-gray-800">HD (up to 3 GB / h)</td><td class="text-amber-600 font-semibold">~16 hours</td><td class="text-amber-600">Gone in ~8 days</td></tr>
+            <tr><td class="font-semibold text-gray-800">4K (up to 7 GB / h)</td><td class="text-rose-600 font-bold">~7 hours</td><td class="text-rose-600">Gone in ~3.5 days</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The playbook for capped connections: set the app to <strong>Save Data</strong>, set the profile's playback setting to <strong>Medium</strong> so a connected TV can't quietly stream HD, and pre-download on real Wi-Fi whenever you pass some. (What the rest of your apps do to the same allowance: <a href="/data-usage/how-long-does-10gb-last/" class="text-indigo-600 hover:underline font-medium">how long any GB plan really lasts</a>.) On these plans, one forgotten "Auto" setting on a hotel-room TV evening can cost a third of the month's allowance.
+      </p>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12" id="faqs">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers on Netflix data usage</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'Bandwidth Calculator',
+        url: '/tools/bandwidth-calculator/',
+        description: 'Volume is this page; speed is that one — can your line carry the streams at once?',
+        icon: '📶',
+      },
+      {
+        name: 'Download Time Calculator',
+        url: '/tools/download-time-calculator/',
+        description: 'How long a season download takes at your real speed.',
+        icon: '⏱️',
+      },
+      {
+        name: 'Is 100 Mbps Good?',
+        url: '/internet-speed/is-100-mbps-good/',
+        description: 'The speed-side verdict — stress-test your evening against your plan.',
+        icon: '⚖️',
+      },
+    ]}
+  />
+
+  <!-- Budget calculator logic -->
+  <script is:inline>
+    const nbState = { g: 3, h: 2 };
+    const $nbTotal = document.getElementById("nb-total");
+    const $nbDetail = document.getElementById("nb-detail");
+    const $nbCapPct = document.getElementById("nb-cap-pct");
+    const $nbCapBar = document.getElementById("nb-cap-bar");
+    const $nbHsPct = document.getElementById("nb-hs-pct");
+    const $nbHsBar = document.getElementById("nb-hs-bar");
+    const $nbNote = document.getElementById("nb-note");
+    const qName = { "0.3": "Low", "0.7": "SD", "3": "HD", "7": "4K" };
+    const qHr = { "0.3": "~0.3 GB/hour", "0.7": "~0.7 GB/hour", "3": "up to 3 GB/hour", "7": "up to 7 GB/hour" };
+
+    const nbRender = () => {
+      const total = nbState.g * nbState.h * 30;
+      const capPct = (total / 1200) * 100;
+      const hsPct = (total / 50) * 100;
+      const totalTxt = total >= 100 ? Math.round(total) + " GB" : total.toFixed(1) + " GB";
+      $nbTotal.textContent = totalTxt;
+      $nbDetail.textContent = `${qName[nbState.g]} · ${nbState.h} h/day · ${qHr[nbState.g]}`;
+      $nbCapPct.textContent = capPct >= 100 ? "OVER the cap" : Math.round(capPct) + "%";
+      $nbCapBar.style.width = Math.min(100, capPct) + "%";
+      $nbCapBar.className = "h-full rounded-full transition-all duration-500 bg-gradient-to-r " + (capPct > 70 ? "from-rose-400 to-rose-500" : capPct > 35 ? "from-amber-400 to-amber-500" : "from-teal-400 to-teal-500");
+      $nbHsPct.textContent = hsPct >= 100 ? Math.round(hsPct) + "% (blown)" : Math.round(hsPct) + "%";
+      $nbHsBar.style.width = Math.min(100, hsPct) + "%";
+      $nbHsBar.className = "h-full rounded-full transition-all duration-500 bg-gradient-to-r " + (hsPct > 90 ? "from-rose-400 to-rose-500" : hsPct > 50 ? "from-amber-400 to-amber-500" : "from-teal-400 to-teal-500");
+      let tail;
+      if (hsPct <= 100 && capPct < 10) tail = `trivial at home and it even fits a 50 GB hotspot plan with ${Math.round(50 - total)} GB to spare.`;
+      else if (capPct < 10) tail = "a rounding error on a home cap — but a 50 GB hotspot plan would run out in " + Math.max(1, Math.round(50 / (nbState.g * nbState.h))) + " days.";
+      else if (capPct < 35) tail = "noticeable but comfortable on a 1.2 TB home cap; on a 50 GB hotspot plan it would last about " + Math.max(1, Math.round(50 / (nbState.g * nbState.h))) + " days.";
+      else if (capPct < 100) tail = "a serious share of a 1.2 TB cap — worth planning the rest of the household's usage around it.";
+      else tail = "more than a 1.2 TB cap on its own — this pace requires an unlimited plan or a lower quality setting.";
+      $nbNote.innerHTML = `At this pace Netflix alone uses <strong>${totalTxt} — ${Math.round(capPct)}% of a 1.2 TB cap</strong>: ${tail}`;
+    };
+
+    const nbActive = "px-4 py-1.5 rounded-full border-2 border-indigo-400 bg-white text-indigo-600 text-sm font-semibold";
+    const nbIdle = "px-4 py-1.5 rounded-full border border-rose-200 bg-rose-50 text-rose-700 text-sm font-semibold hover:bg-rose-100 transition-colors";
+
+    document.querySelectorAll(".nb-q").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll(".nb-q").forEach((c) => (c.className = "nb-chip nb-q " + nbIdle));
+        chip.className = "nb-chip nb-q " + nbActive;
+        nbState.g = Number(chip.dataset.g);
+        nbRender();
+      });
+    });
+    document.querySelectorAll(".nb-h").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll(".nb-h").forEach((c) => (c.className = "nb-chip nb-h " + nbIdle));
+        chip.className = "nb-chip nb-h " + nbActive;
+        nbState.h = Number(chip.dataset.h);
+        nbRender();
+      });
+    });
+  </script>
+</Layout>

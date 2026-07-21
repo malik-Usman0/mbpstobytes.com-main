@@ -1,0 +1,418 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'Bits to Bytes Converter – 8 Bits = 1 Byte, Both Ways';
+const description =
+  'Convert bits to bytes instantly: divide by 8 — 1,000 bits = 125 bytes. With an interactive byte builder, the b-vs-B notation table, and why a byte is 8 bits.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/converters/bits-to-bytes/`;
+
+const faqs = [
+  {
+    question: 'How many bits are in a byte?',
+    answer:
+      'Exactly 8. One byte = 8 bits, so bits ÷ 8 = bytes and bytes × 8 = bits. Examples: 64 bits = 8 bytes, 256 bits = 32 bytes, 1,000 bits = 125 bytes. This 8:1 ratio is fixed by international standard (IEC 80000-13) and is the root of every speed-vs-size confusion on the internet.',
+  },
+  {
+    question: 'Why is a byte 8 bits?',
+    answer:
+      'History plus convenience. Early computers used 6-, 7- and even 9-bit groupings, but IBM\'s System/360 (1964) standardized on 8 — big enough to hold one text character with room to spare, and a power of two, which binary hardware loves. The industry followed, and the 8-bit byte became universal. Networking standards still say "octet" when they need to be unambiguous about meaning exactly 8 bits.',
+  },
+  {
+    question: 'What is a nibble?',
+    answer:
+      'Half a byte: 4 bits. A nibble holds one hexadecimal digit (0–F), which is why hex is computing\'s favorite shorthand — every byte is exactly two hex digits (e.g., 01000001 = 0x41 = 65). The term is real and standard, if underused outside low-level programming.',
+  },
+  {
+    question: 'Is internet speed measured in bits or bytes?',
+    answer:
+      'Bits — always. Network speeds are quoted in bits per second (Kbps, Mbps, Gbps) while files and storage are measured in bytes (KB, MB, GB). That mismatch is why a 100 Mbps plan downloads at 12.5 MB/s: same information, one unit 8× the other. The lowercase b vs capital B is the entire difference.',
+  },
+  {
+    question: 'How many bytes is 1,000 bits?',
+    answer:
+      '125 bytes (1,000 ÷ 8). Scaled up, the same arithmetic gives the internet\'s most useful conversion: 1 megabit = 125 kilobytes, and 1 Mbps = 0.125 MB/s. Any time a speed in bits meets a file in bytes, divide by 8 and the units reconcile.',
+  },
+  {
+    question: 'Is 1 KB 1,000 bytes or 1,024 bytes?',
+    answer:
+      'By the standards: 1 KB (kilobyte) = 1,000 bytes, and 1 KiB (kibibyte) = 1,024 bytes. The two systems coexist — decimal for storage marketing and networking, binary for RAM and much of Windows\' reporting — and mixing them is the other great unit trap alongside bits-vs-bytes. Our GB vs GiB guide covers that split in full.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Converters', item: `${siteURL}/converters/` },
+    { '@type': 'ListItem', position: 3, name: 'Bits to Bytes Converter', item: pageURL },
+  ],
+};
+
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  '@id': `${pageURL}#webapplication`,
+  name: 'Bits to Bytes Converter',
+  url: pageURL,
+  description,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  inLanguage: 'en',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const commonValues = [
+  { bits: '8', bytes: '1', note: 'One byte — one text character', anchor: '8-bits' },
+  { bits: '32', bytes: '4', note: 'An IPv4 address', anchor: '32-bits' },
+  { bits: '64', bytes: '8', note: 'A modern CPU word', anchor: '64-bits' },
+  { bits: '256', bytes: '32', note: 'An AES-256 encryption key', anchor: '256-bits' },
+  { bits: '1,024', bytes: '128', note: 'A binary "round number"', anchor: '1024-bits' },
+  { bits: '1,000,000', bytes: '125,000', note: '1 megabit = 125 KB — the speed-trap ratio', anchor: '1-megabit' },
+];
+
+const notationRows = [
+  ['b', 'bit', 'The atom: one 0 or 1', 'Speeds: Kbps, Mbps, Gbps'],
+  ['B', 'byte', '8 bits — one character', 'Files & storage: KB, MB, GB'],
+  ['Kb / Mb / Gb', 'kilo/mega/gigabit', '1,000 / 10⁶ / 10⁹ bits', 'Network line rates'],
+  ['KB / MB / GB', 'kilo/mega/gigabyte', '1,000 / 10⁶ / 10⁹ bytes', 'File sizes, drives, plans'],
+  ['KiB / MiB / GiB', 'kibi/mebi/gibibyte', '1,024 / 1,024² / 1,024³ bytes', 'RAM, Windows reporting'],
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(webAppSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/converters/" class="hover:text-indigo-600 transition-colors">Converters</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">Bits to Bytes Converter</span>
+  </nav>
+
+  <div class="gap-8 grid grid-cols-1 lg:grid-cols-3">
+    <!-- Calculator -->
+    <section class="lg:col-span-2">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <div class="flex flex-wrap justify-between items-start gap-6 mb-8">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 rounded-full mb-3">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                <span class="text-indigo-600 text-xs font-semibold uppercase tracking-wide">Live Calculator</span>
+              </div>
+              <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">Bits to Bytes Converter</h1>
+              <p class="text-gray-500 text-base mt-3 max-w-lg leading-relaxed">
+                The foundation under every speed and size on this site: 8 bits make 1 byte. Convert both directions — then meet an actual byte below.
+              </p>
+            </div>
+            <div class="flex items-center gap-2 bg-gray-50 px-4 py-3 rounded-2xl border border-gray-100">
+              <span class="text-gray-500 text-sm font-medium">Decimals:</span>
+              <button id="dec-minus" class="w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold">−</button>
+              <div id="dec-value" class="w-9 h-9 flex items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-sm shadow-lg shadow-indigo-200">3</div>
+              <button id="dec-plus" class="w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-400 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-300 flex items-center justify-center font-bold">+</button>
+            </div>
+          </div>
+
+          <!-- Form -->
+          <div class="gap-8 grid md:grid-cols-2">
+            <div class="space-y-3">
+              <label for="bits" class="block text-gray-700 text-sm font-semibold">Bits (b)</label>
+              <div class="relative">
+                <input id="bits" inputmode="decimal" placeholder="Enter bits" class="glow-input pr-14" value="1000" />
+                <div class="absolute right-5 top-1/2 -translate-y-1/2 text-teal-500 font-bold text-sm">b</div>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">The unit of transmission — network speeds count these.</p>
+            </div>
+            <div class="space-y-3">
+              <label for="bytes" class="block text-gray-700 text-sm font-semibold">Bytes (B)</label>
+              <div class="relative">
+                <input id="bytes" inputmode="decimal" placeholder="Enter bytes" class="glow-input pr-14" value="125" />
+                <div class="absolute right-5 top-1/2 -translate-y-1/2 text-amber-500 font-bold text-sm">B</div>
+              </div>
+              <p class="text-gray-400 text-xs leading-relaxed">The unit of storage — files and drives count these.</p>
+            </div>
+          </div>
+
+          <!-- Preset chips -->
+          <div class="flex flex-wrap items-center gap-2 mt-6" aria-label="Common values">
+            <span class="text-gray-400 text-xs font-medium mr-1">Try:</span>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-bits="8">8 b</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-bits="64">64 b</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-bits="256">256 b</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-bits="1024">1,024 b</button>
+            <button class="preset-chip px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-sm font-semibold hover:bg-teal-100 transition-colors" data-bits="1000000">1 Mb</button>
+          </div>
+
+          <p class="text-gray-400 text-xs mt-6">Formula: bytes = bits ÷ 8 · bits = bytes × 8. Both fields editable. For rates (Mbps ↔ MB/s), use the <a href="/converters/mbps-to-mbs/" class="text-indigo-600 hover:underline">Mbps to MB/s converter</a> — same ÷8, applied per second.</p>
+        </div>
+      </div>
+
+      <!-- Byte builder -->
+      <section class="premium-card mt-8" id="byte-builder">
+        <div class="premium-card-inner">
+          <h2 class="font-bold text-2xl text-gray-900 mb-2">The Byte Builder: Meet an Actual Byte</h2>
+          <p class="text-gray-500 mb-6">A byte is just 8 switches. Flip them and watch one byte take every value a byte can hold.</p>
+          <div class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-indigo-50 via-white to-teal-50 border-2 border-gray-100">
+            <div class="flex justify-center gap-1.5 sm:gap-2 mb-6" role="group" aria-label="Eight toggleable bits">
+              <button class="bb-bit w-9 h-12 sm:w-11 sm:h-14 rounded-xl border-2 border-gray-200 bg-white text-gray-300 font-mono font-bold text-lg transition-all" data-pos="7" aria-pressed="false">0</button>
+              <button class="bb-bit w-9 h-12 sm:w-11 sm:h-14 rounded-xl border-2 border-indigo-400 bg-indigo-500 text-white font-mono font-bold text-lg shadow-lg shadow-indigo-200 transition-all" data-pos="6" aria-pressed="true">1</button>
+              <button class="bb-bit w-9 h-12 sm:w-11 sm:h-14 rounded-xl border-2 border-gray-200 bg-white text-gray-300 font-mono font-bold text-lg transition-all" data-pos="5" aria-pressed="false">0</button>
+              <button class="bb-bit w-9 h-12 sm:w-11 sm:h-14 rounded-xl border-2 border-gray-200 bg-white text-gray-300 font-mono font-bold text-lg transition-all" data-pos="4" aria-pressed="false">0</button>
+              <button class="bb-bit w-9 h-12 sm:w-11 sm:h-14 rounded-xl border-2 border-gray-200 bg-white text-gray-300 font-mono font-bold text-lg transition-all" data-pos="3" aria-pressed="false">0</button>
+              <button class="bb-bit w-9 h-12 sm:w-11 sm:h-14 rounded-xl border-2 border-gray-200 bg-white text-gray-300 font-mono font-bold text-lg transition-all" data-pos="2" aria-pressed="false">0</button>
+              <button class="bb-bit w-9 h-12 sm:w-11 sm:h-14 rounded-xl border-2 border-gray-200 bg-white text-gray-300 font-mono font-bold text-lg transition-all" data-pos="1" aria-pressed="false">0</button>
+              <button class="bb-bit w-9 h-12 sm:w-11 sm:h-14 rounded-xl border-2 border-indigo-400 bg-indigo-500 text-white font-mono font-bold text-lg shadow-lg shadow-indigo-200 transition-all" data-pos="0" aria-pressed="true">1</button>
+            </div>
+            <div class="flex justify-center gap-1.5 sm:gap-2 mb-6 text-gray-400 text-[10px] sm:text-xs font-mono" aria-hidden="true">
+              <span class="w-9 sm:w-11 text-center">128</span><span class="w-9 sm:w-11 text-center">64</span><span class="w-9 sm:w-11 text-center">32</span><span class="w-9 sm:w-11 text-center">16</span><span class="w-9 sm:w-11 text-center">8</span><span class="w-9 sm:w-11 text-center">4</span><span class="w-9 sm:w-11 text-center">2</span><span class="w-9 sm:w-11 text-center">1</span>
+            </div>
+            <div class="grid sm:grid-cols-3 gap-4">
+              <div class="p-4 rounded-2xl bg-white border border-gray-100 text-center">
+                <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">Decimal</p>
+                <p id="bb-dec" class="text-2xl font-extrabold text-indigo-600">65</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-white border border-gray-100 text-center">
+                <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">Hex</p>
+                <p id="bb-hex" class="text-2xl font-extrabold text-teal-600">0x41</p>
+              </div>
+              <div class="p-4 rounded-2xl bg-white border border-gray-100 text-center">
+                <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">As ASCII text</p>
+                <p id="bb-ascii" class="text-2xl font-extrabold text-purple-600">"A"</p>
+              </div>
+            </div>
+            <p id="bb-note" class="text-gray-400 text-xs mt-4 text-center">01000001 — the letter "A". Eight on/off switches, 256 possible values (0–255): that's all a byte is.</p>
+          </div>
+          <p class="text-gray-600 leading-relaxed mt-6">
+            This is why the byte, not the bit, became storage's unit: one byte holds one character of text, so file sizes in bytes roughly meant "how many characters fit." And with 8 bits giving 2⁸ = <strong>256 combinations</strong>, two hexadecimal digits describe any byte exactly — the reason low-level computing is written in hex.
+          </p>
+        </div>
+      </section>
+
+      <!-- Why 8 -->
+      <article class="premium-card mt-8">
+        <div class="premium-card-inner">
+          <h2 class="font-bold text-2xl text-gray-900 mb-6">Why 8 Bits? The Short, True History</h2>
+          <p class="text-gray-600 leading-relaxed mb-4">
+            Nothing in physics demands 8. Early machines grouped bits in sixes, sevens and nines — a "byte" originally meant whatever chunk a machine chewed per step. The consolidation came with <strong>IBM's System/360 in 1964</strong>, which committed to 8-bit bytes: enough to hold any character of the era's 7-bit ASCII with a bit to spare, and a power of two, which binary addressing handles elegantly. The 360's dominance made 8 the industry default, microprocessors inherited it, and by the 1970s the 8-bit byte was simply what "byte" meant. The standards later made it official — IEC 80000-13 defines the byte as 8 bits.
+          </p>
+          <p class="text-gray-600 leading-relaxed">
+            One fossil of the ambiguous era survives: networking RFCs say <strong>"octet"</strong> instead of "byte" precisely because, when the internet's protocols were written, a "byte" wasn't yet reliably 8 bits everywhere. Same unit, lawyer-proof name.
+          </p>
+        </div>
+      </article>
+
+      <!-- Notation table -->
+      <article class="premium-card mt-8">
+        <div class="premium-card-inner">
+          <h2 class="font-bold text-2xl text-gray-900 mb-6">b vs B: the Notation Table That Prevents Every Trap</h2>
+          <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+            <table class="luxury-table">
+              <caption class="sr-only">Bit and byte notation with meanings and where each is used</caption>
+              <thead><tr><th>Symbol</th><th>Unit</th><th>Meaning</th><th>Where you see it</th></tr></thead>
+              <tbody>
+                {notationRows.map(([sym, unit, meaning, where]) => (
+                  <tr><td class="font-mono font-bold text-indigo-600">{sym}</td><td class="font-semibold text-gray-800">{unit}</td><td class="text-gray-600">{meaning}</td><td class="text-gray-600">{where}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p class="text-gray-600 leading-relaxed">
+            The two traps live on different axes. <strong>Case</strong> (b vs B) is the 8× trap: speeds arrive in bits, files in bytes, and one letter separates them — dissected in <a href="/learn/mbps-vs-mbps/" class="text-indigo-600 hover:underline font-medium">Mbps vs MB/s</a>. <strong>Prefix system</strong> (K vs Ki) is the 1,000-vs-1,024 trap: decimal versus binary counting — dissected in <a href="/learn/gb-vs-gib/" class="text-indigo-600 hover:underline font-medium">GB vs GiB</a>. Every confusing number on the internet is one of these two, and this table disarms both.
+          </p>
+        </div>
+      </article>
+
+      <!-- Where each lives -->
+      <article class="premium-card mt-8">
+        <div class="premium-card-inner">
+          <h2 class="font-bold text-2xl text-gray-900 mb-6">Why Speeds Use Bits but Files Use Bytes</h2>
+          <p class="text-gray-600 leading-relaxed mb-4">
+            Not marketing mischief — engineering lineage. Transmission systems (telegraph → modem → fiber) move <strong>one signal at a time</strong>, so their natural meter is bits per second; the telecom world has counted that way since before computers had files. Storage systems organize data into <strong>addressable chunks</strong>, and the byte-per-character convention made bytes the natural ledger for files, memory and drives.
+          </p>
+          <p class="text-gray-600 leading-relaxed">
+            The result: your plan is sold in megabits per second, your download arrives in megabytes — same information, units 8× apart, division by 8 in between. That single divide powers this site's flagship: the <a href="/" class="text-indigo-600 hover:underline font-medium">Mbps to Bytes converter</a> for speeds, with the reverse direction in <a href="/converters/bytes-to-mbps/" class="text-indigo-600 hover:underline font-medium">Bytes to Mbps</a>.
+          </p>
+        </div>
+      </article>
+
+      <!-- Common values -->
+      <article class="premium-card mt-8">
+        <div class="premium-card-inner">
+          <h2 class="font-bold text-2xl text-gray-900 mb-6">Common Bits to Bytes Values</h2>
+          <div class="grid sm:grid-cols-2 gap-4">
+            {commonValues.map((v) => (
+              <div id={v.anchor} class="p-5 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:border-indigo-200 transition-colors">
+                <p class="font-bold text-gray-900"><span class="text-teal-600">{v.bits} bits</span> = <span class="text-indigo-600">{v.bytes} {v.bytes === '1' ? 'byte' : 'bytes'}</span></p>
+                <p class="text-gray-500 text-sm mt-1">{v.note}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </article>
+
+      <!-- FAQs -->
+      <section class="mt-12" id="faqs">
+        <div class="text-center mb-8">
+          <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+          <p class="text-gray-500 text-sm mt-2">Quick answers on bits and bytes</p>
+        </div>
+        <div class="space-y-4">
+          {
+            faqs.map((faq) => (
+              <details class="group premium-card overflow-hidden">
+                <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+                  <span class="group-open:text-indigo-600">{faq.question}</span>
+                  <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                    <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+              </details>
+            ))
+          }
+        </div>
+      </section>
+    </section>
+
+    <!-- Sidebar -->
+    <aside class="space-y-6">
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <h2 class="font-bold text-lg text-gray-900 mb-4">Quick Reference</h2>
+          <div class="overflow-x-auto">
+            <table class="luxury-table text-sm">
+              <caption class="sr-only">Quick bits to bytes reference table</caption>
+              <thead><tr><th>Bits</th><th>Bytes</th></tr></thead>
+              <tbody>
+                <tr><td class="text-teal-600 font-semibold">1</td><td class="text-gray-600">0.125</td></tr>
+                <tr><td class="text-teal-600 font-semibold">8</td><td class="text-gray-600">1</td></tr>
+                <tr><td class="text-teal-600 font-semibold">16</td><td class="text-gray-600">2</td></tr>
+                <tr><td class="text-teal-600 font-semibold">32</td><td class="text-gray-600">4</td></tr>
+                <tr><td class="text-teal-600 font-semibold">64</td><td class="text-gray-600">8</td></tr>
+                <tr><td class="text-teal-600 font-semibold">128</td><td class="text-gray-600">16</td></tr>
+                <tr><td class="text-teal-600 font-semibold">512</td><td class="text-gray-600">64</td></tr>
+                <tr><td class="text-teal-600 font-semibold">1,024</td><td class="text-gray-600">128</td></tr>
+                <tr><td class="text-teal-600 font-semibold">1,000,000</td><td class="text-gray-600">125,000</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-gray-400 text-xs mt-4">bytes = bits ÷ 8, exactly — no standards dispute on this one.</p>
+        </div>
+      </div>
+
+      <div class="premium-card">
+        <div class="premium-card-inner">
+          <h2 class="font-bold text-lg text-gray-900 mb-3">The One-Line Rule</h2>
+          <p class="text-gray-500 text-sm leading-relaxed">
+            <strong class="text-gray-700">Little b counts signals; big B counts characters.</strong> Speeds travel in bits, files rest in bytes, and ÷8 is the bridge between every plan you buy and every download you watch.
+          </p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'Mbps vs MB/s Explained',
+        url: '/learn/mbps-vs-mbps/',
+        description: 'This page\'s ÷8, applied to speeds — the one-letter trap in full.',
+        icon: '🔤',
+      },
+      {
+        name: 'Bytes to Mbps Converter',
+        url: '/converters/bytes-to-mbps/',
+        description: 'The rate version of this conversion, with SI and IEC support.',
+        icon: '⇄',
+      },
+      {
+        name: 'GB vs GiB Explained',
+        url: '/learn/gb-vs-gib/',
+        description: 'The other axis of unit confusion: 1,000 vs 1,024.',
+        icon: '📖',
+      },
+    ]}
+  />
+
+  <!-- Converter + byte builder logic -->
+  <script is:inline>
+    const $bits = document.getElementById("bits");
+    const $bytes = document.getElementById("bytes");
+    const $decValue = document.getElementById("dec-value");
+    let decimals = 3;
+
+    const fmt = (n) => n.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: decimals });
+
+    const fromBits = () => {
+      const v = parseFloat($bits.value.replace(/,/g, ""));
+      $bytes.value = isFinite(v) ? fmt(v / 8) : "";
+    };
+    const fromBytes = () => {
+      const v = parseFloat($bytes.value.replace(/,/g, ""));
+      $bits.value = isFinite(v) ? fmt(v * 8) : "";
+    };
+
+    $bits.addEventListener("input", fromBits);
+    $bytes.addEventListener("input", fromBytes);
+
+    document.querySelectorAll(".preset-chip").forEach((chip) => {
+      chip.addEventListener("click", () => { $bits.value = chip.dataset.bits; fromBits(); });
+    });
+    document.getElementById("dec-minus").addEventListener("click", () => { decimals = Math.max(0, decimals - 1); $decValue.textContent = decimals; fromBits(); });
+    document.getElementById("dec-plus").addEventListener("click", () => { decimals = Math.min(6, decimals + 1); $decValue.textContent = decimals; fromBits(); });
+
+    // Byte builder
+    const bbBits = [0, 1, 0, 0, 0, 0, 0, 1]; // index 0 = MSB (pos 7) … "A"
+    const bbButtons = document.querySelectorAll(".bb-bit");
+    const $bbDec = document.getElementById("bb-dec");
+    const $bbHex = document.getElementById("bb-hex");
+    const $bbAscii = document.getElementById("bb-ascii");
+    const $bbNote = document.getElementById("bb-note");
+    const bbOn = "bb-bit w-9 h-12 sm:w-11 sm:h-14 rounded-xl border-2 border-indigo-400 bg-indigo-500 text-white font-mono font-bold text-lg shadow-lg shadow-indigo-200 transition-all";
+    const bbOff = "bb-bit w-9 h-12 sm:w-11 sm:h-14 rounded-xl border-2 border-gray-200 bg-white text-gray-300 font-mono font-bold text-lg transition-all";
+
+    const bbRender = () => {
+      let val = 0, bin = "";
+      bbBits.forEach((b, i) => { val = val * 2 + b; bin += b; });
+      $bbDec.textContent = val;
+      $bbHex.textContent = "0x" + val.toString(16).toUpperCase().padStart(2, "0");
+      const printable = val >= 32 && val <= 126;
+      $bbAscii.textContent = printable ? '"' + String.fromCharCode(val) + '"' : val < 32 ? "control" : "extended";
+      $bbNote.textContent = `${bin} — ${printable ? 'the character "' + String.fromCharCode(val) + '"' : "value " + val}. Eight on/off switches, 256 possible values (0–255): that's all a byte is.`;
+    };
+
+    bbButtons.forEach((btn, i) => {
+      btn.addEventListener("click", () => {
+        bbBits[i] = bbBits[i] ? 0 : 1;
+        btn.textContent = bbBits[i];
+        btn.className = bbBits[i] ? bbOn : bbOff;
+        btn.setAttribute("aria-pressed", bbBits[i] ? "true" : "false");
+        bbRender();
+      });
+    });
+  </script>
+</Layout>
