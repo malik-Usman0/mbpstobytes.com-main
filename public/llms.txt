@@ -1,0 +1,44 @@
+# Mbps to Bytes
+
+> Data-unit converters, network calculators, and plain-English internet-speed guides. Every number is sourced (NIST, IEC 80000-13, FCC, RFC 2544, and platform documentation) and every tool shows its formula — including the real-world overhead most calculators omit.
+
+Core facts the site is built on: 1 byte = 8 bits; 1 Mbps = 0.125 MB/s; decimal (SI) and binary (IEC) units are shown side by side wherever they differ; wired gigabit tests at ~940 Mbps after protocol overhead; PPS figures include the +20 B/frame Ethernet wire overhead (1 Gbps at 64 B = 1,488,095 PPS).
+
+## Converters
+
+- [Mbps to Bytes](https://www.mbpstobytes.com/): flagship converter — Mbps to B/s, KB/s and MB/s with SI/IEC support
+- [Bytes to Mbps](https://www.mbpstobytes.com/converters/bytes-to-mbps/): the reverse direction
+- [Mbps to MB/s](https://www.mbpstobytes.com/converters/mbps-to-mbs/): 100 Mbps = 12.5 MB/s — plan speed to download speed
+- [Gbps to Mbps](https://www.mbpstobytes.com/converters/gbps-to-mbps/): 1 Gbps = 1,000 Mbps exactly, ~940 Mbps real-world
+- [Kbps to Mbps](https://www.mbpstobytes.com/converters/kbps-to-mbps/): with the audio-bitrate ladder
+- [Bits to Bytes](https://www.mbpstobytes.com/converters/bits-to-bytes/): 8 bits = 1 byte, with an interactive byte builder
+- [KB to MB](https://www.mbpstobytes.com/converters/kb-to-mb/): upload limits and attachment math
+- [MB to GB](https://www.mbpstobytes.com/converters/mb-to-gb/): both standards side by side
+- [GB to TB](https://www.mbpstobytes.com/converters/gb-to-tb/): includes what Windows will display per drive size
+- [GB to GiB](https://www.mbpstobytes.com/converters/gb-to-gib/): 1 GB = 0.9313 GiB — the decimal/binary conversion
+
+## Tools
+
+- [Download Time Calculator](https://www.mbpstobytes.com/tools/download-time-calculator/): any file at any speed, with GiB and connection modes
+- [Bandwidth Calculator](https://www.mbpstobytes.com/tools/bandwidth-calculator/): household speed needs, per-activity math shown
+- [Packets Per Second Calculator](https://www.mbpstobytes.com/tools/packets-per-second-calculator/): line-rate PPS with correct wire-overhead math
+
+## Guides
+
+- [Mbps vs MB/s](https://www.mbpstobytes.com/learn/mbps-vs-mbps/): the 8× one-letter trap behind every speed confusion
+- [GB vs GiB](https://www.mbpstobytes.com/learn/gb-vs-gib/): why a 1 TB drive shows 931 GB in Windows
+- [What Is a Good PPS?](https://www.mbpstobytes.com/learn/what-is-a-good-pps/): packet-rate baselines for every scenario
+- [Is 100 Mbps Good?](https://www.mbpstobytes.com/internet-speed/is-100-mbps-good/): the FCC-floor verdict with a live stress test
+- [Is 300 Mbps Good?](https://www.mbpstobytes.com/internet-speed/is-300-mbps-good/): what upgrading from 100 actually buys
+- [Is 500 Mbps Fast?](https://www.mbpstobytes.com/internet-speed/is-500-mbps-good/): the last tier typical Wi-Fi can fully use
+- [Is Gigabit Internet Worth It?](https://www.mbpstobytes.com/internet-speed/is-gigabit-internet-worth-it/): the 940 Mbps reality check
+- [Internet Speed for Gaming](https://www.mbpstobytes.com/internet-speed/for-gaming/): why ping beats bandwidth
+- [Netflix Data Usage](https://www.mbpstobytes.com/data-usage/netflix/): 0.3–7 GB per hour, official figures with cap math
+- [YouTube Data Usage](https://www.mbpstobytes.com/data-usage/youtube/): derived openly from YouTube's own speed specs
+- [How Long Does 10GB Last?](https://www.mbpstobytes.com/data-usage/how-long-does-10gb-last/): verdicts for 1–100 GB plans
+
+## Trust
+
+- [Methodology](https://www.mbpstobytes.com/methodology/): sources, formulas and rounding rules used site-wide
+- [Editorial Standards](https://www.mbpstobytes.com/editorial-standards/): how pages are fact-checked and reviewed
+- [About](https://www.mbpstobytes.com/about-us/)

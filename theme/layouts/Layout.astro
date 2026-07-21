@@ -47,10 +47,14 @@ const pageURL = `${siteURL}${Astro.url.pathname}`;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Google tag (gtag.js) — placed immediately after head metas per Google guidance -->
+    <!-- Early connection hints — third-party connection setup off the critical path -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+
+    <!-- Google tag (gtag.js) — stub queues hits immediately; the library loads after window.load so it never competes with first paint. No data is lost. -->
     {
       config.site.google_analytics_id && (
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=G-${config.site.google_analytics_id}`} />
         <script
           is:inline
           set:html={`
@@ -58,6 +62,12 @@ const pageURL = `${siteURL}${Astro.url.pathname}`;
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-${config.site.google_analytics_id}');
+            window.addEventListener('load', function () {
+              var s = document.createElement('script');
+              s.async = true;
+              s.src = 'https://www.googletagmanager.com/gtag/js?id=G-${config.site.google_analytics_id}';
+              document.head.appendChild(s);
+            });
           `}
         />
       )
@@ -75,8 +85,25 @@ const pageURL = `${siteURL}${Astro.url.pathname}`;
 
     {config.site.yandex_verification && <meta name="yandex-verification" content={config.site.yandex_verification} />}
 
-    <!-- Google AdSense -->
-    {config.site.adsense_client && <script async is:inline src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${config.site.adsense_client}`} crossorigin="anonymous" />}
+    <!-- Google AdSense — injected ~0.8s after window.load so the heavy library never blocks first paint or interactivity. Revert to a plain async script tag only if AdSense site review ever requires immediate presence. -->
+    {
+      config.site.adsense_client && (
+        <script
+          is:inline
+          set:html={`
+            window.addEventListener('load', function () {
+              setTimeout(function () {
+                var s = document.createElement('script');
+                s.async = true;
+                s.crossOrigin = 'anonymous';
+                s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${config.site.adsense_client}';
+                document.head.appendChild(s);
+              }, 800);
+            });
+          `}
+        />
+      )
+    }
 
     <!-- robots (single consolidated tag — applies to all crawlers) -->
     <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />

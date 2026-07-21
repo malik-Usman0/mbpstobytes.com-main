@@ -1,0 +1,418 @@
+---
+import Layout from '@theme/layouts/Layout.astro';
+import RelatedTools from '@theme/components/RelatedTools.astro';
+
+const title = 'What Is a Good PPS? Real Numbers for Every Network';
+const description =
+  'A good PPS depends on context: ~2,000 PPS carries a 4K stream, ~81,000 fills gigabit at full size, 1.49M is the worst case. Baselines for every scenario.';
+
+const siteURL = 'https://www.mbpstobytes.com';
+const pageURL = `${siteURL}/learn/what-is-a-good-pps/`;
+const datePublished = '2026-08-10';
+
+const faqs = [
+  {
+    question: 'What is a good PPS for a home network?',
+    answer:
+      'Typical home traffic is far lighter than people expect: an idle house sits at tens of PPS, a 4K stream adds ~2,000, and a busy family evening rarely exceeds ~5,000–10,000 PPS. Consumer routers commonly handle tens of thousands of PPS of routed traffic, so at home "good PPS" is almost never your problem — until a torrent swarm, a misbehaving device, or an attack multiplies the packet count without touching the bandwidth graph.',
+  },
+  {
+    question: 'What PPS is 1 Gbps?',
+    answer:
+      'It depends entirely on packet size — that\'s the whole point of the metric. At line rate, 1 Gbps carries ~81,000 PPS of full-size (1,500-byte MTU) packets, ~327,000 PPS of a realistic IMIX traffic mix, and 1,488,095 PPS of worst-case 64-byte frames (wire overhead included). Same link, an 18× spread. Any single-number answer to this question is wrong.',
+  },
+  {
+    question: 'Why does my router struggle even though bandwidth is fine?',
+    answer:
+      'Because routers exhaust packets before they exhaust bits. Every packet costs a fixed amount of lookup/NAT/firewall work regardless of size, so a flood of small packets can peg the CPU at a fraction of the advertised bandwidth. A "gigabit" router speced with large frames may handle only a tenth of gigabit\'s worst-case packet rate. If bandwidth graphs look calm but everything lags, check the packet counters.',
+  },
+  {
+    question: 'What PPS can a typical router or switch actually forward?',
+    answer:
+      'Reported ranges, tier by tier: consumer home routers commonly forward ~10,000–100,000 PPS through NAT/firewall in software; well-tuned x86 firewalls (pfSense/OPNsense class) reach hundreds of thousands to ~1M+; hardware-ASIC switches forward at true line rate — 1.488 Mpps per gigabit port, 14.88 Mpps per 10G port; and untuned Linux servers typically start dropping around 1–3M PPS, while kernel-bypass stacks (DPDK/XDP) push 10–100M. Verify with an RFC 2544 test, not the box art.',
+  },
+  {
+    question: 'What PPS counts as a DDoS attack?',
+    answer:
+      'Packet floods are measured in millions of PPS precisely because small packets are the cheapest way to exhaust equipment: a SYN flood of ~40–60-byte packets can saturate a device\'s packet budget while barely registering in Mbps. There\'s no universal "attack threshold" — the working definition is a sustained packet rate far above your measured baseline, especially with uniform small packets. That\'s why knowing your normal PPS (see the measuring section) is the actual defense metric.',
+  },
+  {
+    question: 'How do I check my network\'s PPS?',
+    answer:
+      'Almost everything reports it. On Linux/macOS: watch interface packet counters (ip -s link, or netstat -i) over an interval — packets ÷ seconds = PPS. On routers: the interface statistics page or SNMP counters (ifInUcastPkts/ifOutUcastPkts). Sample at your busiest hour for a week and you have a real baseline — the number every "is this PPS good?" question is secretly asking for.',
+  },
+];
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteURL}/` },
+    { '@type': 'ListItem', position: 2, name: 'Learn', item: `${siteURL}/learn/` },
+    { '@type': 'ListItem', position: 3, name: 'What Is a Good PPS?', item: pageURL },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  '@id': `${pageURL}#article`,
+  headline: 'What Is a Good PPS? Real Numbers for Every Network',
+  description,
+  datePublished,
+  dateModified: datePublished,
+  author: { '@type': 'Organization', name: 'Mbps to Bytes Editorial Team', url: `${siteURL}/about-us/` },
+  publisher: { '@type': 'Organization', '@id': `${siteURL}#organization` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageURL },
+  image: `${siteURL}/images/og.png`,
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+
+const toc = [
+  ['#quick-answer', 'The Quick Answer'],
+  ['#pps-ruler', 'The PPS Ruler (Interactive)'],
+  ['#line-rate', 'Line-Rate Reference: What Each Link Can Carry'],
+  ['#normal-traffic', 'What Normal Traffic Actually Generates'],
+  ['#eighteen-x', 'The 18× Problem: Why "Gigabit" Gear Chokes'],
+  ['#hardware-tiers', 'What Hardware Really Forwards'],
+  ['#ddos', 'The DDoS Lens: PPS as an Attack Metric'],
+  ['#measure', 'How to Measure Your Own Baseline'],
+  ['#faqs', 'FAQs'],
+];
+
+// Line-rate PPS. Wire = frame + 20B (preamble 8 + IFG 12). IMIX: (7×64 + 4×594 + 1×1518)/12 = 362B avg frame.
+const lineRateRows = [
+  ['100 Mbps', '148,810', '~32,700', '8,127', '1,386'],
+  ['1 Gbps', '1,488,095', '~327,400', '81,274', '13,858'],
+  ['10 Gbps', '14,880,952', '~3,273,700', '812,744', '138,580'],
+];
+
+const rulerStops = [
+  { pps: 50, label: 'Idle home network', pos: 23, note: 'Background chatter — DNS, keepalives, smart-home pings. Tens of packets per second is a healthy quiet house.' },
+  { pps: 2032, label: 'One 4K stream', pos: 45, note: 'A 25 Mbps stream in full-size frames is only ~2,000 PPS — bulk traffic is packet-efficient because every packet is full.' },
+  { pps: 5000, label: 'Busy family evening', pos: 51, note: 'Streams, calls, gaming and browsing together typically sit in the low thousands of PPS. Consumer routers carry this comfortably.' },
+  { pps: 81274, label: '1 Gbps, full-size frames', pos: 67, note: 'A gigabit link completely saturated by downloads: ~81,000 PPS. This is the easy way to fill gigabit.' },
+  { pps: 1488095, label: '1 Gbps, worst case (64B)', pos: 85, note: 'The same gigabit filled with minimum-size packets: 1,488,095 PPS — 18× the packet work for identical bandwidth. The benchmark number for serious gear.' },
+  { pps: 14880952, label: '10 Gbps, worst case', pos: 98, note: '14.88 million PPS per 10G port — the rate line-speed ASICs are built for, and software routers are not.' },
+];
+---
+
+<Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <nav aria-label="Breadcrumb" class="mb-6 text-sm text-gray-400">
+    <a href="/" class="hover:text-indigo-600 transition-colors">Home</a>
+    <span class="mx-2">/</span>
+    <a href="/learn/" class="hover:text-indigo-600 transition-colors">Learn</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-600 font-medium">What Is a Good PPS?</span>
+  </nav>
+
+  <!-- Title + byline -->
+  <div class="max-w-3xl">
+    <p class="text-indigo-600 text-xs font-semibold uppercase tracking-wide mb-3">Learn · Network Performance</p>
+    <h1 class="font-extrabold text-3xl md:text-4xl text-gray-900 tracking-tight">What Is a Good PPS? Real Numbers for Every Network</h1>
+    <p class="text-gray-500 text-base mt-4 leading-relaxed">
+      Ask this question in a forum and you'll get "it depends" — true, and useless. This page supplies what "it depends" actually depends on: the packet rates real traffic generates (a 4K stream is ~2,000 PPS; a busy home rarely clears 10,000), the rates each link speed can physically carry (gigabit spans 81,000 to 1.49 million depending on packet size), what each tier of hardware can genuinely forward, and the baselines that separate "healthy," "undersized," and "under attack." Companion to our <a href="/tools/packets-per-second-calculator/" class="text-indigo-600 hover:underline font-medium">PPS calculator</a>, which computes any bandwidth/packet-size combination with correct wire-overhead math.
+    </p>
+
+    <div class="mt-6 p-5 rounded-2xl bg-gradient-to-r from-indigo-50 to-white border-l-4 border-indigo-500">
+      <p class="text-sm text-gray-700">By <a href="/about-us/" class="text-indigo-600 font-semibold hover:underline">Editorial Team</a></p>
+      <p class="text-sm text-gray-500 mt-1">📅 <strong class="text-gray-600">Published:</strong> August 10, 2026 &nbsp;|&nbsp; 🔄 <strong class="text-gray-600">Last reviewed:</strong> August 10, 2026</p>
+      <p class="text-sm text-gray-500 mt-1">
+        ✓ <strong class="text-gray-600">Fact-checked:</strong> line-rate math per Ethernet framing (IEEE 802.3, +20 B preamble/IFG per frame), benchmarking method per
+        <a href="https://datatracker.ietf.org/doc/html/rfc2544" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">RFC 2544</a>, metric definitions per
+        <a href="https://sec.cloudapps.cisco.com/security/center/resources/network_performance_metrics" rel="noopener" target="_blank" class="text-indigo-600 hover:underline">Cisco's network performance guidance</a>; hardware figures are reported ranges, labeled as such ·
+        <a href="/methodology/" class="text-indigo-600 hover:underline">methodology</a>
+      </p>
+    </div>
+
+    <details class="mt-4 premium-card overflow-hidden group">
+      <summary class="flex justify-between items-center gap-4 p-5 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+        <span>📝 Table of Contents</span>
+        <svg class="w-5 h-5 text-gray-400 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </summary>
+      <ol class="px-6 pb-5 text-sm text-gray-600 space-y-1.5 list-decimal list-inside">
+        {toc.map(([href, label]) => (
+          <li><a href={href} class="text-indigo-600 hover:underline">{label}</a></li>
+        ))}
+      </ol>
+    </details>
+  </div>
+
+  <!-- Quick answer -->
+  <article class="premium-card mt-10" id="quick-answer">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The Quick Answer: "Good PPS" Means Three Different Things</h2>
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border-l-4 border-indigo-500 mb-6">
+        <p class="text-lg text-gray-700">
+          <strong class="text-indigo-600">There is no single good PPS — there are three questions wearing one name.</strong> <strong>Capacity:</strong> can your gear forward your link's packet rate? (Gigabit's honest benchmark: 1,488,095 PPS at worst case.) <strong>Normality:</strong> is your traffic's packet rate typical? (Homes: thousands; a 4K stream ≈ 2,000.) <strong>Safety:</strong> is a packet rate far above baseline hitting you? (Floods are Mpps of tiny packets.) Decide which question you're asking, and every number below slots into place.
+        </p>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100 text-center">
+          <p class="text-xs font-semibold uppercase tracking-wide text-teal-600 mb-1">🏠 A normal home peaks at</p>
+          <p class="text-2xl font-extrabold text-gray-900">~5–10K</p>
+          <p class="text-gray-500 text-sm mt-1">PPS on a busy evening</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 text-center">
+          <p class="text-xs font-semibold uppercase tracking-wide text-indigo-600 mb-1">🔌 Gigabit line rate spans</p>
+          <p class="text-2xl font-extrabold text-gray-900">81K–1.49M</p>
+          <p class="text-gray-500 text-sm mt-1">PPS by packet size — an 18× spread</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-rose-50 to-white border border-rose-100 text-center">
+          <p class="text-xs font-semibold uppercase tracking-wide text-rose-600 mb-1">⚠️ Packet floods run</p>
+          <p class="text-2xl font-extrabold text-gray-900">Mpps</p>
+          <p class="text-gray-500 text-sm mt-1">of tiny packets — bandwidth graphs stay calm</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- PPS Ruler -->
+  <section class="premium-card mt-8" id="pps-ruler">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-2">The PPS Ruler</h2>
+      <p class="text-gray-500 mb-6">Packet rates span six orders of magnitude — a linear chart is useless. Walk the log scale instead: pick a scenario, see where it truly sits.</p>
+
+      <div class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-indigo-50 via-white to-teal-50 border-2 border-gray-100">
+        <div class="flex flex-wrap gap-2 mb-8" aria-label="PPS scenarios">
+          {rulerStops.map((s, i) => (
+            <button class={`pr-chip px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${i === 1 ? 'border-2 border-indigo-400 bg-white text-indigo-600' : 'border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100'}`} data-i={i}>{s.label}</button>
+          ))}
+        </div>
+
+        <div class="relative h-16 mb-2" role="img" aria-label="Logarithmic ruler of packets per second from 10 to 20 million">
+          <div class="absolute left-0 right-0 top-7 h-2 rounded-full bg-gradient-to-r from-teal-200 via-amber-200 to-rose-300"></div>
+          <div id="pr-marker" class="absolute top-0 -translate-x-1/2 transition-all duration-500" style="left: 45%">
+            <div class="flex flex-col items-center">
+              <span id="pr-value" class="text-indigo-600 font-extrabold text-sm whitespace-nowrap">~2,000 PPS</span>
+              <span class="w-0.5 h-5 bg-indigo-500"></span>
+              <span class="w-3 h-3 rounded-full bg-indigo-500 border-2 border-white shadow"></span>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-between text-[10px] sm:text-xs text-gray-400 font-mono mb-6" aria-hidden="true">
+          <span>10</span><span>100</span><span>1K</span><span>10K</span><span>100K</span><span>1M</span><span>10M+</span>
+        </div>
+
+        <p id="pr-note" class="text-gray-700 text-sm p-4 rounded-2xl bg-white border border-gray-100">A 25 Mbps stream in full-size frames is only ~2,000 PPS — bulk traffic is packet-efficient because every packet is full.</p>
+        <p class="text-gray-400 text-xs mt-3">Scale is logarithmic: each tick is 10× the last. Compute any bandwidth/packet-size point yourself in the <a href="/tools/packets-per-second-calculator/" class="text-indigo-600 hover:underline">PPS calculator</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Line rate -->
+  <article class="premium-card mt-8" id="line-rate">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">Line-Rate Reference: the Most PPS Each Link Can Carry</h2>
+      <p class="text-gray-600 leading-relaxed mb-6">
+        These are physical ceilings, not typicals — computed with the wire overhead (+20 bytes of preamble and inter-frame gap per packet) that many calculators silently omit. "IMIX" is the standard simple traffic blend (7×64 B + 4×594 B + 1×1518 B ≈ 362 B average frame) used to approximate real mixed traffic:
+      </p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Maximum packets per second by link speed and packet size</caption>
+          <thead><tr><th>Link</th><th>64 B worst case</th><th>IMIX mix</th><th>1,500 B (MTU)</th><th>9,000 B jumbo</th></tr></thead>
+          <tbody>
+            {lineRateRows.map(([link, w, i, f, j]) => (
+              <tr><td class="font-semibold text-gray-800">{link}</td><td class="text-rose-600 font-semibold">{w}</td><td class="text-amber-600">{i}</td><td class="text-teal-600">{f}</td><td class="text-gray-600">{j}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Read a row left to right and the metric's purpose appears: <strong>the same wire carries 18× more packets when they're small</strong>, and every packet costs the forwarding hardware the same lookup work. That's why serious equipment is specified in PPS at 64 bytes — the honest worst case — and why the industry's standard test method (<a href="https://datatracker.ietf.org/doc/html/rfc2544" rel="noopener" target="_blank" class="text-indigo-600 hover:underline font-medium">RFC 2544</a>) sweeps exactly these frame sizes.
+      </p>
+    </div>
+  </article>
+
+  <!-- Normal traffic -->
+  <article class="premium-card mt-8" id="normal-traffic">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">What Normal Traffic Actually Generates</h2>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Typical packets per second generated by common activities</caption>
+          <thead><tr><th>Traffic</th><th>Approx. PPS</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td class="font-semibold text-gray-800">Idle home (background)</td><td class="text-teal-600 font-semibold">tens</td><td class="text-gray-600">DNS, keepalives, telemetry — small and sparse</td></tr>
+            <tr><td class="font-semibold text-gray-800">Online game session</td><td class="text-teal-600 font-semibold">30–128 each way</td><td class="text-gray-600">Tick-rate bound — tiny packets at fixed cadence</td></tr>
+            <tr><td class="font-semibold text-gray-800">HD video call</td><td class="text-teal-600 font-semibold">~350</td><td class="text-gray-600">~3.5 Mbps in medium-size packets</td></tr>
+            <tr><td class="font-semibold text-gray-800">4K stream (25 Mbps)</td><td class="text-teal-600 font-semibold">~2,000</td><td class="text-gray-600">Bulk video ships in full 1,500 B frames</td></tr>
+            <tr><td class="font-semibold text-gray-800">Busy family evening, total</td><td class="text-amber-600 font-semibold">~5,000–10,000</td><td class="text-gray-600">Everything above, summed — still modest</td></tr>
+            <tr><td class="font-semibold text-gray-800">Saturated 1 Gbps download</td><td class="text-amber-600 font-semibold">~81,000</td><td class="text-gray-600">Line rate at full-size frames</td></tr>
+            <tr><td class="font-semibold text-gray-800">Torrent swarm / P2P heavy</td><td class="text-rose-600 font-semibold">high, mixed sizes</td><td class="text-gray-600">Many peers, many small control packets — the classic home-router killer</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        The pattern worth internalizing: <strong>bandwidth-heavy traffic is packet-light, and packet-heavy traffic is bandwidth-light</strong>. A 4K evening barely troubles a router's packet budget; a torrent swarm or a chatty IoT swarm can trouble it while the bandwidth graph shows nothing. When a network "feels broken but the speed test is fine," the packet counter — not the megabit counter — is usually where the story is. (Gamers: your 60 PPS session is trivial for any router; your lag lives in <a href="/internet-speed/for-gaming/" class="text-indigo-600 hover:underline font-medium">latency, not packet rates</a>.)
+      </p>
+    </div>
+  </article>
+
+  <!-- 18x problem -->
+  <article class="premium-card mt-8" id="eighteen-x">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The 18× Problem: Why "Gigabit" Gear Chokes on Small Packets</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        Here's the spec-sheet trick this metric exists to expose. A device can honestly claim "gigabit throughput" by moving ~81,000 full-size packets per second — while its CPU would collapse at the 1,488,095 PPS that same gigabit demands when packets are small. <strong>Both statements describe "1 Gbps." Only one describes your bad day.</strong> Per-packet costs (header parsing, route lookup, NAT translation, firewall rules) don't shrink with packet size, so the small-packet case is 18× the work for identical bandwidth.
+      </p>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        This is also the reading key for spec sheets. Consumer boxes advertise Mbps (tested with big frames, the flattering case). Enterprise switches advertise <strong>Mpps at 64 bytes</strong> (the unflattering case) — a 48-port 10G switch must claim 48 × 14.88 = ~714 Mpps to call itself non-blocking, and that's checkable arithmetic, not marketing. When a vendor won't state a 64-byte PPS figure, they're telling you something.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        We built our <a href="/tools/packets-per-second-calculator/" class="text-indigo-600 hover:underline font-medium">PPS calculator</a> around exactly this honesty gap — including the +20-byte wire overhead per packet that some popular calculators omit, which overstates achievable PPS by up to 31% at small frame sizes. Details and worked math on the calculator page.
+      </p>
+    </div>
+  </article>
+
+  <!-- Hardware tiers -->
+  <article class="premium-card mt-8" id="hardware-tiers">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">What Hardware Really Forwards (Reported Ranges)</h2>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm mb-6">
+        <table class="luxury-table">
+          <caption class="sr-only">Typical packet forwarding capacity by hardware tier</caption>
+          <thead><tr><th>Tier</th><th>Typical forwarding capacity</th><th>What that means</th></tr></thead>
+          <tbody>
+            <tr><td class="font-semibold text-gray-800">Consumer Wi-Fi router (NAT, software path)</td><td class="text-gray-600">~10K–100K PPS</td><td class="text-gray-600">Fine for normal homes; the tier a torrent swarm or flood hurts first</td></tr>
+            <tr><td class="font-semibold text-gray-800">x86 firewall (pfSense/OPNsense class)</td><td class="text-gray-600">hundreds of K – ~1M+ PPS</td><td class="text-gray-600">Depends on CPU and rules; every firewall rule is per-packet work</td></tr>
+            <tr><td class="font-semibold text-gray-800">Untuned Linux server (kernel stack)</td><td class="text-gray-600">drops begin ~1–3M PPS</td><td class="text-gray-600">Why high-PPS services get dedicated tuning</td></tr>
+            <tr><td class="font-semibold text-gray-800">Kernel-bypass stacks (DPDK / XDP)</td><td class="text-gray-600">10–100M PPS</td><td class="text-gray-600">How software touches line rate — by skipping the kernel</td></tr>
+            <tr><td class="font-semibold text-gray-800">Hardware ASIC switch/router</td><td class="text-teal-600 font-semibold">line rate: 1.488 Mpps per 1G port, 14.88 per 10G</td><td class="text-gray-600">Wire speed at any packet size — the point of dedicated silicon</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Two honest caveats. These are <em>reported ranges</em> — real numbers vary with CPU, drivers, features enabled, and firmware, which is precisely why <a href="https://datatracker.ietf.org/doc/html/rfc2544" rel="noopener" target="_blank" class="text-indigo-600 hover:underline font-medium">RFC 2544</a> testing exists: it measures <em>your</em> device's throughput at each frame size instead of trusting a brochure. And "good PPS capacity" is relative to your link: gear that forwards 200K PPS is generous behind a 100 Mbps line (worst case 148,810) and undersized behind gigabit fiber facing small-packet load.
+      </p>
+    </div>
+  </article>
+
+  <!-- DDoS -->
+  <article class="premium-card mt-8" id="ddos">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">The DDoS Lens: PPS as an Attack Metric</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
+        Attack reports quote two numbers — Gbps and Mpps — because they exhaust different resources. Volumetric floods (big packets) fill your <em>pipe</em>; packet-rate floods (tiny packets, classically ~40–60-byte SYN packets) exhaust your <em>equipment</em>, and they're the sneaky ones: a flood pushing millions of PPS can sit at a fraction of your bandwidth while your router's CPU dies. That's why "my internet is down but the graph shows only 200 Mbps" is a classic small-packet-attack signature.
+      </p>
+      <p class="text-gray-600 leading-relaxed">
+        For defense, the useful "good PPS" is a ratio, not a constant: <strong>your equipment's forwarding ceiling versus your measured baseline</strong>. A home seeing 5K PPS normally behind a router that forwards 80K has 16× headroom; a business at 200K behind gear rated 250K has almost none. Mitigation appliances and scrubbing services are specified in Mpps for exactly this reason. Baseline first — which brings us to measuring.
+      </p>
+    </div>
+  </article>
+
+  <!-- Measure -->
+  <article class="premium-card mt-8" id="measure">
+    <div class="premium-card-inner">
+      <h2 class="font-bold text-2xl text-gray-900 mb-6">How to Measure Your Own Baseline</h2>
+      <div class="space-y-4 mb-6">
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-white border border-teal-100">
+          <h3 class="font-semibold text-gray-900 mb-1">💻 On a computer</h3>
+          <p class="text-gray-500 text-sm">Linux/macOS: <code class="text-teal-700 text-xs font-semibold">ip -s link</code> (or <code class="text-teal-700 text-xs font-semibold">netstat -i</code>) shows per-interface packet counters — read twice, subtract, divide by seconds. Windows: <code class="text-teal-700 text-xs font-semibold">netstat -e</code> or Task Manager's Ethernet details. That's PPS, no tools required.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100">
+          <h3 class="font-semibold text-gray-900 mb-1">📡 On a router</h3>
+          <p class="text-gray-500 text-sm">The interface statistics page shows cumulative packets in/out; better firmware graphs PPS directly. For anything continuous, SNMP counters (ifInUcastPkts / ifOutUcastPkts) feed any monitoring stack — sample every 30–60 s and the baseline draws itself.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100">
+          <h3 class="font-semibold text-gray-900 mb-1">📈 What to record</h3>
+          <p class="text-gray-500 text-sm">A week of busiest-hour samples gives you three working numbers: typical peak (your "normal"), the ratio to your equipment's ceiling (your headroom), and the spike threshold that means something's wrong (baseline × ~10 is a reasonable first alarm). Those three numbers are the real answer to "what's a good PPS for me."</p>
+        </div>
+      </div>
+      <p class="text-gray-600 leading-relaxed">
+        Then close the loop with math: take your link speed and your traffic's typical packet size, and the <a href="/tools/packets-per-second-calculator/" class="text-indigo-600 hover:underline font-medium">PPS calculator</a> tells you the ceiling your line imposes — wire overhead included. Baseline below ceiling with headroom: good PPS. Baseline crowding ceiling: upgrade something. Spike over baseline: investigate.
+      </p>
+    </div>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-12" id="faqs">
+    <div class="text-center mb-8">
+      <h2 class="font-bold text-2xl text-gray-900">Frequently Asked Questions</h2>
+      <p class="text-gray-500 text-sm mt-2">Quick answers on packet rates</p>
+    </div>
+    <div class="space-y-4 max-w-3xl mx-auto">
+      {
+        faqs.map((faq) => (
+          <details class="group premium-card overflow-hidden">
+            <summary class="flex justify-between items-center gap-4 p-6 cursor-pointer list-none font-semibold text-gray-800 select-none hover:text-indigo-600 transition-colors">
+              <span class="group-open:text-indigo-600">{faq.question}</span>
+              <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center group-open:bg-indigo-50 group-open:border-indigo-100 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-400 group-open:text-indigo-600 transform group-open:rotate-180 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <RelatedTools
+    tools={[
+      {
+        name: 'PPS Calculator',
+        url: '/tools/packets-per-second-calculator/',
+        description: 'The pillar tool — any bandwidth × packet size, with correct wire-overhead math.',
+        icon: '📦',
+      },
+      {
+        name: 'Gbps to Mbps Converter',
+        url: '/converters/gbps-to-mbps/',
+        description: 'The bandwidth side of the same wire — including why gigabit tests at ~940.',
+        icon: '🌐',
+      },
+      {
+        name: 'Bandwidth Calculator',
+        url: '/tools/bandwidth-calculator/',
+        description: 'Capacity planning in Mbps — the other axis of network sizing.',
+        icon: '📶',
+      },
+    ]}
+  />
+
+  <!-- Ruler logic -->
+  <script is:inline>
+    const prStops = [
+      { pps: "~50 PPS", pos: 23, note: "Background chatter — DNS, keepalives, smart-home pings. Tens of packets per second is a healthy quiet house." },
+      { pps: "~2,000 PPS", pos: 45, note: "A 25 Mbps stream in full-size frames is only ~2,000 PPS — bulk traffic is packet-efficient because every packet is full." },
+      { pps: "~5–10K PPS", pos: 51, note: "Streams, calls, gaming and browsing together typically sit in the low thousands of PPS. Consumer routers carry this comfortably." },
+      { pps: "~81,000 PPS", pos: 67, note: "A gigabit link completely saturated by downloads: ~81,000 PPS. This is the easy way to fill gigabit." },
+      { pps: "1,488,095 PPS", pos: 85, note: "The same gigabit filled with minimum-size packets: 1,488,095 PPS — 18× the packet work for identical bandwidth. The benchmark number for serious gear." },
+      { pps: "14,880,952 PPS", pos: 98, note: "14.88 million PPS per 10G port — the rate line-speed ASICs are built for, and software routers are not." },
+    ];
+    const prChips = document.querySelectorAll(".pr-chip");
+    const $prMarker = document.getElementById("pr-marker");
+    const $prValue = document.getElementById("pr-value");
+    const $prNote = document.getElementById("pr-note");
+
+    prChips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        prChips.forEach((c) => (c.className = "pr-chip px-4 py-1.5 rounded-full text-sm font-semibold transition-colors border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100"));
+        chip.className = "pr-chip px-4 py-1.5 rounded-full text-sm font-semibold transition-colors border-2 border-indigo-400 bg-white text-indigo-600";
+        const s = prStops[Number(chip.dataset.i)];
+        $prMarker.style.left = s.pos + "%";
+        $prValue.textContent = s.pps;
+        $prNote.textContent = s.note;
+      });
+    });
+  </script>
+</Layout>
